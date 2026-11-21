@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LOCK IN — шрифты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Onest:wght@400;500;600;700&family=Martian+Mono:wght@400;500;600&family=Golos+Text:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#000; --card:#0e0e10; --line:#1e1e21; --line2:#161618; --text:#f4f4f5; --text2:#a1a1a8; --mut:#6e6e75; --acc:#ff6a1a; --track:#1c1c1f; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: Geist, system-ui, sans-serif; -webkit-font-smoothing: antialiased; padding: calc(env(safe-area-inset-top) + 24px) 16px 60px; }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  h1 { font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
+  .lead { color: var(--text2); font-size: 14px; line-height: 1.55; margin: 8px 0 28px; max-width: 640px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+  .opt { border: 1px solid var(--line); border-radius: 22px; padding: 16px; background: #050506; }
+  .opt-h { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; font-family: Geist, sans-serif; }
+  .badge { width: 28px; height: 28px; border-radius: 9px; background: var(--acc); color: #000; display: grid; place-items: center; font: 700 14px Geist, sans-serif; }
+  .opt-h b { font-size: 15px; }
+  .opt-d { color: var(--mut); font: 12px Geist, sans-serif; margin-bottom: 14px; }
+  .cur { font: 500 10px 'Geist Mono', monospace; color: var(--acc); border: 1px solid rgba(255,106,26,.3); border-radius: 6px; padding: 2px 6px; margin-left: auto; }
+
+  /* sample (uses --ui / --num set per option) */
+  .s { font-family: var(--ui); }
+  .s .lbl { font: 500 10px var(--num); letter-spacing: .08em; text-transform: uppercase; color: var(--mut); }
+  .s .h { font: var(--hw, 600) 28px var(--head, var(--ui)); letter-spacing: -.03em; margin: 4px 0 14px; }
+  .s .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 13px 14px; margin-bottom: 8px; }
+  .s .num { font-family: var(--num); font-weight: 500; letter-spacing: var(--nls, -.02em); font-variant-numeric: tabular-nums; }
+  .s .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .s .stats { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 10px; }
+  .s .stats > div { padding-left: 10px; border-left: 1px solid var(--line); }
+  .s .stats > div:first-child { padding-left: 0; border: 0; }
+  .s .stats .num { font-size: 16px; margin-top: 4px; }
+  .s .task { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line2); font-size: 14px; }
+  .s .task:first-of-type { border: 0; }
+  .s .cb { width: 20px; height: 20px; border-radius: 7px; border: 1.5px solid #5a5a61; flex-shrink: 0; }
+  .s .cb.on { background: var(--acc); border-color: var(--acc); }
+  .s .done { color: var(--mut); text-decoration: line-through; }
+  .s .tag { margin-left: auto; font: 500 10px var(--num); color: var(--acc); background: rgba(255,106,26,.12); padding: 3px 6px; border-radius: 6px; }
+  .s .big { font-size: 32px; margin: 4px 0 2px; }
+  .s .tx { display: flex; justify-content: space-between; font-size: 14px; padding: 7px 0; border-top: 1px solid var(--line2); }
+  .s .tx:first-of-type { border: 0; }
+  .s .mono-s { font: 11px var(--num); color: var(--mut); }
+  .s .acc { color: var(--acc); }
+  .s .digits { font-size: 13px; color: var(--text2); margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Выбери шрифт</h1>
+  <p class="lead">В каждом варианте есть пара шрифтов: один для текста интерфейса, второй для цифр и подписей. Все поддерживают кириллицу, а цифры у всех одинаковой ширины, поэтому суммы и счётчики не прыгают. Пришли номер варианта. Можно и смешать, например «текст из 3, цифры из 2».</p>
+  <div class="grid" id="grid"></div>
+</div>
+<script>
+const OPTS = [
+  { ui: 'Geist', num: 'Geist Mono', name: 'Geist + Geist Mono', d: 'Текущий. Технологичный, ровный, как у Vercel.', cur: true },
+  { ui: 'Inter', num: 'JetBrains Mono', name: 'Inter + JetBrains Mono', d: 'Самый «системный» и читаемый. Цифры чуть шире и мягче.' },
+  { ui: 'Manrope', num: 'IBM Plex Mono', name: 'Manrope + IBM Plex Mono', d: 'Более округлый и дружелюбный. Цифры строгие, «инженерные».', hw: 700 },
+  { ui: 'Onest', num: 'Martian Mono', name: 'Onest + Martian Mono', d: 'Onest сделан для русского языка. Цифры широкие, с характером.', nls: '-.04em' },
+  { ui: 'Golos Text', num: 'Roboto Mono', name: 'Golos Text + Roboto Mono', d: 'Спокойный и нейтральный. Цифры компактные и аккуратные.' },
+  { ui: 'Inter', num: 'Inter', name: 'Inter без моноширинного', d: 'Один шрифт везде, цифры табличные. Самый «чистый» и минималистичный вид.', nls: '-.01em' },
+  { ui: 'Inter', num: 'JetBrains Mono', head: 'Unbounded', hw: 600, name: 'Unbounded + Inter + JetBrains', d: 'Акцентные широкие заголовки, остальное как во втором варианте. Самый «брендовый».' },
+]
+const sample = `
+  <div class="lbl">Сб 21.11 · W47</div>
+  <div class="h">Сегодня</div>
+  <div class="card">
+    <div class="row"><span style="color:var(--text2);font-size:13px">Привычки</span><span class="num">8/10</span></div>
+    <div class="stats">
+      <div><div class="lbl">Серия</div><div class="num acc">12д</div></div>
+      <div><div class="lbl">За месяц</div><div class="num">+$1 183</div></div>
+      <div><div class="lbl">День</div><div class="num">80%</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="task"><span class="cb on"></span><span class="done">Медитация</span><span class="tag">10 мин</span></div>
+    <div class="task"><span class="cb"></span><span>Йога</span><span class="tag">20 мин</span></div>
+    <div class="task"><span class="cb"></span><span>Прогулка</span><span class="tag">60 мин</span></div>
+  </div>
+  <div class="card">
+    <div class="lbl">Остаток месяца</div>
+    <div class="num big">+42 300 ₾</div>
+    <div class="tx"><span>Кофейня</span><span class="num">−45 ₾</span></div>
+    <div class="tx"><span>Зарплата</span><span class="num acc">+$5 000</span></div>
+    <div class="digits num">0123456789 · 14:00–14:45 · 1 111 / 7 777</div>
+  </div>`
+document.getElementById('grid').innerHTML = OPTS.map((o, i) => `
+  <div class="opt">
+    <div class="opt-h"><span class="badge">${i + 1}</span><b>${o.name}</b>${o.cur ? '<span class="cur">сейчас</span>' : ''}</div>
+    <div class="opt-d">${o.d}</div>
+    <div class="s" style="--ui:'${o.ui}',sans-serif;--num:'${o.num}',monospace;${o.head ? `--head:'${o.head}',sans-serif;` : ''}${o.hw ? `--hw:${o.hw};` : ''}${o.nls ? `--nls:${o.nls};` : ''}">${sample}</div>
+  </div>`).join('')
+</script>
+</body>
+</html>
