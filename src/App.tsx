@@ -4,6 +4,7 @@ import { useStore } from './store'
 import { useT } from './i18n'
 import { Icon } from './components/Icon'
 import { QuickAdd } from './components/QuickAdd'
+import { useCloudSync } from './lib/sync'
 import Today from './screens/Today'
 import Calendar from './screens/Calendar'
 import Finance from './screens/Finance'
@@ -56,6 +57,7 @@ export default function App() {
   const lang = useStore((s) => s.lang)
   useTheme()
   useRates()
+  useCloudSync()
   useEffect(() => {
     document.documentElement.lang = lang
   }, [lang])

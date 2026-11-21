@@ -190,6 +190,11 @@ function initial(): Data {
   }
 }
 
+export type AppData = Data
+/** keys of persisted user data (everything except actions) */
+export const DATA_KEYS = Object.keys(initial()) as (keyof Data)[]
+export const pickData = (s: Data): Data => Object.fromEntries(DATA_KEYS.map((k) => [k, s[k]])) as unknown as Data
+
 const emptyWeek = (): GrowthWeek => ({ speech: [], lang: {} })
 
 export const useStore = create<State>()(

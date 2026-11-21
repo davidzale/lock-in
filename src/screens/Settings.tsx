@@ -7,6 +7,7 @@ import { money } from '../lib/format'
 import { Field, Header, IconBtn, Seg, Sheet } from '../components/ui'
 import { Icon } from '../components/Icon'
 import { GoalForm, HabitForm, unitLabel } from '../components/forms'
+import { CloudCard } from '../components/CloudCard'
 
 export default function Settings() {
   const t = useT()
@@ -48,6 +49,8 @@ export default function Settings() {
           <Seg value={s.theme} onChange={(v: Theme) => s.set('theme', v)} options={(['dark', 'light', 'system'] as Theme[]).map((x) => ({ v: x, label: t(`theme.${x}`) }))} />
         </Field>
       </div>
+
+      <CloudCard />
 
       <div className="card">
         <div className="h2" style={{ marginBottom: 12 }}>{t('settings.currencies')}</div>
@@ -136,7 +139,7 @@ export default function Settings() {
         <input ref={fileRef} type="file" accept="application/json" hidden onChange={(e) => e.target.files?.[0] && importData(e.target.files[0])} />
       </div>
 
-      <div className="mono mut" style={{ textAlign: 'center', fontSize: 10, padding: '8px 0 20px' }}>LOCK IN · v0.1 · {t('settings.phase')}</div>
+      <div className="mono mut" style={{ textAlign: 'center', fontSize: 10, padding: '8px 0 20px' }}>LOCK IN · v0.2 · {t('settings.phase')}</div>
 
       <Sheet open={!!habit} onClose={() => setHabit(null)} title={habit === 'new' ? t('habit.new') : t('habit.edit')}>
         {habit && <HabitForm habit={habit === 'new' ? undefined : habit} onDone={() => setHabit(null)} />}

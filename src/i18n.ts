@@ -81,9 +81,13 @@ const en: Dict = {
   'settings.startBalance': 'Starting balance, USD', 'settings.startBalanceHint': 'Current: {v}. Balance = start + all income − all expenses.',
   'settings.habits': 'Daily habits', 'settings.growthTargets': 'Growth targets', 'settings.speechTarget': 'Speech activities per week (1–5)',
   'settings.minPerWeek': 'min per week', 'settings.data': 'Data',
-  'settings.dataHint': 'Data is stored on this device for now. Cloud sync arrives with Supabase — export a backup meanwhile.',
+  'settings.dataHint': 'With cloud sync on, data is saved automatically. Export makes an extra backup file.',
   'settings.export': 'Export', 'settings.import': 'Import', 'settings.importConfirm': 'Replace current data with the backup?',
-  'settings.importError': 'This file is not a LOCK IN backup', 'settings.phase': 'phase 1',
+  'settings.importError': 'This file is not a LOCK IN backup', 'settings.phase': 'phase 2',
+  'cloud.title': 'Cloud sync', 'cloud.hint': 'Sign in to back up your data and sync it between devices.', 'cloud.password': 'Password',
+  'cloud.signIn': 'Sign in', 'cloud.signUp': 'Create account', 'cloud.pwHint': 'Password: at least 8 characters.',
+  'cloud.checkEmail': 'Check your email and confirm the account, then sign in here.', 'cloud.syncNow': 'Sync now', 'cloud.signOut': 'Sign out',
+  'cloud.last': 'Last sync:', 'cloud.status.off': 'Off', 'cloud.status.syncing': 'Syncing…', 'cloud.status.synced': 'Synced', 'cloud.status.error': 'Error',
 }
 
 const ru: Dict = {
@@ -164,9 +168,13 @@ const ru: Dict = {
   'settings.startBalance': 'Стартовый баланс, USD', 'settings.startBalanceHint': 'Сейчас: {v}. Баланс = старт + все доходы − все расходы.',
   'settings.habits': 'Ежедневные привычки', 'settings.growthTargets': 'Нормы роста', 'settings.speechTarget': 'Активностей речи в неделю (1–5)',
   'settings.minPerWeek': 'мин в неделю', 'settings.data': 'Данные',
-  'settings.dataHint': 'Пока данные хранятся на устройстве. Облако появится с Supabase — а пока делай резервную копию.',
+  'settings.dataHint': 'Когда включено облако, данные сохраняются автоматически. Экспорт — дополнительная копия файлом.',
   'settings.export': 'Экспорт', 'settings.import': 'Импорт', 'settings.importConfirm': 'Заменить текущие данные резервной копией?',
-  'settings.importError': 'Это не резервная копия LOCK IN', 'settings.phase': 'этап 1',
+  'settings.importError': 'Это не резервная копия LOCK IN', 'settings.phase': 'этап 2',
+  'cloud.title': 'Облако', 'cloud.hint': 'Войди, чтобы данные сохранялись в облаке и синхронизировались между устройствами.', 'cloud.password': 'Пароль',
+  'cloud.signIn': 'Войти', 'cloud.signUp': 'Создать аккаунт', 'cloud.pwHint': 'Пароль: минимум 8 символов.',
+  'cloud.checkEmail': 'Проверь почту и подтверди аккаунт, затем войди здесь.', 'cloud.syncNow': 'Синхронизировать', 'cloud.signOut': 'Выйти',
+  'cloud.last': 'Синхронизировано:', 'cloud.status.off': 'Выкл', 'cloud.status.syncing': 'Синхронизация…', 'cloud.status.synced': 'Готово', 'cloud.status.error': 'Ошибка',
 }
 
 export const dict = { en, ru }
