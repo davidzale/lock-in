@@ -10,7 +10,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: false,
-      workbox: { clientsClaim: true, skipWaiting: true, cleanupOutdatedCaches: true },
+      workbox: { clientsClaim: true, skipWaiting: true, cleanupOutdatedCaches: true, importScripts: ['push-sw.js'] },
       includeAssets: ['favicon.png', 'icons/apple-touch-icon.png'],
       manifest: {
         name: 'LOCK IN',

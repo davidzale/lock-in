@@ -23,7 +23,7 @@ const en: Dict = {
   'habit.hasTarget': 'Has a target amount', 'habit.target': 'Target', 'habit.unit': 'Unit',
   'habit.autoGrow': 'Grow automatically', 'habit.autoGrowHint': 'If done on ≥80% of days in the period, the target increases by the step.',
   'habit.step': 'Step', 'habit.everyDays': 'Every N days', 'habit.max': 'Max',
-  'habit.reminder': 'Reminder', 'habit.reminderHint': 'Push reminders arrive in phase 2.',
+  'habit.reminder': 'Reminder', 'habit.reminderHint': 'A push arrives at this time if the habit isn’t done yet (turn on Notifications in Settings).',
 
   'goal.new': 'New goal', 'goal.edit': 'Edit goal', 'goal.period': 'Period', 'goal.kind': 'Type', 'goal.title': 'Title',
   'goal.target': 'Target', 'goal.targetUsd': 'Target, USD', 'goal.progress': 'Progress',
@@ -69,6 +69,12 @@ const en: Dict = {
   'lang.en': 'English', 'lang.fr': 'French', 'lang.de': 'German',
 
   'cal.today': 'Today',
+  'push.needCloud': 'Sign in to Cloud sync above first.', 'push.title': 'Notifications', 'push.hint': 'Habit reminders at the time you set, events 15 min before, monthly summary on the 1st.',
+  'push.onHint': 'On: habit reminders (time is set per habit), events 15 min before, monthly summary on the 1st.',
+  'push.installFirst': 'Open LOCK IN from the Home Screen icon to enable notifications.', 'push.unsupported': 'This device doesn’t support web notifications.',
+  'push.denied': 'Notifications are blocked — allow them in iPhone Settings → LOCK IN → Notifications.',
+  'push.test': 'Send a test notification', 'push.testSent': 'Sent to {n} device(s)',
+
   'cal.new': 'New event', 'cal.connectHint': 'See your events and calls here and add new ones.', 'cal.needCloud': 'Sign in to cloud sync first (Settings).',
   'cal.connectBtn': 'Connect', 'cal.allDay': 'All day', 'cal.empty': 'No events this day', 'cal.join': 'Join call', 'cal.openGoogle': 'Open in Google Calendar',
   'cal.start': 'Start', 'cal.duration': 'Duration', 'cal.reminderNote': 'Google Calendar will remind you 15 minutes before.',
@@ -115,7 +121,7 @@ const ru: Dict = {
   'habit.hasTarget': 'Есть норма (количество)', 'habit.target': 'Норма', 'habit.unit': 'Единица',
   'habit.autoGrow': 'Расти автоматически', 'habit.autoGrowHint': 'Если выполнено в ≥80% дней за период — норма увеличится на шаг.',
   'habit.step': 'Шаг', 'habit.everyDays': 'Каждые N дней', 'habit.max': 'Максимум',
-  'habit.reminder': 'Напоминание', 'habit.reminderHint': 'Push-напоминания появятся на 2 этапе.',
+  'habit.reminder': 'Напоминание', 'habit.reminderHint': 'Push придёт в это время, если привычка ещё не отмечена (включи Уведомления в Настройках).',
 
   'goal.new': 'Новая цель', 'goal.edit': 'Изменить цель', 'goal.period': 'Период', 'goal.kind': 'Тип', 'goal.title': 'Название',
   'goal.target': 'Цель', 'goal.targetUsd': 'Цель, USD', 'goal.progress': 'Прогресс',
@@ -161,6 +167,12 @@ const ru: Dict = {
   'lang.en': 'Английский', 'lang.fr': 'Французский', 'lang.de': 'Немецкий',
 
   'cal.today': 'Сегодня',
+  'push.needCloud': 'Сначала войди в облако — карточка выше.', 'push.title': 'Уведомления', 'push.hint': 'Напоминания о привычках в твоё время, о событиях за 15 минут и итоги месяца 1-го числа.',
+  'push.onHint': 'Включено: привычки (время задаётся у каждой), события за 15 минут, итоги месяца 1-го числа.',
+  'push.installFirst': 'Открой LOCK IN с иконки на экране «Домой», чтобы включить уведомления.', 'push.unsupported': 'Это устройство не поддерживает веб-уведомления.',
+  'push.denied': 'Уведомления запрещены — разреши их в Настройках iPhone → LOCK IN → Уведомления.',
+  'push.test': 'Отправить тестовое уведомление', 'push.testSent': 'Отправлено на устройств: {n}',
+
   'cal.new': 'Новое событие', 'cal.connectHint': 'События и звонки появятся здесь, можно будет добавлять новые.', 'cal.needCloud': 'Сначала войди в облако (Настройки).',
   'cal.connectBtn': 'Подключить', 'cal.allDay': 'Весь день', 'cal.empty': 'В этот день событий нет', 'cal.join': 'Присоединиться к звонку', 'cal.openGoogle': 'Открыть в Google Календаре',
   'cal.start': 'Начало', 'cal.duration': 'Длительность', 'cal.reminderNote': 'Google Календарь напомнит за 15 минут.',
