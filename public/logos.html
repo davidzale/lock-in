@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LOCK IN — логотип</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --acc: #ff6a1a; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #050506; color: #f4f4f5; font-family: Geist, system-ui, sans-serif; -webkit-font-smoothing: antialiased; padding: calc(env(safe-area-inset-top) + 24px) 16px 60px; }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
+  .lead { color: #a1a1a8; font-size: 14px; line-height: 1.55; margin: 8px 0 28px; max-width: 640px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+  .opt { border: 1px solid #1e1e21; border-radius: 22px; padding: 16px; background: #0a0a0b; }
+  .top { display: flex; gap: 16px; align-items: flex-end; }
+  .big { width: 132px; height: 132px; border-radius: 30px; overflow: hidden; box-shadow: 0 0 0 1px #222, 0 10px 30px rgba(0,0,0,.5); flex-shrink: 0; }
+  .small { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .small .ico { width: 60px; height: 60px; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px #222; }
+  .small span { font-size: 11px; color: #d4d4d8; }
+  .tiny { width: 29px; height: 29px; border-radius: 7px; overflow: hidden; box-shadow: 0 0 0 1px #222; margin-top: 8px; }
+  svg { display: block; width: 100%; height: 100%; }
+  .name { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-weight: 600; font-size: 15px; }
+  .n { width: 24px; height: 24px; border-radius: 7px; background: var(--acc); color: #000; display: grid; place-items: center; font: 700 12px Geist, sans-serif; }
+  .cur { margin-left: auto; font: 500 10px 'Geist Mono', monospace; color: var(--acc); border: 1px solid rgba(255,106,26,.3); border-radius: 6px; padding: 2px 6px; }
+  .d { color: #8a8a93; font-size: 12.5px; line-height: 1.5; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Логотип LOCK IN</h1>
+  <p class="lead">Все варианты двухмерные: чёрный фон и оранжевый знак. У каждого слева иконка крупно, справа — в реальном размере на экране «Домой» и совсем маленькая, как в уведомлениях и настройках. Хороший знак должен читаться и в самом маленьком размере. Пришли номер. Можно и смешать, например «замок из 1, но с кольцом из 2».</p>
+  <div class="grid" id="grid"></div>
+</div>
+<script>
+const O = '#ff6a1a', B = '#000'
+const bg = `<rect width="100" height="100" fill="${B}"/>`
+const LOGOS = [
+  { name: 'Замок', d: 'Плотный замок со скважиной. Самое буквальное прочтение «lock in»: закрылся от отвлечений и зафиксировался на цели.',
+    svg: `${bg}<path d="M35 47V37a15 15 0 0 1 30 0v10" fill="none" stroke="${O}" stroke-width="8" stroke-linecap="round"/><rect x="26" y="45" width="48" height="36" rx="10" fill="${O}"/><circle cx="50" cy="60" r="5" fill="${B}"/><rect x="47.5" y="61" width="5" height="10" rx="2.5" fill="${B}"/>` },
+  { name: 'Фокус', d: 'Кольцо с разрывом и точка в центре. Текущий знак, чуть аккуратнее. Про фокус и точное попадание.', cur: true,
+    svg: `${bg}<path d="M60.3 21.8A30 30 0 1 0 77.4 37.7" fill="none" stroke="${O}" stroke-width="8.5" stroke-linecap="round"/><circle cx="50" cy="50" r="8.5" fill="${O}"/>` },
+  { name: 'Замочная скважина', d: 'Оранжевый круг с вырезанной скважиной. Очень простой и узнаваемый силуэт, хорошо читается даже совсем маленьким.',
+    svg: `${bg}<circle cx="50" cy="50" r="31" fill="${O}"/><circle cx="50" cy="43" r="8" fill="${B}"/><path d="M45.5 47h9l3 18h-15z" fill="${B}"/>` },
+  { name: 'Серия', d: 'Геометричное пламя, как символ серии дней подряд. Энергия и постоянство.',
+    svg: `${bg}<path d="M50 16c3 12 20 20 20 41a20 20 0 0 1-40 0c0-10 5-16 10-21 0 8 3 12 7 13-3-12 0-23 3-33z" fill="${O}"/><path d="M50 58c4 5 7 8 7 13a7 7 0 0 1-14 0c0-5 3-8 7-13z" fill="${B}"/>` },
+  { name: 'Галочка в кольце', d: 'Выполненная привычка внутри кольца дня. Самый «функциональный» знак, прямо про то, что делает приложение.',
+    svg: `${bg}<path d="M66.5 24.6A30 30 0 1 0 79 42" fill="none" stroke="${O}" stroke-width="8" stroke-linecap="round"/><path d="M37 50l10 10 19-21" fill="none" stroke="${O}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>` },
+  { name: 'Рост', d: 'Три шеврона вверх, яркость нарастает. Прогресс и движение по уровням.',
+    svg: `${bg}<path d="M30 74l20-18 20 18" fill="none" stroke="${O}" stroke-opacity=".3" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 58l20-18 20 18" fill="none" stroke="${O}" stroke-opacity=".62" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 42l20-18 20 18" fill="none" stroke="${O}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>` },
+  { name: 'Ступени', d: 'Три растущих столбика, как в статистике. Спокойный, «дата»-характер, в стиле Precision.',
+    svg: `${bg}<rect x="24" y="56" width="13" height="20" rx="4" fill="${O}" fill-opacity=".38"/><rect x="43.5" y="42" width="13" height="34" rx="4" fill="${O}" fill-opacity=".68"/><rect x="63" y="24" width="13" height="52" rx="4" fill="${O}"/>` },
+  { name: 'Вершина', d: 'Гора и солнце: цель, путь вверх, новые места. Более «lifestyle» и эмоциональный вариант.',
+    svg: `${bg}<path d="M14 76l28-42 13 19 8-11 23 34z" fill="${O}"/><path d="M42 34l7 10-7 3-7-3z" fill="${B}" fill-opacity=".35"/><circle cx="70" cy="26" r="7" fill="${O}"/>` },
+  { name: 'Молния', d: 'Разряд внутри скруглённого квадрата: дисциплина, заряд и действие. Смелый и спортивный знак.',
+    svg: `${bg}<rect x="21" y="21" width="58" height="58" rx="17" fill="none" stroke="${O}" stroke-width="6"/><path d="M55 28L36 54h13l-4 18 19-27H51z" fill="${O}" stroke="${O}" stroke-width="2" stroke-linejoin="round"/>` },
+  { name: 'Монограмма L', d: 'Буква L, которая одновременно стрелка вверх. Строгий типографский знак, как у тех-продуктов.',
+    svg: `${bg}<path d="M36 24v52h30" fill="none" stroke="${O}" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M56 40l10-12 10 12" fill="none" stroke="${O}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M66 30v24" stroke="${O}" stroke-width="8" stroke-linecap="round"/>` },
+  { name: 'Сцепление', d: 'Два звена, сцеплённых вместе: привычки, которые держатся друг за друга. Про связь и «закрепиться».',
+    svg: `${bg}<rect x="16" y="36" width="40" height="28" rx="14" fill="none" stroke="${O}" stroke-width="8"/><rect x="44" y="36" width="40" height="28" rx="14" fill="none" stroke="${O}" stroke-width="8"/><path d="M48 36h4" stroke="${B}" stroke-width="10"/><path d="M48 36h6" stroke="${O}" stroke-width="8" stroke-linecap="round" transform="translate(-2 0)"/>` },
+  { name: 'Квадрат-кнопка', d: 'Минимализм: оранжевый квадрат со скруглением и тонкой галочкой-вырезом. Выглядит как приложение Apple, максимально «чисто».',
+    svg: `${bg}<rect x="22" y="22" width="56" height="56" rx="16" fill="${O}"/><path d="M38 51l8 8 17-19" fill="none" stroke="${B}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>` },
+]
+document.getElementById('grid').innerHTML = LOGOS.map((l, i) => {
+  const s = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${l.svg}</svg>`
+  return `<div class="opt">
+    <div class="top">
+      <div class="big">${s}</div>
+      <div class="small"><div class="ico">${s}</div><span>LOCK IN</span><div class="tiny">${s}</div></div>
+    </div>
+    <div class="name"><span class="n">${i + 1}</span>${l.name}${l.cur ? '<span class="cur">сейчас</span>' : ''}</div>
+    <div class="d">${l.d}</div>
+  </div>`
+}).join('')
+</script>
+</body>
+</html>
