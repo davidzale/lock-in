@@ -3,6 +3,7 @@ import { useStore } from '../store'
 import { useT } from '../i18n'
 import { fmtDate, monthKey, periodRange } from '../lib/date'
 import { Header, IconBtn } from '../components/ui'
+import { Icon } from '../components/Icon'
 import { Report } from '../components/Report'
 
 export default function Summary() {
@@ -19,14 +20,13 @@ export default function Summary() {
       <Header
         eyebrow={t('summary.title')}
         title={fmtDate(d, lang, { month: 'long', year: 'numeric' }).replace(/^./, (c) => c.toUpperCase())}
-        actions={
-          <>
-            <IconBtn n="back" label="prev" onClick={() => go(-1)} />
-            <IconBtn n="chev" label="next" onClick={() => go(1)} />
-          </>
-        }
+        actions={<IconBtn n="back" label="back" onClick={() => nav('/stats')} />}
       />
-      <div className="mut" style={{ fontSize: 12, marginBottom: 12 }}>{t('summary.vs', { m: fmtDate(prev, lang, { month: 'long' }) })}</div>
+      <div className="row" style={{ marginBottom: 12 }}>
+        <button className="btn ghost sm" onClick={() => go(-1)}><Icon n="back" size="s" />{fmtDate(prev, lang, { month: 'short' })}</button>
+        <span className="mut" style={{ fontSize: 12, textAlign: 'center' }}>{t('summary.vs', { m: fmtDate(prev, lang, { month: 'long' }) })}</span>
+        <button className="btn ghost sm" onClick={() => go(1)}>{fmtDate(new Date(y, m, 1), lang, { month: 'short' })}<Icon n="chev" size="s" /></button>
+      </div>
       <Report range={periodRange('month', d)} prev={periodRange('month', prev)} />
     </>
   )

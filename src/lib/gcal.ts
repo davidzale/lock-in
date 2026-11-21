@@ -95,10 +95,12 @@ export async function loadWeek(monday: Date, force = false) {
   }
 }
 
-export async function createEvent(p: { title: string; start: Date; end: Date; description?: string }) {
+export async function createEvent(p: { title: string; start: Date; end: Date; description?: string; guests?: string[]; meet?: boolean }) {
   const r = await call<{ id?: string; error?: string }>('create', {
     title: p.title,
     description: p.description,
+    guests: p.guests || [],
+    meet: !!p.meet,
     start: p.start.toISOString(),
     end: p.end.toISOString(),
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,

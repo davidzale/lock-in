@@ -79,6 +79,7 @@ const en: Dict = {
   'push.denied': 'Notifications are blocked — allow them in iPhone Settings → LOCK IN → Notifications.',
   'push.test': 'Send a test notification', 'push.testSent': 'Sent to {n} device(s)',
 
+  'cal.guests': 'Guests (email, optional)', 'cal.badEmail': 'Check this email: {e}', 'cal.addMeet': 'Add Google Meet link', 'cal.inviteNote': 'Guests get an email invitation from Google Calendar. You’ll be reminded 15 minutes before.',
   'cal.new': 'New event', 'cal.connectHint': 'See your events and calls here and add new ones.', 'cal.needCloud': 'Sign in to cloud sync first (Settings).',
   'cal.connectBtn': 'Connect', 'cal.allDay': 'All day', 'cal.empty': 'No events this day', 'cal.join': 'Join call', 'cal.openGoogle': 'Open in Google Calendar',
   'cal.start': 'Start', 'cal.duration': 'Duration', 'cal.reminderNote': 'Google Calendar will remind you 15 minutes before.',
@@ -88,7 +89,7 @@ const en: Dict = {
   'stats.title': 'Stats', 'stats.eyebrow': 'All spheres', 'stats.habits': 'Habits', 'stats.avg': 'Average', 'stats.goodDays': '≥80% days',
   'stats.bestStreak': 'Best streak', 'stats.net': 'Net', 'stats.workouts': 'Workouts', 'stats.minutes': 'Minutes', 'stats.strength': 'Strength',
   'stats.avgSleep': 'Avg sleep', 'stats.avgSteps': 'Avg steps', 'stats.places': 'Places', 'stats.skills': 'Skills', 'stats.langMin': 'Language practice',
-  'summary.title': 'Monthly summary', 'summary.vs': 'Deltas compared with {m}',
+  'summary.title': 'Monthly summary', 'summary.vs': 'Compared with last month',
 
   'settings.title': 'Settings', 'settings.language': 'Language', 'settings.theme': 'Theme',
   'theme.dark': 'Dark', 'theme.light': 'Light', 'theme.system': 'Auto',
@@ -181,6 +182,7 @@ const ru: Dict = {
   'push.denied': 'Уведомления запрещены — разреши их в Настройках iPhone → LOCK IN → Уведомления.',
   'push.test': 'Отправить тестовое уведомление', 'push.testSent': 'Отправлено на устройств: {n}',
 
+  'cal.guests': 'Гости (email, необязательно)', 'cal.badEmail': 'Проверь email: {e}', 'cal.addMeet': 'Добавить ссылку Google Meet', 'cal.inviteNote': 'Гостям придёт приглашение на почту от Google Календаря. Тебе — напоминание за 15 минут.',
   'cal.new': 'Новое событие', 'cal.connectHint': 'События и звонки появятся здесь, можно будет добавлять новые.', 'cal.needCloud': 'Сначала войди в облако (Настройки).',
   'cal.connectBtn': 'Подключить', 'cal.allDay': 'Весь день', 'cal.empty': 'В этот день событий нет', 'cal.join': 'Присоединиться к звонку', 'cal.openGoogle': 'Открыть в Google Календаре',
   'cal.start': 'Начало', 'cal.duration': 'Длительность', 'cal.reminderNote': 'Google Календарь напомнит за 15 минут.',
@@ -190,7 +192,7 @@ const ru: Dict = {
   'stats.title': 'Статистика', 'stats.eyebrow': 'Все сферы', 'stats.habits': 'Привычки', 'stats.avg': 'Среднее', 'stats.goodDays': 'Дни ≥80%',
   'stats.bestStreak': 'Лучшая серия', 'stats.net': 'Итог', 'stats.workouts': 'Тренировки', 'stats.minutes': 'Минуты', 'stats.strength': 'Силовые',
   'stats.avgSleep': 'Сон, ср.', 'stats.avgSteps': 'Шаги, ср.', 'stats.places': 'Места', 'stats.skills': 'Навыки', 'stats.langMin': 'Практика языков',
-  'summary.title': 'Итоги месяца', 'summary.vs': 'Изменения по сравнению с: {m}',
+  'summary.title': 'Итоги месяца', 'summary.vs': 'Сравнение с прошлым месяцем',
 
   'settings.title': 'Настройки', 'settings.language': 'Язык', 'settings.theme': 'Тема',
   'theme.dark': 'Тёмная', 'theme.light': 'Светлая', 'theme.system': 'Авто',

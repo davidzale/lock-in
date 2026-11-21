@@ -85,7 +85,7 @@ export function Report({ range, prev }: { range: [Date, Date]; prev?: [Date, Dat
           b={[t('stats.minutes'), `${sp.minutes}′`]}
           c={[t('stats.strength'), String(sp.byType.strength?.n || 0)]}
         />
-        <div className="stats div" style={{ marginTop: 12, paddingTop: 12, gridTemplateColumns: '1fr 1fr' }}>
+        <div className="stats div" style={{ marginTop: 12, paddingTop: 12, gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)' }}>
           <div><div className="lbl">{t('stats.avgSleep')}</div><div className="num">{sleep != null ? `${sleep.toFixed(1)}${t('unit.h')}` : '—'}</div></div>
           <div><div className="lbl">{t('stats.avgSteps')}</div><div className="num">{steps != null ? Math.round(steps).toLocaleString('en-US').replace(/,/g, ' ') : '—'}</div></div>
         </div>

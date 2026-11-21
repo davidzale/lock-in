@@ -134,14 +134,14 @@ export default function Settings() {
       <div className="card">
         <div className="h2" style={{ marginBottom: 6 }}>{t('settings.data')}</div>
         <div className="mut" style={{ fontSize: 12, marginBottom: 12 }}>{t('settings.dataHint')}</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 8 }}>
           <button className="btn ghost sm" onClick={exportData}><Icon n="download" size="s" />{t('settings.export')}</button>
           <button className="btn ghost sm" onClick={() => fileRef.current?.click()}><Icon n="upload" size="s" />{t('settings.import')}</button>
         </div>
         <input ref={fileRef} type="file" accept="application/json" hidden onChange={(e) => e.target.files?.[0] && importData(e.target.files[0])} />
       </div>
 
-      <div className="mono mut" style={{ textAlign: 'center', fontSize: 10, padding: '8px 0 20px' }}>LOCK IN · v0.4.2 · {t('settings.phase')}</div>
+      <div className="mono mut" style={{ textAlign: 'center', fontSize: 10, padding: '8px 0 20px' }}>LOCK IN · v0.4.3 · {t('settings.phase')}</div>
 
       <Sheet open={!!habit} onClose={() => setHabit(null)} title={habit === 'new' ? t('habit.new') : t('habit.edit')}>
         {habit && <HabitForm habit={habit === 'new' ? undefined : habit} onDone={() => setHabit(null)} />}

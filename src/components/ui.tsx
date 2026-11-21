@@ -109,17 +109,26 @@ export function IconBtn({ n, onClick, label }: { n: string; onClick: () => void;
 
 export function Rings({ values, size = 100 }: { values: { v: number; color: string; track: string }[]; size?: number }) {
   const radii = [46, 34, 22]
+  // start empty and fill on mount, so the rings always animate in
+  const [shown, setShown] = useState(false)
+  useEffect(() => {
+    const id = requestAnimationFrame(() => requestAnimationFrame(() => setShown(true)))
+    return () => cancelAnimationFrame(id)
+  }, [])
   return (
     <svg width={size} height={size} viewBox="0 0 104 104" style={{ flexShrink: 0 }}>
       <g fill="none" strokeWidth={8} strokeLinecap="round" transform="rotate(-90 52 52)">
         {values.map((x, i) => {
           const r = radii[i]
           const c = 2 * Math.PI * r
-          const v = clamp01(x.v)
+          const v = shown ? clamp01(x.v) : 0
           return (
             <g key={i}>
               <circle cx="52" cy="52" r={r} stroke={x.track} />
-              {v > 0 && <circle cx="52" cy="52" r={r} stroke={x.color} strokeDasharray={c} strokeDashoffset={c * (1 - v)} style={{ transition: 'stroke-dashoffset .5s ease' }} />}
+              <circle
+                cx="52" cy="52" r={r} stroke={x.color} strokeDasharray={c} strokeDashoffset={c * (1 - v)}
+                style={{ opacity: v > 0 ? 1 : 0, transition: `stroke-dashoffset .9s cubic-bezier(.16,1,.3,1) ${i * 80}ms, opacity .2s` }}
+              />
             </g>
           )
         })}
@@ -148,8 +157,10 @@ export function Segs({ v, n = 12 }: { v: number; n?: number }) {
 }
 
 export function Seg<T extends string>({ value, options, onChange }: { value: T; options: { v: T; label: string }[]; onChange: (v: T) => void }) {
+  const idx = Math.max(0, options.findIndex((o) => o.v === value))
   return (
     <div className="seg">
+      <span className="seg-ind" style={{ width: `calc((100% - 6px) / ${options.length})`, transform: `translateX(${idx * 100}%)` }} />
       {options.map((o) => (
         <button key={o.v} className={o.v === value ? 'on' : ''} onClick={() => onChange(o.v)}>
           {o.label}
@@ -165,10 +176,10 @@ export function Switch({ on, onChange }: { on: boolean; onChange: (v: boolean) =
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <label className="field">
+    <div className="field">
       <span className="lbl">{label}</span>
       {children}
-    </label>
+    </div>
   )
 }
 

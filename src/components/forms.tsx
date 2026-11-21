@@ -57,7 +57,7 @@ export function HabitForm({ habit, onDone }: { habit?: Habit; onDone: () => void
       </div>
       {hasTarget && (
         <>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr', gap: 8 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.3fr)', gap: 8 }}>
             <Field label={t('habit.target')}>
               <input className="input" inputMode="decimal" value={target} onChange={(e) => setTarget(e.target.value)} />
             </Field>
@@ -75,7 +75,7 @@ export function HabitForm({ habit, onDone }: { habit?: Habit; onDone: () => void
           </div>
           <div className="mut" style={{ fontSize: 12, marginBottom: 12 }}>{t('habit.autoGrowHint')}</div>
           {prog && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)', gap: 8 }}>
               <Field label={t('habit.step')}><input className="input" inputMode="decimal" value={step} onChange={(e) => setStep(e.target.value)} /></Field>
               <Field label={t('habit.everyDays')}><input className="input" inputMode="numeric" value={every} onChange={(e) => setEvery(e.target.value)} /></Field>
               <Field label={t('habit.max')}><input className="input" inputMode="decimal" value={max} onChange={(e) => setMax(e.target.value)} /></Field>

@@ -104,7 +104,7 @@ export function describe(a: Action, t: (k: string, v?: Record<string, string | n
     }
     case 'create_calendar_event':
       if (!str(i.title) || !isDay(i.date) || !isTime(i.start_time)) return null
-      return `📅 ${i.title} · ${i.date === dayKey() ? t('cal.today') : i.date} ${i.start_time} · ${i.duration_min || 30} ${t('unit.min')}`
+      return `📅 ${i.title} · ${i.date === dayKey() ? t('cal.today') : i.date} ${i.start_time} · ${i.duration_min || 30} ${t('unit.min')}${Array.isArray(i.guests) && i.guests.length ? ` · ✉ ${(i.guests as string[]).join(', ')}` : ''}`
   }
   return null
 }
@@ -174,7 +174,8 @@ export async function apply(a: Action) {
       const [h, m] = str(i.start_time).split(':').map(Number)
       const [y, mo, d] = str(i.date).split('-').map(Number)
       const start = new Date(y, mo - 1, d, h, m)
-      return createEvent({ title: str(i.title), start, end: new Date(start.getTime() + (num(i.duration_min) || 30) * 60000) })
+      const guests = Array.isArray(i.guests) ? (i.guests as string[]) : []
+      return createEvent({ title: str(i.title), start, end: new Date(start.getTime() + (num(i.duration_min) || 30) * 60000), guests, meet: guests.length > 0 })
     }
   }
 }

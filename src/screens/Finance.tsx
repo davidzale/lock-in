@@ -244,7 +244,7 @@ function ContribForm({ goal, onDone, onEdit }: { goal: FinGoal; onDone: () => vo
       <Field label={goal.type === 'debt' ? t('fin.payDebt') : t('fin.addToGoal')}>
         <input className="input big" inputMode="decimal" placeholder="$0" value={v} onChange={(e) => setV(e.target.value)} autoFocus />
       </Field>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 8 }}>
         <button className="btn ghost" disabled={!(n > 0)} onClick={() => { upsertFinGoal({ ...goal, saved: Math.max(0, goal.saved - n) }); onDone() }}>− {t('fin.withdraw')}</button>
         <button className="btn primary" disabled={!(n > 0)} onClick={() => { upsertFinGoal({ ...goal, saved: goal.saved + n }); onDone() }}>+ {t('common.add')}</button>
       </div>
@@ -264,7 +264,7 @@ function RecurringForm({ rec, onDone }: { rec?: Recurring; onDone: () => void })
   return (
     <>
       <Field label={t('goal.title')}><input className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Netflix" /></Field>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr)', gap: 8 }}>
         <Field label={t('fin.amount')}><input className="input" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} /></Field>
         <Field label={t('fin.dayOfMonth')}><input className="input" inputMode="numeric" value={day} onChange={(e) => setDay(e.target.value)} /></Field>
       </div>

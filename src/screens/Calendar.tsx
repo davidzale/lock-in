@@ -6,7 +6,7 @@ import { addDays, dayKey, fmtDate, fmtWeekday, parseDay, weekStart } from '../li
 import { connectGoogle, createEvent, eventsOn, loadWeek, useGcal, useWeekEvents } from '../lib/gcal'
 import type { GEvent } from '../lib/gcal'
 import { useSync } from '../lib/sync'
-import { Field, Header, IconBtn, Sheet } from '../components/ui'
+import { Field, Header, IconBtn, Sheet, Switch } from '../components/ui'
 import { Icon } from '../components/Icon'
 
 const START = 6, END = 24, ROW = 48
@@ -190,15 +190,19 @@ function NewEvent({ day, onDone }: { day: string; onDone: () => void }) {
   const [date, setDate] = useState(day)
   const [start, setStart] = useState(hm(nextHour))
   const [dur, setDur] = useState(30)
+  const [guests, setGuests] = useState('')
+  const [meet, setMeet] = useState(true)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
+  const emails = guests.split(/[\s,;]+/).map((x) => x.trim()).filter(Boolean)
+  const badEmail = emails.find((x) => !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x))
   const save = async () => {
     const [h, m] = start.split(':').map(Number)
     const s = parseDay(date)
     s.setHours(h, m, 0, 0)
     setBusy(true)
     try {
-      await createEvent({ title: title.trim(), start: s, end: new Date(s.getTime() + dur * 60000) })
+      await createEvent({ title: title.trim(), start: s, end: new Date(s.getTime() + dur * 60000), guests: emails, meet })
       onDone()
     } catch (e) {
       setErr((e as Error).message)
@@ -208,7 +212,7 @@ function NewEvent({ day, onDone }: { day: string; onDone: () => void }) {
   return (
     <>
       <Field label={t('goal.title')}><input className="input" value={title} onChange={(e) => setTitle(e.target.value)} autoFocus /></Field>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)', gap: 8 }}>
         <Field label={t('common.date')}><input className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} /></Field>
         <Field label={t('cal.start')}><input className="input" type="time" value={start} onChange={(e) => setStart(e.target.value)} /></Field>
       </div>
@@ -219,9 +223,17 @@ function NewEvent({ day, onDone }: { day: string; onDone: () => void }) {
           ))}
         </div>
       </Field>
-      <div className="mut" style={{ fontSize: 12, marginTop: -6, marginBottom: 12 }}>{t('cal.reminderNote')}</div>
+      <Field label={t('cal.guests')}>
+        <input className="input" type="email" inputMode="email" autoCapitalize="off" autoCorrect="off" placeholder="name@gmail.com, …" value={guests} onChange={(e) => setGuests(e.target.value)} />
+      </Field>
+      {badEmail && <div className="danger" style={{ fontSize: 12, marginTop: -8, marginBottom: 10 }}>{t('cal.badEmail', { e: badEmail })}</div>}
+      <div className="row" style={{ marginBottom: 14 }}>
+        <span className="gap8"><Icon n="video" size="s" className="mut" />{t('cal.addMeet')}</span>
+        <Switch on={meet} onChange={setMeet} />
+      </div>
+      <div className="mut" style={{ fontSize: 12, marginTop: -6, marginBottom: 12 }}>{emails.length ? t('cal.inviteNote') : t('cal.reminderNote')}</div>
       {err && <div className="danger" style={{ fontSize: 12, marginBottom: 10 }}>{err}</div>}
-      <button className="btn primary" style={{ width: '100%' }} disabled={!title.trim() || busy} onClick={save}>{busy ? '…' : t('common.save')}</button>
+      <button className="btn primary" style={{ width: '100%' }} disabled={!title.trim() || busy || !!badEmail} onClick={save}>{busy ? '…' : t('common.save')}</button>
     </>
   )
 }

@@ -136,7 +136,7 @@ export function Assistant() {
             {done ? (
               <div className="btn ghost" style={{ width: '100%' }}><Icon n="check" size="s" className="acc" />{t('ai.done')}</div>
             ) : actions.length > 0 ? (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 8 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 2fr)', gap: 8 }}>
                 <button className="btn ghost" onClick={reset} disabled={busy}>{t('ai.again')}</button>
                 <button className="btn primary" onClick={confirm} disabled={busy || !actions.some((x) => x.on)}>
                   {busy ? '…' : t('ai.apply', { n: actions.filter((x) => x.on).length })}

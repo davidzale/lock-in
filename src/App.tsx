@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { NavLink, Route, Routes, useLocation } from 'react-router-dom'
 import { useStore } from './store'
 import { useT } from './i18n'
@@ -73,10 +73,22 @@ export default function App() {
 
   const { pathname } = useLocation()
   const overlay = useOverlay((o) => o.count > 0)
-  // every screen opens at the top
-  useEffect(() => {
+  // every screen opens at the top (before paint, so nothing jumps)
+  useLayoutEffect(() => {
     window.scrollTo({ top: 0 })
   }, [pathname])
+
+  // while a sheet is open, freeze the page behind it (iOS ignores overflow:hidden on body)
+  useEffect(() => {
+    if (!overlay) return
+    const y = window.scrollY
+    const b = document.body.style
+    Object.assign(b, { position: 'fixed', top: `-${y}px`, left: '0', right: '0', width: '100%' })
+    return () => {
+      Object.assign(b, { position: '', top: '', left: '', right: '', width: '' })
+      window.scrollTo(0, y)
+    }
+  }, [overlay])
 
   return (
     <>

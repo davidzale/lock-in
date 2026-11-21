@@ -48,7 +48,7 @@ export function TxForm({ type, onDone }: { type: TxType; onDone: () => void }) {
           ))}
         </div>
       </Field>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.4fr)', gap: 8 }}>
         <Field label={t('common.date')}>
           <input className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
         </Field>
@@ -87,7 +87,7 @@ export function WorkoutForm({ onDone }: { onDone: () => void }) {
           ))}
         </div>
       </Field>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 8 }}>
         <Field label={t('sport.minutes')}>
           <input className="input" inputMode="numeric" value={min} onChange={(e) => setMin(e.target.value)} />
         </Field>
@@ -119,7 +119,7 @@ export function MetricsForm({ onDone }: { onDone: () => void }) {
           setSteps(x.steps != null ? String(x.steps) : '')
         }} />
       </Field>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 8 }}>
         <Field label={t('sport.sleepH')}>
           <input className="input" inputMode="decimal" placeholder="7.5" value={sleep} onChange={(e) => setSleep(e.target.value)} />
         </Field>

@@ -217,8 +217,8 @@ textarea.input { font-size: 16px; }
 .fab.hide { transform: scale(0.6); opacity: 0; pointer-events: none; }
 
 /* screens fade in */
-.page { animation: pageIn 0.28s var(--ease); }
-@keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.page { animation: pageIn 0.22s ease-out; }
+@keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* press feedback */
 .btn, .iconbtn, .chip, .seg button, .fab, .mic, .wd, .switch { transition: transform 0.14s var(--ease), background 0.18s, color 0.18s, border-color 0.18s, opacity 0.18s; }
@@ -240,8 +240,29 @@ textarea.input { font-size: 16px; }
 .segs i { transition: background 0.3s; }
 
 /* banners and sheet content */
-.banner { animation: pageIn 0.3s var(--ease); }
+.banner { animation: rise 0.3s var(--ease); }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* form layout: grid items may shrink; native date/time inputs behave like text fields */
+.field { min-width: 0; }
+.input { min-width: 0; max-width: 100%; }
+input[type='date'].input, input[type='time'].input {
+  -webkit-appearance: none; appearance: none; display: flex; align-items: center; text-align: left; line-height: normal;
+}
+input[type='date'].input::-webkit-date-and-time-value, input[type='time'].input::-webkit-date-and-time-value { text-align: left; margin: 0; }
+input[type='date'].input::-webkit-calendar-picker-indicator, input[type='time'].input::-webkit-calendar-picker-indicator { opacity: 0.5; margin-left: auto; }
+.sheet .chips { row-gap: 6px; }
+
+/* segmented control with a sliding pill */
+.seg { position: relative; }
+.seg button { position: relative; z-index: 1; background: transparent !important; box-shadow: none !important; transition: color 0.2s; }
+.seg-ind { position: absolute; top: 3px; bottom: 3px; left: 3px; border-radius: 9px; background: var(--card); box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform 0.32s var(--ease); }
+[data-theme='dark'] .seg-ind { background: #232326; }
+.backdrop { animation: fade 0.25s ease-out; }
+.switch::after { transition: transform 0.25s var(--ease); }
+.empty, .card { animation: none; }
+.seg { gap: 0; }

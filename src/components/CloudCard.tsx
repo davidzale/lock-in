@@ -34,7 +34,7 @@ export function CloudCard() {
         <div className="t2" style={{ fontSize: 13 }}>{session.user.email}</div>
         {lastSync && <div className="mono mut" style={{ fontSize: 11, marginTop: 4 }}>{t('cloud.last')} {new Date(lastSync).toLocaleString()}</div>}
         {error && <div className="danger" style={{ fontSize: 12, marginTop: 6 }}>{error === 'offline' ? t('cloud.offline') : error}</div>}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 8, marginTop: 12 }}>
           <button className="btn ghost sm" onClick={() => syncNow().then(pull)}>{t('cloud.syncNow')}</button>
           <button className="btn ghost sm" onClick={() => supabase.auth.signOut()}>{t('cloud.signOut')}</button>
         </div>
@@ -60,7 +60,7 @@ export function CloudCard() {
         <input className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
       {msg && <div className={msg.ok ? 'acc' : 'danger'} style={{ fontSize: 12, marginBottom: 10 }}>{msg.text}</div>}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 8 }}>
         <button className="btn primary sm" disabled={!valid || busy} onClick={() => run(() => supabase.auth.signInWithPassword({ email, password }))}>
           {t('cloud.signIn')}
         </button>

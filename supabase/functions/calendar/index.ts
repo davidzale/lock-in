@@ -100,14 +100,19 @@ Deno.serve(async (req) => {
 
     if (action === 'create') {
       const tz = body.timeZone || 'UTC'
-      const ev = {
+      const guests = ((body.guests || []) as string[]).filter((x) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x)).slice(0, 50)
+      const ev: Record<string, unknown> = {
         summary: body.title,
         description: body.description || undefined,
         start: { dateTime: body.start, timeZone: tz },
         end: { dateTime: body.end, timeZone: tz },
         reminders: { useDefault: false, overrides: [{ method: 'popup', minutes: 15 }] },
       }
-      const r = await g('/calendars/primary/events', { method: 'POST', body: JSON.stringify(ev) })
+      if (guests.length) ev.attendees = guests.map((email) => ({ email }))
+      if (body.meet) ev.conferenceData = { createRequest: { requestId: crypto.randomUUID(), conferenceSolutionKey: { type: 'hangoutsMeet' } } }
+      // sendUpdates=all emails the invitation to every guest
+      const qs = new URLSearchParams({ sendUpdates: guests.length ? 'all' : 'none', conferenceDataVersion: '1' })
+      const r = await g(`/calendars/primary/events?${qs}`, { method: 'POST', body: JSON.stringify(ev) })
       const j = await r.json()
       if (!r.ok) return json({ error: j.error?.message || 'create failed' }, 400)
       return json({ connected: true, id: j.id })

@@ -71,8 +71,9 @@ const TOOLS = [
   tool('add_to_money_goal', 'Add money to a savings/purchase goal, or record a debt payment (negative amount takes money out).', {
     fin_goal_id: S('id from the money goals list'), amount_usd: N('amount in USD'),
   }),
-  tool('create_calendar_event', 'Create a Google Calendar event (a call, a meeting, a reminder).', {
+  tool('create_calendar_event', 'Create a Google Calendar event (a call, a meeting, a reminder). With guests, Google emails them an invitation and a Meet link is added.', {
     title: S('event title'), date: S('YYYY-MM-DD'), start_time: S('HH:MM 24h'), duration_min: N('duration in minutes; 30 if not said'),
+    guests: { type: ['array', 'null'], items: { type: 'string' }, description: 'guest email addresses to invite, if the user named any' },
   }),
 ]
 
