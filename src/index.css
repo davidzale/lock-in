@@ -266,3 +266,19 @@ input[type='date'].input::-webkit-calendar-picker-indicator, input[type='time'].
 .switch::after { transition: transform 0.25s var(--ease); }
 .empty, .card { animation: none; }
 .seg { gap: 0; }
+
+/* sport */
+.daydot { width: 28px; height: 28px; border-radius: 10px; margin: 6px auto 0; display: grid; place-items: center; background: var(--track); color: var(--mut); }
+.daydot.plan { background: var(--card2); border: 1px dashed var(--data3); }
+.daydot.on { background: var(--acc); color: var(--acc-ink); }
+
+/* workout session (full screen, no tab bar) */
+.session { min-height: 100dvh; padding-bottom: 40px; }
+.step-in { animation: rise 0.32s var(--ease); }
+.session-controls { display: flex; justify-content: center; align-items: center; gap: 22px; margin-top: 22px; }
+.iconbtn.big { width: 52px; height: 52px; border-radius: 17px; }
+.iconbtn:disabled { opacity: 0.3; }
+.fab-inline { width: 68px; height: 68px; border-radius: 24px; background: var(--acc); color: var(--acc-ink); display: grid; place-items: center; transition: transform 0.14s var(--ease); }
+.fab-inline:active { transform: scale(0.93); }
+.pause-bar { display: block; width: 5px; height: 20px; border-radius: 3px; background: currentColor; }
+.stepper { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; margin: 18px 0 16px; }

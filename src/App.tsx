@@ -15,6 +15,7 @@ import Growth from './screens/Growth'
 import Stats from './screens/Stats'
 import Summary from './screens/Summary'
 import Settings from './screens/Settings'
+import Session from './screens/Session'
 
 const TABS = [
   { to: '/', icon: 'today', key: 'tab.today' },
@@ -73,6 +74,7 @@ export default function App() {
 
   const { pathname } = useLocation()
   const overlay = useOverlay((o) => o.count > 0)
+  const inSession = pathname.startsWith('/session')
   // every screen opens at the top (before paint, so nothing jumps)
   useLayoutEffect(() => {
     window.scrollTo({ top: 0 })
@@ -103,10 +105,11 @@ export default function App() {
           <Route path="/stats" element={<Stats />} />
           <Route path="/summary/:month" element={<Summary />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/session/:kind" element={<Session />} />
         </Routes>
         </div>
       </main>
-      <nav className={`tabbar ${overlay ? 'hide' : ''}`}>
+      <nav className={`tabbar ${overlay || inSession ? 'hide' : ''}`}>
         {TABS.map((x) => (
           <NavLink
             key={x.to}
@@ -120,7 +123,7 @@ export default function App() {
         ))}
       </nav>
       <QuickAdd />
-      <Assistant />
+      {!inSession && <Assistant />}
     </>
   )
 }

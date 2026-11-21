@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { addDays, dayKey, daysBetween, parseDay, uid } from './lib/date'
 import type { Period } from './lib/date'
+import { DAY_FAMILIES, FAMILIES } from './lib/program'
 
 export type Lang = 'en' | 'ru'
 export type Theme = 'dark' | 'light' | 'system'
@@ -60,6 +61,23 @@ export interface GrowthWeek {
 }
 export interface DailyMetrics { sleep?: number; steps?: number }
 export interface ProgNote { id: string; habitId: string; from: number; to: number; date: string }
+export type SessionKind = 'A' | 'B' | 'yoga' | 'stretch'
+export interface SessionLog { id: string; date: string; kind: SessionKind; minutes: number; week?: number; sets?: Record<string, number[]>; levelUps?: string[] }
+export interface ActiveSession { kind: SessionKind; startedAt: number; step: number; week: number; logs: Record<string, number[]> }
+export interface SportData {
+  /** Monday the 12-week program started */
+  start?: string
+  /** current level index per family */
+  levels: Record<string, number>
+  /** consecutive sessions where every set hit the top of the range */
+  hits: Record<string, number>
+  /** best single set per exercise (reps or seconds) */
+  prs: Record<string, number>
+  /** user's own video link per exercise */
+  videos: Record<string, string>
+  sessions: SessionLog[]
+  active?: ActiveSession | null
+}
 
 export const EXPENSE_CATS = ['food', 'housing', 'transport', 'entertainment', 'health', 'sport', 'subscriptions', 'shopping', 'travel', 'other'] as const
 export const SPEECH_ACTS = ['camera', 'retell', 'aloud', 'explain', 'diction'] as const
@@ -85,6 +103,7 @@ interface Data {
   daily: Record<string, DailyMetrics>
   weights: Record<string, number>
   progNotes: ProgNote[]
+  sport: SportData
 }
 
 interface Actions {
@@ -110,6 +129,9 @@ interface Actions {
   dismissProg: (id: string) => void
   runProgression: () => void
   importData: (d: Partial<Data>) => void
+  sportPatch: (p: Partial<SportData>) => void
+  /** save a finished session; applies records, level-ups, habit check and workout log. Returns families that levelled up. */
+  finishSession: (kind: SessionKind, minutes: number, logs: Record<string, number[]>, week: number) => string[]
 }
 
 export type State = Data & Actions
@@ -187,6 +209,7 @@ function initial(): Data {
     daily: {},
     weights: {},
     progNotes: [],
+    sport: { levels: {}, hits: {}, prs: {}, videos: {}, sessions: [], active: null },
   }
 }
 
@@ -265,6 +288,40 @@ export const useStore = create<State>()(
         if (notes.length) set({ habits, progNotes: [...notes, ...s.progNotes] })
       },
       importData: (d) => set(d as Partial<State>),
+      sportPatch: (p) => set((s) => ({ sport: { ...s.sport, ...p } })),
+      finishSession: (kind, minutes, logs, week) => {
+        const s = get()
+        const sp = s.sport
+        const today = dayKey()
+        const prs = { ...sp.prs }
+        for (const [ex, reps] of Object.entries(logs)) for (const r of reps) if (r > (prs[ex] || 0)) prs[ex] = r
+        const levels = { ...sp.levels }
+        const hits = { ...sp.hits }
+        const levelUps: string[] = []
+        if (kind === 'A' || kind === 'B') {
+          for (const f of DAY_FAMILIES[kind]) {
+            const fam = FAMILIES[f]
+            const li = Math.min(levels[f] ?? 0, fam.levels.length - 1)
+            const lv = fam.levels[li]
+            const reps = logs[lv.ex] || []
+            const top = reps.length > 0 && reps.every((r) => r >= lv.hi)
+            hits[f] = top ? (hits[f] || 0) + 1 : 0
+            if (hits[f] >= 2 && li < fam.levels.length - 1) {
+              levels[f] = li + 1
+              hits[f] = 0
+              levelUps.push(f)
+            }
+          }
+        }
+        const log: SessionLog = { id: uid(), date: today, kind, minutes, week, sets: logs, levelUps }
+        set({ sport: { ...sp, prs, levels, hits, sessions: [log, ...sp.sessions].slice(0, 400), active: null } })
+        s.addWorkout({ type: kind === 'yoga' ? 'yoga' : kind === 'stretch' ? 'stretch' : 'strength', minutes, date: today })
+        // guided yoga / stretching checks off the matching daily habit
+        const seed = kind === 'yoga' ? 'yoga' : kind === 'stretch' ? 'stretch' : null
+        const h = seed && get().habits.find((x) => x.seed === seed || x.name.toLowerCase().includes(seed === 'yoga' ? 'йог' : 'растяж') || x.name.toLowerCase().includes(seed))
+        if (h && !(get().logs[today] || []).includes(h.id)) get().toggleHabit(today, h.id)
+        return levelUps
+      },
     }),
     { name: 'lockin-v1', version: 1 },
   ),
