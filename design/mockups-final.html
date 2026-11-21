@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life Tracker — финал</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000; --card:#0e0e10; --card2:#151517; --line:#1e1e21; --line2:#161618;
+    --text:#f4f4f5; --text2:#a1a1a8; --mut:#6e6e75; --acc:#ff6a1a; --acc-d:rgba(255,106,26,.12);
+    --white:#ededef; --gray:#5a5a61; --red:#ff4d4d;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#050506;color:var(--text);font-family:Geist,system-ui,sans-serif;padding:48px 16px 80px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1200px;margin:0 auto}
+  h1{font-size:30px;font-weight:600;letter-spacing:-.02em}
+  .lead{color:#8a8a93;margin:8px 0 36px;line-height:1.6;max-width:760px;font-size:15px}
+  .mono{font-family:"Geist Mono",monospace}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  /* tokens */
+  .tokens{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:56px;padding:24px;border:1px solid #1a1a1d;border-radius:20px;background:#0a0a0b}
+  .tokens h3{font:500 10px "Geist Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px}
+  .sw{display:flex;gap:10px}
+  .sw div{width:56px}
+  .sw i{display:block;width:56px;height:56px;border-radius:14px;border:1px solid #222;margin-bottom:6px}
+  .sw span{font:400 10px "Geist Mono",monospace;color:var(--mut);display:block}
+  .type div{margin-bottom:6px}
+
+  .phones{display:flex;gap:32px;flex-wrap:wrap}
+  .cap{font-size:12px;color:#6b6b73;text-align:center;margin-top:14px}
+  .phone{width:320px;height:692px;border-radius:52px;padding:10px;background:#1a1a1d;box-shadow:0 0 0 1px #2a2a2e,0 30px 80px rgba(0,0,0,.6);flex-shrink:0}
+  .screen{position:relative;width:100%;height:100%;border-radius:43px;overflow:hidden;background:var(--bg)}
+  .island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:94px;height:28px;border-radius:20px;background:#000;z-index:10;box-shadow:0 0 0 1px #111}
+  .sb{position:absolute;top:0;left:0;right:0;height:50px;padding:0 26px;display:flex;justify-content:space-between;align-items:center;font:600 14px Geist,sans-serif;z-index:9}
+  .sb .r{display:flex;gap:5px;align-items:center}
+  .home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:118px;height:4px;border-radius:4px;background:rgba(255,255,255,.85);z-index:10}
+  .body{position:absolute;inset:0;padding:54px 18px 100px;overflow:hidden}
+  .tabs{position:absolute;left:0;right:0;bottom:0;height:84px;padding:10px 8px 0;display:flex;justify-content:space-around;z-index:8;background:linear-gradient(to top,#000 72%,rgba(0,0,0,0));border-top:1px solid var(--line2);color:#55555b}
+  .tabs .t{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10px;font-weight:500;width:56px}
+  .tabs .on{color:var(--text)} .tabs .on .ic{color:var(--acc)}
+  .ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+  .ic.s{width:16px;height:16px}
+  .row{display:flex;align-items:center;justify-content:space-between}
+  .mut{color:var(--mut)} .t2{color:var(--text2)} .acc{color:var(--acc)}
+
+  .lbl{font:500 10px "Geist Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+  .head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px}
+  .h{font-size:28px;font-weight:600;letter-spacing:-.03em;margin-top:5px}
+  .iconbtn{width:36px;height:36px;border-radius:12px;background:var(--card2);border:1px solid var(--line);display:grid;place-items:center;color:var(--text2)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-bottom:10px}
+  .num{font-family:"Geist Mono",monospace;font-weight:500;letter-spacing:-.02em}
+  .div{border-top:1px solid var(--line2)}
+  .bar{height:6px;border-radius:6px;background:#1c1c1f;overflow:hidden;display:flex;gap:2px}
+  .bar i{display:block;height:100%}
+  .cb{width:20px;height:20px;border-radius:7px;border:1.5px solid #38383d;display:grid;place-items:center;flex-shrink:0}
+  .cb.on{background:var(--acc);border-color:var(--acc);color:#000}
+  .task{display:flex;align-items:center;gap:12px;padding:8px 0;font-size:14px;border-top:1px solid var(--line2)}
+  .task:first-of-type{border-top:0}
+  .task.done span{color:#55555b;text-decoration:line-through;text-decoration-color:#38383d}
+  .task .tag{margin-left:auto}
+  .tag{font:500 10px "Geist Mono",monospace;color:var(--mut);padding:3px 6px;border:1px solid var(--line);border-radius:6px}
+  .ibox{width:38px;height:38px;border-radius:12px;background:var(--acc-d);color:var(--acc);display:grid;place-items:center;flex-shrink:0}
+  .ibox.g{background:var(--card2);color:var(--text2)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr)}
+  .stats>div{padding-left:12px;border-left:1px solid var(--line)}
+  .stats>div:first-child{padding-left:0;border-left:0}
+  .stats .num{font-size:16px;margin-top:5px}
+  .heat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,1fr);gap:3px}
+  .heat span{width:100%;aspect-ratio:1;border-radius:2px}
+  .tx{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line2);font-size:14px}
+  .tx:first-of-type{border-top:0}
+  .segs{display:grid;grid-template-columns:repeat(12,1fr);gap:3px}
+  .segs i{height:18px;border-radius:3px;background:#1c1c1f}
+  .segs i.on{background:var(--acc)}
+  .line{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:8px 0;font-size:14px;border-top:1px solid var(--line2)}
+  .line:first-of-type{border-top:0}
+  /* calendar */
+  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:14px}
+  .wd{text-align:center;padding:8px 0;border-radius:12px;font:500 10px "Geist Mono",monospace;color:var(--mut)}
+  .wd b{display:block;font:600 15px Geist,sans-serif;color:var(--text);margin-top:4px}
+  .wd.on{background:var(--acc);color:#000} .wd.on b{color:#000}
+  .wd .dt{width:4px;height:4px;border-radius:50%;background:var(--acc);margin:4px auto 0}
+  .wd.on .dt{background:#000}
+  .tl{position:relative;padding-left:50px}
+  .tl .hr{position:absolute;left:0;font:500 11px "Geist Mono",monospace;color:var(--mut)}
+  .tl .gl{position:absolute;left:44px;right:0;border-top:1px dashed #1a1a1d}
+  .ev{position:absolute;left:50px;right:0;border-radius:10px;padding:7px 10px;font-size:13px;font-weight:500;border-left:3px solid}
+  .ev small{display:block;font:400 11px "Geist Mono",monospace;margin-top:2px;opacity:.7}
+  .ev.a{background:var(--acc-d);border-color:var(--acc)}
+  .ev.w{background:#151517;border-color:#ededef}
+  .ev.g{background:#111113;border-color:#4a4a50;color:var(--text2)}
+  .nowl{position:absolute;left:44px;right:0;height:0;border-top:1.5px solid var(--acc)}
+  .nowl::before{content:"";position:absolute;left:-4px;top:-4.5px;width:7px;height:7px;border-radius:50%;background:var(--acc)}
+  /* growth */
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;min-height:90px;display:flex;flex-direction:column}
+  .tile .ibox{width:30px;height:30px;border-radius:10px;margin-bottom:auto}
+  .tile.empty{background:transparent;border-style:dashed;border-color:#2a2a2e}
+  .btn{height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:600;flex:1}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-today" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"/><path d="M17 14h.01"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2.1 6.3-6.3 2.1 2.1-6.3z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><path d="m22 8-6 4 6 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M7 7l10 10M17 8v9H8"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-brief" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+  <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M6 2v2M10 2v2M14 2v2"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+</svg>
+
+<div class="wrap">
+<h1>Финальный дизайн: Carbon × Precision</h1>
+<p class="lead">От Carbon взяты карточки с тонкой рамкой, кольца прогресса и мягкая иерархия. От Precision — чёрный фон, моноширинные цифры и подписи, тонкие разделители, тепловые карты и сегментные шкалы. Основной цвет — оранжевый. Белый и серый работают как вторичные цвета данных. Ниже все 5 вкладок.</p>
+
+<div class="tokens">
+  <div>
+    <h3>Палитра</h3>
+    <div class="sw">
+      <div><i style="background:#000"></i><span>bg<br>#000000</span></div>
+      <div><i style="background:#0e0e10"></i><span>card<br>#0E0E10</span></div>
+      <div><i style="background:#ff6a1a;border-color:#ff6a1a"></i><span>accent<br>#FF6A1A</span></div>
+      <div><i style="background:#ededef"></i><span>data 2<br>#EDEDEF</span></div>
+      <div><i style="background:#5a5a61"></i><span>data 3<br>#5A5A61</span></div>
+      <div><i style="background:#ff4d4d"></i><span>danger<br>#FF4D4D</span></div>
+    </div>
+  </div>
+  <div class="type">
+    <h3>Типографика</h3>
+    <div style="font-size:28px;font-weight:600;letter-spacing:-.03em">Geist — заголовки</div>
+    <div style="font-size:14px;color:#a1a1a8">Geist — основной текст интерфейса</div>
+    <div class="mono" style="font-size:16px">+42 300 ₽ · 4/6 · 14:00</div>
+    <div class="lbl" style="margin-top:8px">Geist Mono — подписи и цифры</div>
+  </div>
+</div>
+
+<div class="phones">
+
+<!-- 1 TODAY -->
+<div><div class="phone"><div class="screen"><div class="island"></div><div class="sb" data-sb></div>
+  <div class="body">
+    <div class="head"><div><div class="lbl">Сб 21.11 · W47</div><div class="h">Сегодня</div></div><div class="iconbtn"><svg class="ic s"><use href="#i-plus"/></svg></div></div>
+    <div class="card">
+      <div style="display:flex;gap:18px;align-items:center">
+        <svg width="100" height="100" viewBox="0 0 104 104"><g fill="none" stroke-width="8" stroke-linecap="round" transform="rotate(-90 52 52)">
+          <circle cx="52" cy="52" r="46" stroke="#2a160b"/><circle cx="52" cy="52" r="46" stroke="#ff6a1a" stroke-dasharray="289" stroke-dashoffset="96"/>
+          <circle cx="52" cy="52" r="34" stroke="#1c1c1f"/><circle cx="52" cy="52" r="34" stroke="#ededef" stroke-dasharray="213.6" stroke-dashoffset="107"/>
+          <circle cx="52" cy="52" r="22" stroke="#1c1c1f"/><circle cx="52" cy="52" r="22" stroke="#5a5a61" stroke-dasharray="138.2" stroke-dashoffset="35"/></g></svg>
+        <div style="flex:1;display:grid;gap:9px;font-size:13px">
+          <div class="row"><span class="t2" style="display:flex;gap:8px;align-items:center"><i style="width:8px;height:8px;border-radius:50%;background:#ff6a1a"></i>Цели</span><span class="num">4/6</span></div>
+          <div class="row"><span class="t2" style="display:flex;gap:8px;align-items:center"><i style="width:8px;height:8px;border-radius:50%;background:#ededef"></i>Спорт</span><span class="num">30/60′</span></div>
+          <div class="row"><span class="t2" style="display:flex;gap:8px;align-items:center"><i style="width:8px;height:8px;border-radius:50%;background:#5a5a61"></i>Рост</span><span class="num">3/4</span></div>
+        </div>
+      </div>
+      <div class="stats div" style="margin-top:14px;padding-top:12px">
+        <div><div class="lbl">Серия</div><div class="num acc">12д</div></div>
+        <div><div class="lbl">Баланс</div><div class="num">+42.3k</div></div>
+        <div><div class="lbl">День</div><div class="num">68%</div></div>
+      </div>
+    </div>
+    <div class="card" style="display:flex;gap:12px;align-items:center">
+      <div class="ibox"><svg class="ic s"><use href="#i-video"/></svg></div>
+      <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">Созвон с командой</div><div class="mono mut" style="font-size:11px;margin-top:3px">14:00–14:45 · через 40м</div></div>
+      <svg class="ic s mut"><use href="#i-chev"/></svg>
+    </div>
+    <div class="card" style="padding-bottom:6px">
+      <div class="row" style="margin-bottom:4px"><span style="font-size:15px;font-weight:600">Цели дня</span><span class="num mut" style="font-size:12px">4/6</span></div>
+      <div class="task done"><div class="cb on"><svg class="ic" style="width:12px;height:12px;stroke-width:3"><use href="#i-check"/></svg></div><span>Медитация 10 мин</span></div>
+      <div class="task done"><div class="cb on"><svg class="ic" style="width:12px;height:12px;stroke-width:3"><use href="#i-check"/></svg></div><span>Вода 2 л</span></div>
+      <div class="task"><div class="cb"></div><span>Чтение 20 стр.</span><span class="tag">0/20</span></div>
+    </div>
+  </div>
+  <div class="tabs" data-tabs="0"></div><div class="home-ind"></div>
+</div></div><div class="cap">Сегодня</div></div>
+
+<!-- 2 CALENDAR -->
+<div><div class="phone"><div class="screen"><div class="island"></div><div class="sb" data-sb></div>
+  <div class="body">
+    <div class="head"><div><div class="lbl">Ноябрь 2026</div><div class="h">Календарь</div></div><div class="iconbtn"><svg class="ic s"><use href="#i-plus"/></svg></div></div>
+    <div class="week">
+      <div class="wd">ПН<b>16</b><div class="dt"></div></div><div class="wd">ВТ<b>17</b><div class="dt"></div></div><div class="wd">СР<b>18</b></div><div class="wd">ЧТ<b>19</b><div class="dt"></div></div><div class="wd">ПТ<b>20</b><div class="dt"></div></div><div class="wd on">СБ<b>21</b><div class="dt"></div></div><div class="wd">ВС<b>22</b></div>
+    </div>
+    <div class="card" style="padding:12px 14px">
+      <div class="tl" style="height:358px">
+        <div class="hr" style="top:0">09:00</div><div class="gl" style="top:7px"></div>
+        <div class="hr" style="top:62px">11:00</div><div class="gl" style="top:69px"></div>
+        <div class="hr" style="top:124px">13:00</div><div class="gl" style="top:131px"></div>
+        <div class="hr" style="top:186px">15:00</div><div class="gl" style="top:193px"></div>
+        <div class="hr" style="top:248px">17:00</div><div class="gl" style="top:255px"></div>
+        <div class="hr" style="top:310px">19:00</div><div class="gl" style="top:317px"></div>
+        <div class="ev g" style="top:9px;height:28px;padding-top:5px">Медитация</div>
+        <div class="nowl" style="top:144px"></div>
+        <div class="ev a" style="top:162px;height:46px">Созвон с командой<small>14:00–14:45 · Meet</small></div>
+        <div class="ev w" style="top:240px;height:42px">Звонок — бухгалтер<small>16:30–16:45</small></div>
+        <div class="ev w" style="top:319px;height:39px;padding-top:5px">Йога<small>19:00–19:45 · студия</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="tabs" data-tabs="1"></div><div class="home-ind"></div>
+</div></div><div class="cap">Календарь</div></div>
+
+<!-- 3 FINANCE -->
+<div><div class="phone"><div class="screen"><div class="island"></div><div class="sb" data-sb></div>
+  <div class="body">
+    <div class="head"><div><div class="lbl">Ноябрь 2026</div><div class="h">Финансы</div></div><div class="iconbtn"><svg class="ic s"><use href="#i-plus"/></svg></div></div>
+    <div class="card">
+      <div class="lbl">Остаток месяца</div>
+      <div class="num" style="font-size:32px;margin:6px 0 12px">+42 300<span class="mut" style="font-size:22px"> ₽</span></div>
+      <div class="stats" style="grid-template-columns:1fr 1fr">
+        <div><div class="lbl" style="display:flex;gap:4px;align-items:center"><svg class="ic acc" style="width:12px;height:12px"><use href="#i-up"/></svg>Доход</div><div class="num">186 000</div></div>
+        <div><div class="lbl" style="display:flex;gap:4px;align-items:center"><svg class="ic" style="width:12px;height:12px"><use href="#i-down"/></svg>Расход</div><div class="num">143 700</div></div>
+      </div>
+      <div class="bar" style="margin-top:14px"><i style="width:27%;background:#ff6a1a"></i><i style="width:24%;background:#ededef"></i><i style="width:12%;background:#8a8a93"></i><i style="width:14%;background:#4a4a50"></i></div>
+      <div class="mono mut" style="display:flex;gap:10px;font-size:10px;margin-top:8px;white-space:nowrap"><span>ЕДА 38k</span><span>ЖИЛЬЁ 35k</span><span>ТРАНСП 17k</span><span>ДР 20k</span></div>
+    </div>
+    <div class="card">
+      <div class="row"><div style="display:flex;gap:8px;align-items:center"><svg class="ic s acc"><use href="#i-target"/></svg><span style="font-size:14px;font-weight:600">Подушка безопасности</span></div><span class="num acc" style="font-size:13px">64%</span></div>
+      <div class="segs" style="margin:12px 0 8px"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div>
+      <div class="mono mut" style="font-size:11px">320 000 / 500 000 ₽ · ≈5 мес</div>
+    </div>
+    <div class="card" style="padding-top:8px;padding-bottom:6px">
+      <div class="tx"><div class="ibox g" style="width:34px;height:34px"><svg class="ic s"><use href="#i-coffee"/></svg></div><div style="flex:1"><div>Кофейня</div><div class="mono mut" style="font-size:11px">ЕДА · 09:12</div></div><span class="num">−420</span></div>
+      <div class="tx"><div class="ibox" style="width:34px;height:34px"><svg class="ic s"><use href="#i-brief"/></svg></div><div style="flex:1"><div>Зарплата</div><div class="mono mut" style="font-size:11px">ДОХОД · 20.11</div></div><span class="num acc">+150 000</span></div>
+    </div>
+  </div>
+  <div class="tabs" data-tabs="2"></div><div class="home-ind"></div>
+</div></div><div class="cap">Финансы</div></div>
+
+<!-- 4 SPORT -->
+<div><div class="phone"><div class="screen"><div class="island"></div><div class="sb" data-sb></div>
+  <div class="body">
+    <div class="head"><div><div class="lbl">Неделя 47 · 4/5</div><div class="h">Спорт</div></div><div class="iconbtn"><svg class="ic s"><use href="#i-plus"/></svg></div></div>
+    <div class="card" style="padding-bottom:10px">
+      <div class="row" style="margin-bottom:6px"><span class="lbl">Минуты по дням</span><span class="num" style="font-size:12px">235′</span></div>
+      <svg width="250" height="92" viewBox="0 20 280 92"><g font-family="Geist Mono" font-size="10" fill="#6e6e75" text-anchor="middle">
+        <rect x="14" y="34" width="12" height="60" rx="3" fill="#ededef"/><text x="20" y="110">П</text>
+        <rect x="54" y="18" width="12" height="76" rx="3" fill="#ededef"/><text x="60" y="110">В</text>
+        <rect x="94" y="88" width="12" height="6" rx="3" fill="#1f1f22"/><text x="100" y="110">С</text>
+        <rect x="134" y="28" width="12" height="66" rx="3" fill="#ededef"/><text x="140" y="110">Ч</text>
+        <rect x="174" y="48" width="12" height="46" rx="3" fill="#ededef"/><text x="180" y="110">П</text>
+        <rect x="214" y="40" width="12" height="54" rx="3" fill="none" stroke="#ff6a1a" stroke-width="1.5" stroke-dasharray="3 3"/><text x="220" y="110" fill="#ff6a1a">С</text>
+        <rect x="254" y="88" width="12" height="6" rx="3" fill="#1f1f22"/><text x="260" y="110">В</text></g></svg>
+    </div>
+    <div class="card" style="padding-top:8px;padding-bottom:6px">
+      <div class="line"><span>Йога</span><span class="mono mut" style="font-size:12px">4ч 30м</span><span class="num" style="font-size:13px">06</span></div>
+      <div class="line"><span>Кроссфит</span><span class="mono mut" style="font-size:12px">3ч 00м</span><span class="num" style="font-size:13px">04</span></div>
+      <div class="line"><span>Калистеника</span><span class="mono mut" style="font-size:12px">3ч 45м</span><span class="num" style="font-size:13px">05</span></div>
+    </div>
+    <div class="card">
+      <div class="row"><span class="lbl">Навык</span><span class="mono" style="font-size:12px"><span class="acc">42</span><span class="mut"> / 60 сек</span></span></div>
+      <div style="font-size:15px;font-weight:600;margin:6px 0 10px">Стойка на руках у стены</div>
+      <div class="segs"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="card" style="padding-top:10px;padding-bottom:10px">
+      <div class="row" style="font-size:14px"><span class="t2">Рекорд · подтягивания</span><span class="num">18</span></div>
+    </div>
+  </div>
+  <div class="tabs" data-tabs="3"></div><div class="home-ind"></div>
+</div></div><div class="cap">Спорт</div></div>
+
+<!-- 5 GROWTH -->
+<div><div class="phone"><div class="screen"><div class="island"></div><div class="sb" data-sb></div>
+  <div class="body">
+    <div class="head"><div><div class="lbl">Неделя 47 · 3/4</div><div class="h">Рост</div></div><div class="iconbtn"><svg class="ic s"><use href="#i-plus"/></svg></div></div>
+    <div class="g2">
+      <div class="tile"><div class="ibox"><svg class="ic s"><use href="#i-pin"/></svg></div><div class="lbl" style="margin-top:8px">Место</div><div style="font-size:14px;font-weight:600;margin-top:3px">Бар на крыше</div></div>
+      <div class="tile"><div class="ibox"><svg class="ic s"><use href="#i-book"/></svg></div><div class="lbl" style="margin-top:8px">Открытие</div><div style="font-size:14px;font-weight:600;margin-top:3px">«Сапиенс»</div></div>
+      <div class="tile"><div class="ibox"><svg class="ic s"><use href="#i-spark"/></svg></div><div class="lbl" style="margin-top:8px">Навык</div><div style="font-size:14px;font-weight:600;margin-top:3px">Курс бариста</div></div>
+      <div class="tile empty"><div class="ibox g"><svg class="ic s"><use href="#i-users"/></svg></div><div class="lbl" style="margin-top:8px">Знакомство</div><div class="mut" style="font-size:14px;margin-top:3px">Добавить</div></div>
+    </div>
+    <div class="card">
+      <div class="row" style="margin-bottom:10px"><span class="lbl">Разнообразие · 26 нед</span><span class="num acc" style="font-size:12px">47</span></div>
+      <div class="heat" id="hg" style="grid-template-columns:repeat(26,1fr)"></div>
+    </div>
+    <div class="card">
+      <div class="lbl">Идея на неделю</div>
+      <div style="font-size:15px;font-weight:600;margin:6px 0 12px">Мастер-класс по керамике</div>
+      <div style="display:flex;gap:8px">
+        <div class="btn" style="background:#ff6a1a;color:#000">Взять</div>
+        <div class="btn" style="background:#18181b;color:#d4d4d8;border:1px solid #232326"><svg class="ic s"><use href="#i-shuffle"/></svg>Другая</div>
+      </div>
+    </div>
+  </div>
+  <div class="tabs" data-tabs="4"></div><div class="home-ind"></div>
+</div></div><div class="cap">Рост</div></div>
+
+</div>
+</div>
+
+<script>
+  const tabs=[['i-today','Сегодня'],['i-cal','Календарь'],['i-wallet','Финансы'],['i-activity','Спорт'],['i-compass','Рост']];
+  document.querySelectorAll('[data-tabs]').forEach(el=>{const a=+el.dataset.tabs;
+    el.innerHTML=tabs.map(([i,l],k)=>`<div class="t${k===a?' on':''}"><svg class="ic"><use href="#${i}"/></svg>${l}</div>`).join('');});
+  document.querySelectorAll('[data-sb]').forEach(el=>{el.innerHTML=`<span>9:41</span><span class="r">
+    <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+    <svg width="25" height="12" viewBox="0 0 25 12"><rect x=".5" y=".5" width="21" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="16" height="8" rx="2" fill="currentColor"/><rect x="23" y="4" width="1.5" height="4" rx=".75" fill="currentColor" opacity=".4"/></svg></span>`;});
+  (function(){const el=document.getElementById('hg');let s=11;const L=['#141416','#4a2410','#a8460f','#ff6a1a'];
+    for(let i=0;i<26*7;i++){s=(s*9301+49297)%233280;const r=s/233280;const sp=document.createElement('span');sp.style.background=L[r<.25?0:r<.5?1:r<.78?2:3];el.appendChild(sp);}})();
+</script>
+</body>
+</html>

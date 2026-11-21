@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life Tracker — раунд 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:#050506; color:#ededef; font-family:Inter,system-ui,sans-serif; padding:48px 16px 80px; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1120px; margin:0 auto; }
+  h1 { font-size:30px; font-weight:700; letter-spacing:-.02em; }
+  .lead { color:#8a8a93; margin:8px 0 56px; line-height:1.6; max-width:720px; font-size:15px; }
+  section { margin-bottom:88px; }
+  .vh { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .vh .n { font:600 12px "Geist Mono",monospace; width:28px; height:28px; border-radius:8px; display:grid; place-items:center; color:#000; }
+  .vh h2 { font-size:22px; font-weight:600; letter-spacing:-.01em; }
+  .vd { color:#8a8a93; line-height:1.6; max-width:720px; margin-bottom:28px; font-size:14px; }
+  .vd b { color:#cfcfd4; font-weight:500; }
+  .phones { display:flex; gap:40px; flex-wrap:wrap; }
+  .cap { font-size:12px; color:#6b6b73; text-align:center; margin-top:14px; letter-spacing:.02em; }
+
+  /* phone frame */
+  .phone { width:320px; height:692px; border-radius:52px; padding:10px; background:#1a1a1d; box-shadow:0 0 0 1px #2a2a2e, 0 30px 80px rgba(0,0,0,.6); flex-shrink:0; }
+  .screen { position:relative; width:100%; height:100%; border-radius:43px; overflow:hidden; }
+  .island { position:absolute; top:11px; left:50%; transform:translateX(-50%); width:94px; height:28px; border-radius:20px; background:#000; z-index:10; }
+  .sb { position:absolute; top:0; left:0; right:0; height:50px; padding:0 26px; display:flex; justify-content:space-between; align-items:center; font:600 14px Inter,sans-serif; z-index:9; }
+  .sb .r { display:flex; gap:5px; align-items:center; }
+  .home-ind { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:118px; height:4px; border-radius:4px; background:rgba(255,255,255,.85); z-index:10; }
+  .body { position:absolute; inset:0; padding:54px 20px 100px; overflow:hidden; }
+  .tabs { position:absolute; left:0; right:0; bottom:0; height:84px; padding:10px 8px 0; display:flex; justify-content:space-around; z-index:8; }
+  .tabs .t { display:flex; flex-direction:column; align-items:center; gap:5px; font-size:10px; font-weight:500; width:56px; }
+  .ic { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.75; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+  .ic.s { width:16px; height:16px; }
+  .tnum { font-variant-numeric:tabular-nums; }
+  .row { display:flex; align-items:center; justify-content:space-between; }
+  .heat { display:grid; grid-auto-flow:column; grid-template-rows:repeat(7,1fr); gap:3px; }
+  .heat span { width:100%; aspect-ratio:1; border-radius:2px; }
+
+  /* ================= 1 · CARBON ================= */
+  .v1 .screen { background:#09090a; color:#f4f4f5; }
+  .v1 .mut { color:#76767e; }
+  .v1 .acc { color:#cdff4a; }
+  .v1 .card { background:#121214; border:1px solid #1d1d20; border-radius:18px; padding:14px 16px; margin-bottom:10px; }
+  .v1 .eyebrow { font-size:11px; font-weight:500; color:#76767e; letter-spacing:.04em; text-transform:uppercase; }
+  .v1 .h { font-size:28px; font-weight:700; letter-spacing:-.025em; }
+  .v1 .iconbtn { width:36px; height:36px; border-radius:12px; background:#151517; border:1px solid #222225; display:grid; place-items:center; color:#d4d4d8; }
+  .v1 .leg { display:grid; gap:10px; flex:1; }
+  .v1 .leg .row { font-size:13px; }
+  .v1 .leg .k { display:flex; align-items:center; gap:8px; color:#a1a1aa; }
+  .v1 .leg .d { width:8px; height:8px; border-radius:50%; }
+  .v1 .leg b { font-weight:600; }
+  .v1 .ev { display:flex; gap:12px; align-items:center; }
+  .v1 .evi { width:40px; height:40px; border-radius:12px; background:rgba(205,255,74,.1); color:#cdff4a; display:grid; place-items:center; }
+  .v1 .chip { font-size:11px; font-weight:500; padding:4px 9px; border-radius:99px; background:#1c1c1f; color:#a1a1aa; }
+  .v1 .task { display:flex; align-items:center; gap:12px; padding:8px 0; font-size:14px; border-top:1px solid #1a1a1d; }
+  .v1 .task:first-of-type { border-top:0; }
+  .v1 .cb { width:20px; height:20px; border-radius:7px; border:1.5px solid #3a3a3f; display:grid; place-items:center; }
+  .v1 .cb.on { background:#cdff4a; border-color:#cdff4a; color:#09090a; }
+  .v1 .task.done span { color:#5c5c63; text-decoration:line-through; text-decoration-color:#3a3a3f; }
+  .v1 .bar { height:6px; border-radius:6px; background:#1f1f22; overflow:hidden; display:flex; gap:2px; }
+  .v1 .bar i { display:block; height:100%; }
+  .v1 .tx { display:flex; align-items:center; gap:12px; padding:10px 0; border-top:1px solid #1a1a1d; font-size:14px; }
+  .v1 .txi { width:36px; height:36px; border-radius:11px; background:#18181b; display:grid; place-items:center; color:#a1a1aa; }
+  .v1 .tabs { background:linear-gradient(to top,#09090a 70%,rgba(9,9,10,0)); color:#5c5c63; }
+  .v1 .tabs .on { color:#cdff4a; }
+
+  /* ================= 2 · PRECISION ================= */
+  .v2 .screen { background:#000; color:#fafafa; font-family:Geist,Inter,sans-serif; }
+  .v2 .mono { font-family:"Geist Mono",monospace; }
+  .v2 .mut { color:#6e6e73; }
+  .v2 .acc { color:#ff6a1a; }
+  .v2 .lbl { font:500 10px "Geist Mono",monospace; letter-spacing:.08em; text-transform:uppercase; color:#6e6e73; }
+  .v2 .h { font-size:30px; font-weight:600; letter-spacing:-.03em; }
+  .v2 .sec { border-top:1px solid #1c1c1e; padding:14px 0; }
+  .v2 .stats { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid #1c1c1e; border-bottom:1px solid #1c1c1e; margin-top:18px; }
+  .v2 .stats > div { padding:14px 0 14px 10px; border-left:1px solid #1c1c1e; }
+  .v2 .stats > div:first-child { border-left:0; padding-left:0; }
+  .v2 .stats .v { font:500 17px "Geist Mono",monospace; margin-top:6px; letter-spacing:-.02em; }
+  .v2 .sched { display:grid; grid-template-columns:44px 1fr auto; align-items:center; gap:10px; padding:10px 0; font-size:14px; }
+  .v2 .sched .tm { font:500 12px "Geist Mono",monospace; color:#6e6e73; }
+  .v2 .sched .sub { font-size:12px; color:#6e6e73; margin-top:2px; }
+  .v2 .now { position:relative; }
+  .v2 .now .tm { color:#ff6a1a; }
+  .v2 .st { width:6px; height:6px; border-radius:50%; background:#2a2a2d; }
+  .v2 .disc { display:grid; grid-template-columns:1fr auto auto; gap:14px; align-items:center; padding:8px 0; font-size:14px; border-top:1px solid #141416; }
+  .v2 .disc:first-of-type { border-top:0; }
+  .v2 .disc .mono { font-size:13px; }
+  .v2 .segs { display:grid; grid-template-columns:repeat(12,1fr); gap:3px; margin-top:12px; }
+  .v2 .segs i { height:20px; border-radius:3px; background:#1a1a1c; }
+  .v2 .segs i.on { background:#ff6a1a; }
+  .v2 .pr { display:flex; justify-content:space-between; padding:9px 0; font-size:14px; border-top:1px solid #141416; }
+  .v2 .tabs { background:#000; border-top:1px solid #1c1c1e; color:#55555a; font-family:Geist,sans-serif; }
+  .v2 .tabs .on { color:#fafafa; }
+  .v2 .tabs .on .ic { color:#ff6a1a; }
+
+  /* ================= 3 · CALM ================= */
+  .v3 .screen { background:#0d0e10; color:#f2f3f5; }
+  .v3 .mut { color:#7c7f87; }
+  .v3 .acc { color:#6ee7b7; }
+  .v3 .card { background:#15171a; border-radius:24px; padding:16px 18px; margin-bottom:10px; }
+  .v3 .h { font-size:30px; font-weight:700; letter-spacing:-.03em; }
+  .v3 .lbl { font-size:12px; font-weight:500; color:#7c7f87; }
+  .v3 .mini { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:16px; }
+  .v3 .mini .v { font-size:15px; font-weight:600; margin:2px 0 8px; }
+  .v3 .thin { height:4px; border-radius:4px; background:#23262b; overflow:hidden; }
+  .v3 .thin i { display:block; height:100%; border-radius:4px; background:#6ee7b7; }
+  .v3 .tl { display:grid; grid-template-columns:14px 1fr auto; gap:12px; align-items:start; }
+  .v3 .tl .dot { width:10px; height:10px; border-radius:50%; border:2px solid #6ee7b7; margin-top:5px; }
+  .v3 .tl .dot.g { border-color:#3a3d44; }
+  .v3 .habits { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; text-align:center; margin-top:14px; }
+  .v3 .hb { width:46px; height:46px; border-radius:18px; margin:0 auto 8px; display:grid; place-items:center; background:#1c1f23; color:#7c7f87; }
+  .v3 .hb.on { background:rgba(110,231,183,.12); color:#6ee7b7; }
+  .v3 .habits span { font-size:11px; color:#a3a6ad; }
+  .v3 .g2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
+  .v3 .tile { background:#15171a; border-radius:20px; padding:12px 14px; min-height:92px; display:flex; flex-direction:column; }
+  .v3 .tile .ti { width:32px; height:32px; border-radius:11px; display:grid; place-items:center; background:rgba(110,231,183,.12); color:#6ee7b7; margin-bottom:auto; }
+  .v3 .tile.empty { background:transparent; border:1.5px dashed #2a2d33; }
+  .v3 .tile.empty .ti { background:#1c1f23; color:#7c7f87; }
+  .v3 .btn { height:40px; border-radius:14px; display:flex; align-items:center; justify-content:center; gap:6px; font-size:14px; font-weight:600; flex:1; }
+  .v3 .tabs { background:linear-gradient(to top,#0d0e10 70%,rgba(13,14,16,0)); color:#5d6068; }
+  .v3 .tabs .on { color:#f2f3f5; }
+  .v3 .tabs .t .pip { width:4px; height:4px; border-radius:50%; background:transparent; }
+  .v3 .tabs .on .pip { background:#6ee7b7; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-today" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"/><path d="M17 14h.01"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2.1 6.3-6.3 2.1 2.1-6.3z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><path d="m22 8-6 4 6 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M7 7l10 10M17 8v9H8"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></symbol>
+  <symbol id="i-brief" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+  <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M6 2v2M10 2v2M14 2v2"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5S12.5 5.5 12 3c-.5 2.5-2 4.9-4 6.5S5 13 5 15a7 7 0 0 0 7 7z"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+</svg>
+
+<div class="wrap">
+<h1>Раунд 2 — гибрид A + C</h1>
+<p class="lead">Теперь без эмодзи и случайных символов: одна система линейных иконок, сетка с шагом 4 px, одинаковые отступы и скругления, моноширинные цифры, чтобы числа не прыгали. Во всех трёх вариантах есть кольца и чистота из A, а также данные и тепловые карты из C. Отличаются они балансом между ними.</p>
+
+<!-- ============ 1 CARBON ============ -->
+<section class="v1">
+  <div class="vh"><div class="n" style="background:#cdff4a">01</div><h2>Carbon</h2></div>
+  <p class="vd"><b>Ближе к A.</b> Почти чёрный фон, карточки с тонкой рамкой и мягким контрастом. Лайм используется только там, где есть прогресс или действие. Кольца стали тоньше и монохромнее: лайм, белый и серый вместо трёх неоновых цветов. Направление: Apple Fitness × Linear.</p>
+  <div class="phones">
+    <div>
+      <div class="phone"><div class="screen"><div class="island"></div><div class="sb" data-sb></div>
+        <div class="body">
+          <div class="row" style="margin-bottom:16px;align-items:flex-end">
+            <div><div class="eyebrow">Суббота, 21 ноября</div><div class="h" style="margin-top:4px">Сегодня</div></div>
+            <div class="iconbtn"><svg class="ic s"><use href="#i-plus"/></svg></div>
+          </div>
+          <div class="card" style="display:flex;gap:18px;align-items:center">
+            <svg width="104" height="104" viewBox="0 0 104 104">
+              <g fill="none" stroke-width="8" stroke-linecap="round" transform="rotate(-90 52 52)">
+                <circle cx="52" cy="52" r="46" stroke="#1d1f17"/><circle cx="52" cy="52" r="46" stroke="#cdff4a" stroke-dasharray="289" stroke-dashoffset="96"/>
+                <circle cx="52" cy="52" r="34" stroke="#1c1c1f"/><circle cx="52" cy="52" r="34" stroke="#ededef" stroke-dasharray="213.6" stroke-dashoffset="107"/>
+                <circle cx="52" cy="52" r="22" stroke="#1c1c1f"/><circle cx="52" cy="52" r="22" stroke="#6b6b73" stroke-dasharray="138.2" stroke-dashoffset="35"/>
+              </g>
+            </svg>
+            <div class="leg">
+              <div class="row"><span class="k"><i class="d" style="background:#cdff4a"></i>Цели</span><b class="tnum">4/6</b></div>
+              <div class="row"><span class="k"><i class="d" style="background:#ededef"></i>Спорт</span><b class="tnum">30/60′</b></div>
+              <div class="row"><span class="k"><i class="d" style="background:#6b6b73"></i>Рост</span><b class="tnum">3/4</b></div>
+            </div>
+          </div>
+          <div class="card ev">
+            <div class="evi"><svg class="ic"><use href="#i-video"/></svg></div>
+            <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Созвон с командой</div><div class="mut tnum" style="font-size:12px;margin-top:2px">14:00 – 14:45 · через 40 мин</div></div>
+            <svg class="ic s mut"><use href="#i-chev"/></svg>
+          </div>
+          <div class="card" style="padding-bottom:8px">
+            <div class="row" style="margin-bottom:6px"><span style="font-size:15px;font-weight:600">Цели дня</span><span class="mut tnum" style="font-size:13px">4 из 6</span></div>
+            <div class="task done"><div class="cb on"><svg class="ic" style="width:12px;height:12px;stroke-width:3"><use href="#i-check"/></svg></div><span>Медитация 10 мин</span></div>
+            <div class="task done"><div class="cb on"><svg class="ic" style="width:12px;height:12px;stroke-width:3"><use href="#i-check"/></svg></div><span>Вода 2 л</span></div>
+            <div class="task"><div class="cb"></div><span>Чтение 20 страниц</span></div>
+            <div class="task"><div class="cb"></div><span>Йога в 19:00</span></div>
+          </div>
+        </div>
+        <div class="tabs" data-tabs="0"></div><div class="home-ind"></div>
+      </div></div>
+      <div class="cap">Сегодня</div>
+    </div>
+
+    <div>
+      <div class="phone"><div class="screen"><div class="island"></div><div class="sb" data-sb></div>
+        <div class="body">
+          <div class="row" style="margin-bottom:16px;align-items:flex-end">
+            <div><div class="eyebrow">Ноябрь 2026</div><div class="h" style="margin-top:4px">Финансы</div></div>
+            <div class="iconbtn"><svg class="ic s"><use href="#i-plus"/></svg></div>
+          </div>
+          <div class="card">
+            <div class="mut" style="font-size:12px">Остаток месяца</div>
+            <div class="tnum" style="font-size:34px;font-weight:700;letter-spacing:-.03em;margin:2px 0 12px">+42 300 <span class="mut" style="font-weight:500">₽</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px">
+              <div><div class="mut" style="display:flex;gap:4px;align-items:center"><svg class="ic s acc"><use href="#i-up"/></svg>Доходы</div><div class="tnum" style="font-weight:600;margin-top:4px">186 000</div></div>
+              <div><div class="mut" style="display:flex;gap:4px;align-items:center"><svg class="ic s"><use href="#i-down"/></svg>Расходы</div><div class="tnum" style="font-weight:600;margin-top:4px">143 700</div></div>
+            </div>
+            <div class="bar" style="margin-top:16px"><i style="width:27%;background:#cdff4a"></i><i style="width:24%;background:#ededef"></i><i style="width:12%;background:#8a8a93"></i><i style="width:14%;background:#4a4a50"></i></div>
+            <div class="mut" style="display:flex;gap:10px;font-size:11px;margin-top:8px;white-space:nowrap"><span>● Еда</span><span>● Жильё</span><span>● Транспорт</span><span>● Прочее</span></div>
+          </div>
+          <div class="card">
+            <div class="row"><div style="display:flex;gap:10px;align-items:center"><svg class="ic s acc"><use href="#i-target"/></svg><span style="font-size:14px;font-weight:600">Подушка безопасности</span></div><span class="acc tnum" style="font-size:13px;font-weight:600">64%</span></div>
+            <div class="bar" style="margin:12px 0 8px"><i style="width:64%;background:#cdff4a;border-radius:6px"></i></div>
+            <div class="mut tnum" style="font-size:12px">320 000 из 500 000 ₽ · ≈ 5 мес.</div>
+          </div>
+          <div class="card" style="padding-top:10px;padding-bottom:6px">
+            <div class="tx" style="border:0"><div class="txi"><svg class="ic s"><use href="#i-coffee"/></svg></div><div style="flex:1"><div>Кофейня</div><div class="mut" style="font-size:12px">Еда · 09:12</div></div><span class="tnum">−420</span></div>
+            <div class="tx"><div class="txi" style="color:#cdff4a"><svg class="ic s"><use href="#i-brief"/></svg></div><div style="flex:1"><div>Зарплата</div><div class="mut" style="font-size:12px">Доход · 20 нояб.</div></div><span class="tnum acc">+150 000</span></div>
+          </div>
+        </div>
+        <div class="tabs" data-tabs="2"></div><div class="home-ind"></div>
+      </div></div>
+      <div class="cap">Финансы</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 PRECISION ============ -->
+<section class="v2">
+  <div class="vh"><div class="n" style="background:#ff6a1a">02</div><h2>Precision</h2></div>
+  <p class="vd"><b>Ближе к C.</b> Чистый чёрный фон и никаких карточек: структуру задают только тонкие линии-разделители. Цифры набраны моноширинным шрифтом, заголовки — гротеском Geist. Оранжевый акцент встречается всего в 2–3 местах на экране. Плотно, точно, как инструмент. Направление: Vercel × Teenage Engineering.</p>
+  <div class="phones">
+    <div>
+      <div class="phone"><div class="screen"><div class="island"></div><div class="sb" data-sb></div>
+        <div class="body">
+          <div class="lbl">Сб 21.11 · W47</div>
+          <div class="row" style="align-items:flex-end;margin-top:6px">
+            <div class="h">Сегодня</div>
+            <div class="mono" style="font-size:13px"><span class="acc">68%</span><span class="mut"> дня</span></div>
+          </div>
+          <div class="stats">
+            <div><div class="lbl">Цели</div><div class="v">4<span class="mut">/6</span></div></div>
+            <div><div class="lbl">Серия</div><div class="v acc">12д</div></div>
+            <div><div class="lbl">Баланс</div><div class="v">42.3k</div></div>
+            <div><div class="lbl">Спорт</div><div class="v">4<span class="mut">/5</span></div></div>
+          </div>
+          <div class="sec" style="border:0">
+            <div class="row" style="margin-bottom:10px"><span class="lbl">Активность</span><span class="lbl">26 нед</span></div>
+            <div class="heat" id="h2" style="grid-template-columns:repeat(26,1fr)"></div>
+          </div>
+          <div class="sec" style="padding-bottom:0">
+            <div class="row" style="margin-bottom:4px"><span class="lbl">Расписание</span><span class="lbl">4</span></div>
+            <div class="sched"><span class="tm">09:00</span><div><div class="mut" style="text-decoration:line-through">Медитация</div></div><span class="st"></span></div>
+            <div class="sched now"><span class="tm">14:00</span><div><div>Созвон с командой</div><div class="sub">через 40 мин · Meet</div></div><span class="st" style="background:#ff6a1a"></span></div>
+            <div class="sched"><span class="tm">16:30</span><div><div>Звонок — бухгалтер</div><div class="sub">15 мин</div></div><span class="st"></span></div>
+            <div class="sched"><span class="tm">19:00</span><div><div>Йога</div><div class="sub">45 мин · студия</div></div><span class="st"></span></div>
+          </div>
+        </div>
+        <div class="tabs" data-tabs="0"></div><div class="home-ind"></div>
+      </div></div>
+      <div class="cap">Сегодня</div>
+    </div>
+
+    <div>
+      <div class="phone"><div class="screen"><div class="island"></div><div class="sb" data-sb></div>
+        <div class="body">
+          <div class="lbl">Неделя 47 · 4 из 5</div>
+          <div class="h" style="margin-top:6px">Спорт</div>
+          <div class="sec" style="margin-top:16px">
+            <svg width="280" height="92" viewBox="0 20 280 92">
+              <g font-family="Geist Mono" font-size="10" fill="#6e6e73" text-anchor="middle">
+                <rect x="14" y="34" width="12" height="60" rx="3" fill="#fafafa"/><text x="20" y="110">П</text>
+                <rect x="54" y="18" width="12" height="76" rx="3" fill="#fafafa"/><text x="60" y="110">В</text>
+                <rect x="94" y="88" width="12" height="6" rx="3" fill="#1f1f22"/><text x="100" y="110">С</text>
+                <rect x="134" y="28" width="12" height="66" rx="3" fill="#fafafa"/><text x="140" y="110">Ч</text>
+                <rect x="174" y="48" width="12" height="46" rx="3" fill="#fafafa"/><text x="180" y="110">П</text>
+                <rect x="214" y="40" width="12" height="54" rx="3" fill="none" stroke="#ff6a1a" stroke-width="1.5" stroke-dasharray="3 3"/><text x="220" y="110" fill="#ff6a1a">С</text>
+                <rect x="254" y="88" width="12" height="6" rx="3" fill="#1f1f22"/><text x="260" y="110">В</text>
+              </g>
+            </svg>
+          </div>
+          <div class="sec">
+            <div class="lbl" style="margin-bottom:4px">За месяц</div>
+            <div class="disc"><span>Йога</span><span class="mono mut">4ч 30м</span><span class="mono">06</span></div>
+            <div class="disc"><span>Кроссфит</span><span class="mono mut">3ч 00м</span><span class="mono">04</span></div>
+            <div class="disc"><span>Калистеника</span><span class="mono mut">3ч 45м</span><span class="mono">05</span></div>
+          </div>
+          <div class="sec">
+            <div class="row"><span class="lbl">Навык</span><span class="mono" style="font-size:12px"><span class="acc">42</span><span class="mut"> / 60 сек</span></span></div>
+            <div style="font-size:15px;font-weight:500;margin-top:8px">Стойка на руках у стены</div>
+            <div class="segs"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="sec" style="padding-bottom:0">
+            <div class="lbl" style="margin-bottom:4px">Рекорды</div>
+            <div class="pr" style="border:0"><span>Подтягивания</span><span class="mono">18</span></div>
+          </div>
+        </div>
+        <div class="tabs" data-tabs="3"></div><div class="home-ind"></div>
+      </div></div>
+      <div class="cap">Спорт</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 CALM ============ -->
+<section class="v3">
+  <div class="vh"><div class="n" style="background:#6ee7b7">03</div><h2>Calm</h2></div>
+  <p class="vd"><b>Баланс A и C.</b> Графитовый фон с лёгкой холодной ноткой, мягкие крупные скругления, карточки без рамок. Мятный акцент. Самая крупная типографика из трёх вариантов и меньше всего элементов на экране: приложение не давит, а спокойно показывает главное. Направление: Things 3 × Oura.</p>
+  <div class="phones">
+    <div>
+      <div class="phone"><div class="screen"><div class="island"></div><div class="sb" data-sb></div>
+        <div class="body">
+          <div class="lbl">Доброе утро</div>
+          <div class="h" style="margin:2px 0 14px">21 ноября</div>
+          <div class="card">
+            <div class="row"><span class="lbl">Прогресс дня</span><span class="lbl" style="display:flex;gap:4px;align-items:center"><svg class="ic s acc"><use href="#i-flame"/></svg><span class="tnum">12 дней</span></span></div>
+            <div class="tnum" style="font-size:44px;font-weight:700;letter-spacing:-.04em;line-height:1.1;margin-top:4px">68<span class="mut" style="font-size:24px;font-weight:600">%</span></div>
+            <div class="mini">
+              <div><div class="lbl">Цели</div><div class="v tnum">4/6</div><div class="thin"><i style="width:67%"></i></div></div>
+              <div><div class="lbl">Спорт</div><div class="v tnum">30′</div><div class="thin"><i style="width:50%"></i></div></div>
+              <div><div class="lbl">Рост</div><div class="v tnum">3/4</div><div class="thin"><i style="width:75%"></i></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="lbl" style="margin-bottom:14px">Далее</div>
+            <div class="tl" style="margin-bottom:14px"><span class="dot"></span><div><div style="font-size:14px;font-weight:600">Созвон с командой</div><div class="mut" style="font-size:12px;margin-top:2px">Google Meet</div></div><span class="tnum acc" style="font-size:13px;font-weight:600">14:00</span></div>
+            <div class="tl"><span class="dot g"></span><div><div style="font-size:14px;font-weight:600">Звонок — бухгалтер</div><div class="mut" style="font-size:12px;margin-top:2px">15 мин</div></div><span class="tnum mut" style="font-size:13px">16:30</span></div>
+          </div>
+          <div class="card">
+            <div class="row"><span class="lbl">Привычки</span><span class="lbl tnum">2 / 4</span></div>
+            <div class="habits">
+              <div><div class="hb on"><svg class="ic"><use href="#i-moon"/></svg></div><span>Медитация</span></div>
+              <div><div class="hb on"><svg class="ic"><use href="#i-drop"/></svg></div><span>Вода</span></div>
+              <div><div class="hb"><svg class="ic"><use href="#i-book"/></svg></div><span>Чтение</span></div>
+              <div><div class="hb"><svg class="ic"><use href="#i-activity"/></svg></div><span>Йога</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="tabs" data-tabs="0"></div><div class="home-ind"></div>
+      </div></div>
+      <div class="cap">Сегодня</div>
+    </div>
+
+    <div>
+      <div class="phone"><div class="screen"><div class="island"></div><div class="sb" data-sb></div>
+        <div class="body">
+          <div class="lbl">Неделя 47 · 3 из 4</div>
+          <div class="h" style="margin:2px 0 14px">Рост</div>
+          <div class="g2">
+            <div class="tile"><div class="ti"><svg class="ic s"><use href="#i-pin"/></svg></div><div class="lbl" style="margin-top:8px">Новое место</div><div style="font-size:14px;font-weight:600;margin-top:2px">Бар на крыше</div></div>
+            <div class="tile"><div class="ti"><svg class="ic s"><use href="#i-book"/></svg></div><div class="lbl" style="margin-top:8px">Открытие</div><div style="font-size:14px;font-weight:600;margin-top:2px">«Сапиенс»</div></div>
+            <div class="tile"><div class="ti"><svg class="ic s"><use href="#i-spark"/></svg></div><div class="lbl" style="margin-top:8px">Навык</div><div style="font-size:14px;font-weight:600;margin-top:2px">Курс бариста</div></div>
+            <div class="tile empty"><div class="ti"><svg class="ic s"><use href="#i-users"/></svg></div><div class="lbl" style="margin-top:8px">Знакомство</div><div class="mut" style="font-size:14px;font-weight:500;margin-top:2px">Добавить</div></div>
+          </div>
+          <div class="card">
+            <div class="row" style="margin-bottom:12px"><span class="lbl">Разнообразие за год</span><span class="lbl tnum">47 открытий</span></div>
+            <div class="heat" id="h3" style="grid-template-columns:repeat(26,1fr)"></div>
+          </div>
+          <div class="card">
+            <div class="lbl">Идея на неделю</div>
+            <div style="font-size:16px;font-weight:600;margin:4px 0 12px">Мастер-класс по керамике</div>
+            <div style="display:flex;gap:8px">
+              <div class="btn" style="background:#6ee7b7;color:#0d0e10">Взять</div>
+              <div class="btn" style="background:#1f2226;color:#d4d6da"><svg class="ic s"><use href="#i-shuffle"/></svg>Другая</div>
+            </div>
+          </div>
+        </div>
+        <div class="tabs" data-tabs="4"></div><div class="home-ind"></div>
+      </div></div>
+      <div class="cap">Рост</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+  const tabs=[['i-today','Сегодня'],['i-cal','Календарь'],['i-wallet','Финансы'],['i-activity','Спорт'],['i-compass','Рост']];
+  document.querySelectorAll('[data-tabs]').forEach(el=>{
+    const a=+el.dataset.tabs;
+    el.innerHTML=tabs.map(([i,l],k)=>`<div class="t${k===a?' on':''}"><svg class="ic"><use href="#${i}"/></svg>${l}<span class="pip"></span></div>`).join('');
+  });
+  document.querySelectorAll('[data-sb]').forEach(el=>{
+    el.innerHTML=`<span>9:41</span><span class="r">
+      <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12"><rect x=".5" y=".5" width="21" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="16" height="8" rx="2" fill="currentColor"/><rect x="23" y="4" width="1.5" height="4" rx=".75" fill="currentColor" opacity=".4"/></svg></span>`;
+  });
+  function heat(id,cols,levels){
+    const el=document.getElementById(id); let s=11;
+    for(let i=0;i<cols*7;i++){ s=(s*9301+49297)%233280; const r=s/233280;
+      const sp=document.createElement('span'); sp.style.background=levels[r<.25?0:r<.5?1:r<.78?2:3]; el.appendChild(sp); }
+  }
+  heat('h2',26,['#141416','#4a2410','#a8460f','#ff6a1a']);
+  heat('h3',26,['#1c1f23','#1f4a3b','#3a9a76','#6ee7b7']);
+</script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life Tracker — макеты</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --page:#070708; --text:#e8e8ea; --muted:#8a8a92; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--page); color:var(--text); font-family:Inter,system-ui,sans-serif; padding:32px 16px 64px; }
+  h1 { font-size:28px; font-weight:800; max-width:1100px; margin:0 auto 6px; }
+  .lead { color:var(--muted); max-width:1100px; margin:0 auto 40px; line-height:1.5; }
+  section.variant { max-width:1100px; margin:0 auto 64px; }
+  .vhead { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:6px; }
+  .vhead .tag { font:700 13px JetBrains Mono,monospace; padding:4px 10px; border-radius:8px; }
+  .vhead h2 { font-size:22px; }
+  .vdesc { color:var(--muted); margin-bottom:22px; line-height:1.5; max-width:760px; }
+  .phones { display:flex; gap:28px; flex-wrap:wrap; }
+  .phone { width:300px; height:640px; border-radius:42px; border:8px solid #1c1c1f; overflow:hidden; position:relative; flex-shrink:0; }
+  .cap { font-size:12px; color:var(--muted); margin-top:10px; text-align:center; width:300px; }
+  .scr { position:absolute; inset:0; padding:44px 18px 90px; overflow:hidden; }
+  .notch { position:absolute; top:10px; left:50%; transform:translateX(-50%); width:90px; height:24px; background:#000; border-radius:14px; z-index:5; }
+  .tabbar { position:absolute; left:0; right:0; bottom:0; height:76px; display:flex; justify-content:space-around; align-items:flex-start; padding-top:12px; font-size:10px; }
+  .tabbar div { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .tabbar i { width:22px; height:22px; border-radius:7px; display:block; font-style:normal; text-align:center; line-height:22px; font-size:13px; }
+  svg { display:block; }
+
+  /* ========== A — NEON MINIMAL ========== */
+  .va { background:#000; color:#f2f2f2; }
+  .va .muted { color:#7b7b80; }
+  .va .acc { color:#c6ff3d; }
+  .va .card { background:#111113; border-radius:20px; padding:14px; margin-bottom:10px; }
+  .va .row { display:flex; justify-content:space-between; align-items:center; }
+  .va .chk { width:20px; height:20px; border-radius:6px; border:2px solid #333; flex-shrink:0; }
+  .va .chk.on { background:#c6ff3d; border-color:#c6ff3d; }
+  .va .habit { display:flex; gap:10px; align-items:center; padding:7px 0; font-size:13px; }
+  .va .habit.done span { color:#666; text-decoration:line-through; }
+  .va .pill { font-size:11px; padding:3px 8px; border-radius:99px; background:#1d1d20; }
+  .va .bar { height:6px; border-radius:6px; background:#222; overflow:hidden; }
+  .va .bar b { display:block; height:100%; border-radius:6px; }
+  .va .tabbar { background:#0b0b0c; border-top:1px solid #1a1a1c; color:#666; }
+  .va .tabbar .on { color:#c6ff3d; }
+  .va .tabbar i { background:#1a1a1c; }
+  .va .tabbar .on i { background:#c6ff3d; color:#000; }
+  .tag-a { background:#c6ff3d; color:#000; }
+
+  /* ========== B — AURORA GLASS ========== */
+  .vb { background:#0b0b1a; color:#eef; }
+  .vb::before { content:""; position:absolute; width:260px; height:260px; border-radius:50%; background:#6d4bff; filter:blur(90px); opacity:.55; top:-80px; left:-60px; }
+  .vb::after { content:""; position:absolute; width:220px; height:220px; border-radius:50%; background:#00d1b2; filter:blur(90px); opacity:.35; bottom:60px; right:-80px; }
+  .vb .scr { z-index:2; }
+  .vb .muted { color:#9a9ac0; }
+  .vb .glass { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10); border-radius:22px; padding:14px; margin-bottom:10px; backdrop-filter:blur(14px); }
+  .vb .grad { background:linear-gradient(90deg,#8b6cff,#2ee6c5); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .vb .days { display:flex; justify-content:space-between; }
+  .vb .day { width:34px; padding:6px 0; border-radius:12px; text-align:center; font-size:11px; color:#9a9ac0; }
+  .vb .day b { display:block; font-size:14px; color:#eef; margin-top:2px; }
+  .vb .day.on { background:linear-gradient(160deg,#8b6cff,#5a3fe0); color:#fff; }
+  .vb .dot { width:5px; height:5px; border-radius:50%; background:#2ee6c5; margin:3px auto 0; }
+  .vb .tabbar { z-index:3; background:rgba(15,15,35,.85); border-top:1px solid rgba(255,255,255,.08); color:#7a7aa0; backdrop-filter:blur(10px); }
+  .vb .tabbar .on { color:#fff; }
+  .vb .tabbar .on i { background:linear-gradient(160deg,#8b6cff,#2ee6c5); }
+  .vb .tabbar i { background:rgba(255,255,255,.07); }
+  .tag-b { background:linear-gradient(90deg,#8b6cff,#2ee6c5); color:#fff; }
+
+  /* ========== C — TERMINAL / DATA ========== */
+  .vc { background:#121212; color:#e6e6e6; font-family:"JetBrains Mono",monospace; }
+  .vc .muted { color:#6f6f6f; }
+  .vc .or { color:#ff7a1a; }
+  .vc .tile { border:1px solid #262626; background:#171717; border-radius:6px; padding:10px; }
+  .vc .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px; }
+  .vc .lbl { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:#6f6f6f; }
+  .vc .big { font-size:22px; font-weight:700; margin-top:4px; }
+  .vc .heat { display:grid; grid-template-columns:repeat(18,1fr); gap:3px; }
+  .vc .heat span { aspect-ratio:1; border-radius:2px; background:#222; }
+  .vc .line { display:flex; gap:10px; font-size:11px; padding:6px 0; border-bottom:1px dashed #262626; }
+  .vc .tabbar { background:#0e0e0e; border-top:1px solid #262626; color:#5c5c5c; font-family:"JetBrains Mono",monospace; }
+  .vc .tabbar .on { color:#ff7a1a; }
+  .vc .tabbar i { border:1px solid #333; border-radius:4px; }
+  .vc .tabbar .on i { border-color:#ff7a1a; }
+  .tag-c { background:#ff7a1a; color:#000; }
+</style>
+</head>
+<body>
+
+<h1>Life Tracker — 3 направления дизайна</h1>
+<p class="lead">Все варианты тёмные. В каждом — главный экран «Сегодня» + один экран раздела, чтобы было видно, как стиль ведёт себя с разными данными. Вкладки внизу: Сегодня · Календарь · Финансы · Спорт · Рост. Можно выбрать один вариант целиком или смешать (например, «структура A, цвета B»).</p>
+
+<!-- ================= A ================= -->
+<section class="variant">
+  <div class="vhead"><span class="tag tag-a">A</span><h2>Neon Minimal</h2></div>
+  <p class="vdesc">Чистый чёрный (хорошо на OLED), один яркий лаймовый акцент, крупные кольца прогресса в стиле фитнес-трекеров. Максимум воздуха, минимум шума. Быстро считывается за 2 секунды.</p>
+  <div class="phones">
+    <div>
+      <div class="phone va"><div class="notch"></div>
+        <div class="scr">
+          <div class="muted" style="font-size:12px">Суббота, 21 ноября</div>
+          <div style="font-size:24px;font-weight:800;margin:2px 0 14px">Доброе утро 👋</div>
+
+          <div class="card" style="display:flex;gap:14px;align-items:center">
+            <svg width="110" height="110" viewBox="0 0 110 110">
+              <circle cx="55" cy="55" r="48" fill="none" stroke="#1f2a0a" stroke-width="10"/>
+              <circle cx="55" cy="55" r="48" fill="none" stroke="#c6ff3d" stroke-width="10" stroke-linecap="round" stroke-dasharray="301.6" stroke-dashoffset="96" transform="rotate(-90 55 55)"/>
+              <circle cx="55" cy="55" r="35" fill="none" stroke="#2a1530" stroke-width="10"/>
+              <circle cx="55" cy="55" r="35" fill="none" stroke="#ff4fd8" stroke-width="10" stroke-linecap="round" stroke-dasharray="219.9" stroke-dashoffset="110" transform="rotate(-90 55 55)"/>
+              <circle cx="55" cy="55" r="22" fill="none" stroke="#0a2430" stroke-width="10"/>
+              <circle cx="55" cy="55" r="22" fill="none" stroke="#3dd6ff" stroke-width="10" stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="30" transform="rotate(-90 55 55)"/>
+            </svg>
+            <div style="font-size:12px;line-height:1.9">
+              <div><b class="acc">●</b> Цели <b>4/6</b></div>
+              <div><b style="color:#ff4fd8">●</b> Спорт <b>30/60 мин</b></div>
+              <div><b style="color:#3dd6ff">●</b> Рост <b>3/4 нед.</b></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="row"><span class="muted" style="font-size:11px">СЛЕДУЮЩЕЕ</span><span class="pill">через 40 мин</span></div>
+            <div style="font-weight:700;margin-top:6px">📞 Созвон с командой</div>
+            <div class="muted" style="font-size:12px">14:00 – 14:45 · Google Meet</div>
+          </div>
+
+          <div class="card">
+            <div class="row" style="margin-bottom:4px"><b style="font-size:14px">Цели дня</b><span class="muted" style="font-size:12px">4 из 6</span></div>
+            <div class="habit done"><div class="chk on"></div><span>Медитация 10 мин</span></div>
+            <div class="habit done"><div class="chk on"></div><span>Вода 2 л</span></div>
+            <div class="habit"><div class="chk"></div><span>Чтение 20 стр.</span></div>
+            <div class="habit"><div class="chk"></div><span>Йога вечером</span></div>
+          </div>
+        </div>
+        <div class="tabbar"><div class="on"><i>◉</i>Сегодня</div><div><i>▦</i>Календарь</div><div><i>₽</i>Финансы</div><div><i>⚡</i>Спорт</div><div><i>✦</i>Рост</div></div>
+      </div>
+      <div class="cap">Сегодня</div>
+    </div>
+
+    <div>
+      <div class="phone va"><div class="notch"></div>
+        <div class="scr">
+          <div style="font-size:24px;font-weight:800;margin-bottom:14px">Финансы</div>
+          <div class="card">
+            <div class="muted" style="font-size:11px">ОСТАТОК НОЯБРЯ</div>
+            <div style="font-size:30px;font-weight:800;margin:2px 0">+42 300 ₽</div>
+            <div style="display:flex;gap:16px;font-size:12px"><span>↑ <b class="acc">186 000</b></span><span>↓ <b style="color:#ff5d5d">143 700</b></span></div>
+          </div>
+          <div class="card">
+            <div class="row"><b style="font-size:14px">🎯 Подушка безопасности</b><span class="acc" style="font-size:12px;font-weight:700">64%</span></div>
+            <div class="bar" style="margin:10px 0 6px"><b style="width:64%;background:#c6ff3d"></b></div>
+            <div class="muted" style="font-size:11px">320 000 из 500 000 ₽ · ~5 мес. в текущем темпе</div>
+          </div>
+          <div class="card">
+            <b style="font-size:14px">Траты по категориям</b>
+            <div style="margin-top:10px;font-size:12px;display:grid;gap:9px">
+              <div><div class="row"><span>Еда</span><span class="muted">38 200</span></div><div class="bar" style="margin-top:4px"><b style="width:80%;background:#c6ff3d"></b></div></div>
+              <div><div class="row"><span>Жильё</span><span class="muted">35 000</span></div><div class="bar" style="margin-top:4px"><b style="width:73%;background:#3dd6ff"></b></div></div>
+              <div><div class="row"><span>Спорт</span><span class="muted">9 500</span></div><div class="bar" style="margin-top:4px"><b style="width:20%;background:#ff4fd8"></b></div></div>
+            </div>
+          </div>
+          <div class="card" style="font-size:12px">
+            <div class="row" style="padding:3px 0"><span>☕ Кофейня</span><span style="color:#ff5d5d">−420</span></div>
+            <div class="row" style="padding:3px 0"><span>💼 Зарплата</span><span class="acc">+150 000</span></div>
+          </div>
+        </div>
+        <div class="tabbar"><div><i>◉</i>Сегодня</div><div><i>▦</i>Календарь</div><div class="on"><i>₽</i>Финансы</div><div><i>⚡</i>Спорт</div><div><i>✦</i>Рост</div></div>
+      </div>
+      <div class="cap">Финансы</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= B ================= -->
+<section class="variant">
+  <div class="vhead"><span class="tag tag-b">B</span><h2>Aurora Glass</h2></div>
+  <p class="vdesc">Глубокий тёмно-синий фон со светящимися фиолетово-бирюзовыми пятнами, «стеклянные» полупрозрачные карточки, градиенты. Более эмоциональный и «живой», ощущается как премиальное lifestyle-приложение.</p>
+  <div class="phones">
+    <div>
+      <div class="phone vb"><div class="notch"></div>
+        <div class="scr">
+          <div class="row" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div><div class="muted" style="font-size:12px">Ноябрь 2026</div><div style="font-size:22px;font-weight:800">Твой день</div></div>
+            <div class="glass" style="padding:6px 10px;margin:0;font-size:12px">🔥 <b>12</b> дней</div>
+          </div>
+          <div class="days" style="margin-bottom:12px">
+            <div class="day">Пн<b>16</b><div class="dot"></div></div><div class="day">Вт<b>17</b><div class="dot"></div></div><div class="day">Ср<b>18</b><div class="dot"></div></div><div class="day">Чт<b>19</b></div><div class="day">Пт<b>20</b><div class="dot"></div></div><div class="day on">Сб<b style="color:#fff">21</b></div><div class="day">Вс<b>22</b></div>
+          </div>
+          <div class="glass">
+            <div class="muted" style="font-size:11px">ПРОГРЕСС ДНЯ</div>
+            <div style="display:flex;align-items:baseline;gap:8px"><span class="grad" style="font-size:40px;font-weight:800">68%</span><span class="muted" style="font-size:12px">+12% к вчера</span></div>
+            <div style="height:8px;border-radius:8px;background:rgba(255,255,255,.08);margin-top:6px"><div style="width:68%;height:100%;border-radius:8px;background:linear-gradient(90deg,#8b6cff,#2ee6c5)"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="glass" style="margin:0"><div style="font-size:20px">🧘</div><div style="font-weight:700;font-size:13px;margin-top:4px">Йога</div><div class="muted" style="font-size:11px">19:00 · 45 мин</div></div>
+            <div class="glass" style="margin:0"><div style="font-size:20px">💰</div><div style="font-weight:700;font-size:13px;margin-top:4px">+42 300 ₽</div><div class="muted" style="font-size:11px">остаток месяца</div></div>
+          </div>
+          <div class="glass" style="margin-top:10px">
+            <div class="muted" style="font-size:11px">✦ НОВОЕ НА ЭТОЙ НЕДЕЛЕ</div>
+            <div style="font-weight:700;margin-top:4px">Сходить в новое место</div>
+            <div class="muted" style="font-size:12px">Идея: тот грузинский ресторан на Патриках</div>
+            <div style="display:flex;gap:6px;margin-top:8px"><span style="width:28px;height:5px;border-radius:4px;background:#2ee6c5"></span><span style="width:28px;height:5px;border-radius:4px;background:#2ee6c5"></span><span style="width:28px;height:5px;border-radius:4px;background:#2ee6c5"></span><span style="width:28px;height:5px;border-radius:4px;background:rgba(255,255,255,.15)"></span></div>
+          </div>
+          <div class="glass" style="display:flex;gap:10px;align-items:center"><div style="width:4px;height:34px;border-radius:4px;background:#8b6cff"></div><div><div style="font-weight:700;font-size:13px">Созвон с командой</div><div class="muted" style="font-size:11px">14:00 · через 40 мин</div></div></div>
+        </div>
+        <div class="tabbar"><div class="on"><i>◉</i>Сегодня</div><div><i>▦</i>Календарь</div><div><i>₽</i>Финансы</div><div><i>⚡</i>Спорт</div><div><i>✦</i>Рост</div></div>
+      </div>
+      <div class="cap">Сегодня</div>
+    </div>
+
+    <div>
+      <div class="phone vb"><div class="notch"></div>
+        <div class="scr">
+          <div style="font-size:22px;font-weight:800;margin-bottom:12px">Спорт</div>
+          <div class="glass">
+            <div style="display:flex;justify-content:space-between"><span class="muted" style="font-size:11px">ЭТА НЕДЕЛЯ</span><span style="font-size:12px"><b>4</b>/5 тренировок</span></div>
+            <svg width="246" height="110" viewBox="0 0 246 110" style="margin-top:8px">
+              <defs><linearGradient id="g1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#5a3fe0"/><stop offset="1" stop-color="#2ee6c5"/></linearGradient></defs>
+              <g fill="url(#g1)">
+                <rect x="6" y="40" width="24" height="56" rx="6"/><rect x="41" y="20" width="24" height="76" rx="6"/><rect x="76" y="86" width="24" height="10" rx="5" fill="rgba(255,255,255,.12)"/><rect x="111" y="30" width="24" height="66" rx="6"/><rect x="146" y="50" width="24" height="46" rx="6"/><rect x="181" y="60" width="24" height="36" rx="6"/><rect x="216" y="86" width="24" height="10" rx="5" fill="rgba(255,255,255,.12)"/>
+              </g>
+              <g fill="#9a9ac0" font-size="9" font-family="Inter" text-anchor="middle"><text x="18" y="108">Пн</text><text x="53" y="108">Вт</text><text x="88" y="108">Ср</text><text x="123" y="108">Чт</text><text x="158" y="108">Пт</text><text x="193" y="108">Сб</text><text x="228" y="108">Вс</text></g>
+            </svg>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+            <div class="glass" style="margin:0;padding:10px;text-align:center"><div>🧘</div><b style="font-size:16px">6</b><div class="muted" style="font-size:10px">йога</div></div>
+            <div class="glass" style="margin:0;padding:10px;text-align:center"><div>🏋️</div><b style="font-size:16px">4</b><div class="muted" style="font-size:10px">кроссфит</div></div>
+            <div class="glass" style="margin:0;padding:10px;text-align:center"><div>🤸</div><b style="font-size:16px">5</b><div class="muted" style="font-size:10px">калистеника</div></div>
+          </div>
+          <div class="glass">
+            <div class="muted" style="font-size:11px">НАВЫК В ПРОЦЕССЕ</div>
+            <div style="font-weight:700;margin:4px 0 8px">Стойка на руках у стены</div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span>Лучшее: <b>42 сек</b></span><span class="grad" style="font-weight:800">цель 60</span></div>
+            <div style="height:8px;border-radius:8px;background:rgba(255,255,255,.08);margin-top:6px"><div style="width:70%;height:100%;border-radius:8px;background:linear-gradient(90deg,#8b6cff,#2ee6c5)"></div></div>
+          </div>
+          <div class="glass">
+            <div class="muted" style="font-size:11px">ЛИЧНЫЕ РЕКОРДЫ</div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-top:6px"><span>Подтягивания</span><b>18</b></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-top:4px"><span>Отжимания на брусьях</span><b>25</b></div>
+          </div>
+        </div>
+        <div class="tabbar"><div><i>◉</i>Сегодня</div><div><i>▦</i>Календарь</div><div><i>₽</i>Финансы</div><div class="on"><i>⚡</i>Спорт</div><div><i>✦</i>Рост</div></div>
+      </div>
+      <div class="cap">Спорт</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= C ================= -->
+<section class="variant">
+  <div class="vhead"><span class="tag tag-c">C</span><h2>Terminal / Data</h2></div>
+  <p class="vdesc">Графит, моноширинный шрифт, оранжевый акцент, плотная сетка цифр и тепловые карты как в GitHub. Для тех, кто любит данные и статистику — много информации на одном экране, ощущение «пульта управления жизнью».</p>
+  <div class="phones">
+    <div>
+      <div class="phone vc"><div class="notch"></div>
+        <div class="scr">
+          <div class="muted" style="font-size:11px">// сб 21.11.2026 · неделя 47</div>
+          <div style="font-size:20px;font-weight:700;margin:2px 0 12px">today<span class="or">_</span></div>
+          <div class="grid2">
+            <div class="tile"><div class="lbl">цели</div><div class="big">4<span class="muted">/6</span></div></div>
+            <div class="tile"><div class="lbl">streak</div><div class="big or">12d</div></div>
+            <div class="tile"><div class="lbl">баланс мес</div><div class="big" style="font-size:17px">+42.3k</div></div>
+            <div class="tile"><div class="lbl">спорт нед</div><div class="big">4<span class="muted">/5</span></div></div>
+          </div>
+          <div class="tile" style="margin-bottom:8px">
+            <div class="lbl" style="margin-bottom:8px">активность · 18 недель</div>
+            <div class="heat" id="heat1"></div>
+          </div>
+          <div class="tile">
+            <div class="lbl" style="margin-bottom:4px">расписание</div>
+            <div class="line"><span class="muted">09:00</span><span style="text-decoration:line-through" class="muted">медитация</span></div>
+            <div class="line"><span class="or">14:00</span><span>созвон с командой</span></div>
+            <div class="line"><span class="muted">16:30</span><span>звонок: бухгалтер</span></div>
+            <div class="line" style="border:0"><span class="muted">19:00</span><span>йога · 45m</span></div>
+          </div>
+        </div>
+        <div class="tabbar"><div class="on"><i>~</i>today</div><div><i>#</i>cal</div><div><i>$</i>fin</div><div><i>!</i>sport</div><div><i>*</i>grow</div></div>
+      </div>
+      <div class="cap">Сегодня</div>
+    </div>
+
+    <div>
+      <div class="phone vc"><div class="notch"></div>
+        <div class="scr">
+          <div class="muted" style="font-size:11px">// ментальные цели</div>
+          <div style="font-size:20px;font-weight:700;margin:2px 0 12px">grow<span class="or">_</span></div>
+          <div class="tile" style="margin-bottom:8px">
+            <div class="lbl">эта неделя · новое</div>
+            <div style="font-size:12px;margin-top:8px;line-height:2">
+              <div><span class="or">[x]</span> новое место — бар на крыше</div>
+              <div><span class="or">[x]</span> новая книга — «Сапиенс»</div>
+              <div><span class="or">[x]</span> новый навык — бариста-курс</div>
+              <div><span class="muted">[ ]</span> новое знакомство</div>
+            </div>
+          </div>
+          <div class="grid2">
+            <div class="tile"><div class="lbl">новых мест</div><div class="big">23</div><div class="muted" style="font-size:10px">за 2026</div></div>
+            <div class="tile"><div class="lbl">открытий</div><div class="big or">47</div><div class="muted" style="font-size:10px">≈1 / неделю</div></div>
+          </div>
+          <div class="tile" style="margin-bottom:8px">
+            <div class="lbl" style="margin-bottom:8px">разнообразие · 18 недель</div>
+            <div class="heat" id="heat2"></div>
+          </div>
+          <div class="tile">
+            <div class="lbl" style="margin-bottom:6px">случайная идея</div>
+            <div style="font-size:12px">&gt; сходи на мастер-класс по керамике</div>
+            <div class="or" style="font-size:11px;margin-top:6px">[ взять ]  [ другая ]</div>
+          </div>
+        </div>
+        <div class="tabbar"><div><i>~</i>today</div><div><i>#</i>cal</div><div><i>$</i>fin</div><div><i>!</i>sport</div><div class="on"><i>*</i>grow</div></div>
+      </div>
+      <div class="cap">Рост (ментальные цели)</div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function heat(id, colors){
+    const el=document.getElementById(id); let s=7;
+    for(let i=0;i<18*5;i++){ s=(s*9301+49297)%233280; const r=s/233280;
+      const c=r<.2?'#222':r<.45?colors[0]:r<.75?colors[1]:colors[2];
+      const sp=document.createElement('span'); sp.style.background=c; el.appendChild(sp); }
+  }
+  heat('heat1',['#4a2a10','#a14d10','#ff7a1a']);
+  heat('heat2',['#2c2a14','#7a6a1c','#e8c93a']);
+</script>
+</body>
+</html>
