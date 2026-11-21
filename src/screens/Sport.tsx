@@ -4,11 +4,12 @@ import { useStore } from '../store'
 import type { SessionKind } from '../store'
 import { useT } from '../i18n'
 import { addDays, dayKey, fmtDate, fmtWeekday, monthKey, parseDay, weekStart } from '../lib/date'
-import { DAY_FAMILIES, EX, FAMILIES, PROGRAM_WEEKS, exCues, exName, flowSteps, phase, setsFor, stepsDuration, strengthSteps, videoUrl } from '../lib/program'
+import { DAY_FAMILIES, EX, FAMILIES, PROGRAM_WEEKS, exCues, exName, flowSteps, phase, setsFor, stepsDuration, strengthSteps } from '../lib/program'
 import { STRENGTH_DAYS, doneOn, doneToday, flowMinutes, nextDay, programWeek, weekForPlan } from '../lib/sportCalc'
 import { Field, Header, IconBtn, Segs, Sheet } from '../components/ui'
 import { Icon } from '../components/Icon'
 import { MetricsForm, WorkoutForm } from '../components/QuickAdd'
+import { ExerciseVideo } from '../components/ExerciseVideo'
 
 export default function Sport() {
   const t = useT()
@@ -62,6 +63,14 @@ export default function Sport() {
           <div className="grow"><div style={{ fontWeight: 600 }}>{t('sport.resume')}</div><div className="t2">{sp.active.kind === 'yoga' || sp.active.kind === 'stretch' ? t(`sess.${sp.active.kind}`) : `${t('sess.day')} ${sp.active.kind}`}</div></div>
           <Icon n="chev" size="s" className="mut" />
         </button>
+      )}
+
+      {!sp.spineNoteSeen && (
+        <div className="card" style={{ borderColor: 'var(--acc-d)' }}>
+          <div className="card-head"><span className="gap8 h2"><Icon n="activity" size="s" className="acc" />{t('sport.spineTitle')}</span>
+            <button className="mut" aria-label="ok" onClick={() => s.sportPatch({ spineNoteSeen: true })}><Icon n="x" size="s" /></button></div>
+          <div className="t2" style={{ fontSize: 13, lineHeight: 1.5 }}>{t('sport.spineText')}</div>
+        </div>
       )}
 
       {/* week strip */}
@@ -236,8 +245,8 @@ function FamilySheet({ family }: { family: string }) {
             {open && (
               <div style={{ marginTop: 10 }}>
                 {exCues(lv.ex, lang).map((c, k) => <div key={k} className="t2" style={{ fontSize: 13, padding: '2px 0' }}>• {c}</div>)}
-                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 8, marginTop: 10 }}>
-                  <a className="btn ghost sm" style={{ textDecoration: 'none' }} href={videoUrl(e, s.sport.videos[lv.ex])} target="_blank" rel="noreferrer"><Icon n="video" size="s" />{t('sess.video')}</a>
+                <div style={{ marginTop: 10 }}><ExerciseVideo exId={lv.ex} /></div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 8, marginTop: 8 }}>
                   <button className="btn ghost sm" disabled={i === cur} onClick={() => s.sportPatch({ levels: { ...s.sport.levels, [family]: i }, hits: { ...s.sport.hits, [family]: 0 } })}>
                     {i === cur ? t('sport.current') : t('sport.setLevel')}
                   </button>

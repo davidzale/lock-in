@@ -77,6 +77,7 @@ export interface SportData {
   videos: Record<string, string>
   sessions: SessionLog[]
   active?: ActiveSession | null
+  spineNoteSeen?: boolean
 }
 
 export const EXPENSE_CATS = ['food', 'housing', 'transport', 'entertainment', 'health', 'sport', 'subscriptions', 'shopping', 'travel', 'other'] as const

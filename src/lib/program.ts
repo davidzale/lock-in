@@ -53,6 +53,29 @@ const LIB: Exercise[] = [
   ex('bird_dog', 'Bird dog', 'Птица-собака', 'bird dog exercise proper form', 'reps', [['On all fours, extend opposite arm and leg', 'На четвереньках вытяни противоположные руку и ногу'], ['Keep hips square, pause 2 s', 'Таз не разворачивается, пауза 2 секунды']], true),
   ex('side_plank', 'Side plank', 'Боковая планка', 'side plank proper form', 'sec', [['Elbow under shoulder, hips high', 'Локоть под плечом, таз высоко'], ['Start from knees if needed', 'Можно начать с колен']], true),
   ex('leg_raise', 'Lying leg raise', 'Подъём ног лёжа', 'lying leg raises proper form', 'reps', [['Hands under hips, lower back down', 'Руки под тазом, поясница прижата'], ['Lower legs slowly, don’t touch the floor', 'Медленно опускай ноги, не касаясь пола']]),
+  // posture / upper back
+  ex('wall_angel', 'Wall angels', 'Ангел у стены', 'wall angels exercise posture', 'reps', [['Back, head and arms against the wall', 'Спина, голова и руки прижаты к стене'], ['Slide arms up and down without arching the lower back', 'Скользи руками вверх-вниз, не прогибая поясницу']]),
+  ex('prone_cobra', 'Prone cobra hold', 'Кобра лёжа (удержание)', 'prone cobra exercise', 'sec', [['Face down, lift chest, squeeze shoulder blades', 'Лёжа на животе, подними грудь и сведи лопатки'], ['Thumbs out, chin tucked, glutes on', 'Большие пальцы наружу, подбородок к груди, ягодицы напряжены']]),
+  ex('swimmers', 'Prone swimmers', 'Пловец лёжа', 'prone swimmers exercise', 'reps', [['Lift opposite arm and leg, alternate slowly', 'Поднимай противоположные руку и ногу, медленно чередуй'], ['Long spine, look at the floor', 'Позвоночник вытянут, взгляд в пол']], true),
+  // pelvis / hips
+  ex('clamshell', 'Clamshell', 'Раскладушка', 'clamshell exercise proper form', 'reps', [['Side-lying, knees bent, feet together', 'Лёжа на боку, колени согнуты, стопы вместе'], ['Open the top knee without rolling the pelvis back', 'Открывай верхнее колено, таз не заваливается назад']], true),
+  ex('side_leg_raise', 'Side-lying leg raise', 'Отведение ноги лёжа на боку', 'side lying hip abduction exercise', 'reps', [['Top leg straight, toes slightly down', 'Верхняя нога прямая, носок чуть вниз'], ['Lift from the hip, don’t lean back', 'Поднимай от бедра, корпус не отклоняй']], true),
+  ex('bridge_march', 'Glute bridge march', 'Мост с шагами', 'glute bridge march exercise', 'reps', [['Hold the bridge, lift one knee at a time', 'Держи мост и поочерёдно поднимай колени'], ['Hips stay level and high', 'Таз ровный и высоко']], true),
+  ex('sl_rdl', 'Single-leg RDL', 'Становая на одной ноге', 'single leg romanian deadlift bodyweight form', 'reps', [['Hinge on one leg, back leg reaches long', 'Наклон на одной ноге, задняя нога тянется назад'], ['Flat back, hips square to the floor', 'Спина ровная, таз параллелен полу']], true),
+  // knees / single-leg
+  ex('wall_sit', 'Wall sit', 'Стульчик у стены', 'wall sit proper form', 'sec', [['Back flat on the wall, knees over ankles', 'Спина прижата к стене, колени над стопами'], ['Go only as low as feels good for the knees', 'Опускайся настолько, насколько комфортно коленям']]),
+  ex('step_up', 'Step-up', 'Зашагивания', 'step up exercise proper form', 'reps', [['Whole foot on a stair or sturdy step', 'Вся стопа на ступеньке или устойчивой опоре'], ['Drive through the front heel, knee in line with toes', 'Вверх через пятку, колено по линии носка']], true),
+  ex('step_down', 'Lateral step-down', 'Медленный шаг вниз', 'lateral step down exercise knee', 'reps', [['Stand on a step, slowly lower the other heel to the floor', 'Стоя на ступеньке, медленно опускай пятку другой ноги к полу'], ['Knee stays over the middle toe', 'Колено над средним пальцем стопы']], true),
+  // spine-friendly core
+  ex('shoulder_taps', 'Plank shoulder taps', 'Планка с касанием плеч', 'plank shoulder taps proper form', 'reps', [['High plank, feet wide, tap opposite shoulder', 'Высокая планка, стопы шире, касайся противоположного плеча'], ['Hips stay still — no rocking', 'Таз неподвижен — не раскачивайся']], true),
+  ex('bear_hold', 'Bear plank hold', 'Медвежья планка', 'bear plank hold exercise', 'sec', [['On all fours, lift knees 3 cm off the floor', 'На четвереньках, приподними колени на 3 см'], ['Flat back, breathe', 'Спина ровная, дыши']]),
+  // mobility
+  ex('open_book', 'Open book rotation', 'Раскрытие книги', 'open book thoracic rotation stretch', 'sec', [['Side-lying, knees stacked, open the top arm behind you', 'Лёжа на боку, колени вместе, раскрывай верхнюю руку назад'], ['Rotate from the upper back, follow the hand with your eyes', 'Поворот грудным отделом, взгляд за рукой']], true),
+  ex('thread_needle', 'Thread the needle', 'Продень нитку', 'thread the needle stretch', 'sec', [['On all fours, slide one arm under the other', 'На четвереньках проведи одну руку под другой'], ['Then reach it up to the ceiling', 'Затем подними её к потолку']], true),
+  // kyphosis / scoliosis care
+  ex('thoracic_ext', 'Thoracic extension on a towel', 'Раскрытие грудного отдела на валике', 'thoracic extension rolled towel', 'sec', [['Lie on a rolled towel across the upper back, hands behind head', 'Ляг на свёрнутое полотенце поперёк лопаток, руки за голову'], ['Let the chest open, breathe slowly — no pain in the lower back', 'Дай груди раскрыться, дыши медленно — без боли в пояснице']]),
+  ex('chin_tuck', 'Chin tucks', 'Двойной подбородок', 'chin tuck exercise posture', 'reps', [['Glide the head straight back, make a double chin', 'Отведи голову прямо назад, сделай «двойной подбородок»'], ['Hold 3 s, eyes level', 'Задержись на 3 секунды, взгляд прямо']]),
+  ex('expansion_breath', '360° rib breathing', 'Дыхание на раскрытие рёбер', '360 breathing ribs expansion exercise', 'sec', [['Hands on the lower ribs, breathe into the sides and back', 'Ладони на нижних рёбрах, дыши в бока и в спину'], ['Long exhale, ribs come down', 'Длинный выдох, рёбра опускаются']]),
   // conditioning
   ex('jumping_jacks', 'Jumping jacks', 'Прыжки «звёздочка»', 'jumping jacks proper form', 'sec', [['Light on the balls of your feet', 'Легко, на носках'], ['Steady breathing', 'Ровное дыхание']]),
   ex('high_knees', 'High knees', 'Бег с высоким подниманием колен', 'high knees exercise form', 'sec', [['Knees to hip height, pump arms', 'Колени до уровня таза, работай руками'], ['Stay tall', 'Корпус прямо']]),
@@ -105,17 +128,25 @@ export const EX: Record<string, Exercise> = Object.fromEntries([...LIB, ...FLOW]
 /** a family is a progression ladder: easiest → hardest, each with a target range */
 export interface Level { ex: string; lo: number; hi: number }
 export const FAMILIES: Record<string, { name: L; levels: Level[] }> = {
-  push: { name: { en: 'Push', ru: 'Жим' }, levels: [{ ex: 'wall_pushup', lo: 10, hi: 15 }, { ex: 'incline_pushup', lo: 8, hi: 12 }, { ex: 'knee_pushup', lo: 8, hi: 12 }, { ex: 'pushup', lo: 6, hi: 12 }, { ex: 'decline_pushup', lo: 8, hi: 12 }] },
-  squat: { name: { en: 'Squat', ru: 'Присед' }, levels: [{ ex: 'chair_squat', lo: 10, hi: 15 }, { ex: 'squat', lo: 12, hi: 20 }, { ex: 'split_squat', lo: 8, hi: 12 }, { ex: 'bulgarian', lo: 8, hi: 12 }, { ex: 'jump_squat', lo: 10, hi: 15 }] },
+  back: { name: { en: 'Back', ru: 'Спина' }, levels: [{ ex: 'superman', lo: 10, hi: 15 }, { ex: 'swimmers', lo: 8, hi: 12 }, { ex: 'snow_angel', lo: 8, hi: 12 }, { ex: 'table_row', lo: 6, hi: 12 }] },
+  posture: { name: { en: 'Posture', ru: 'Осанка' }, levels: [{ ex: 'wall_angel', lo: 8, hi: 12 }, { ex: 'ytw', lo: 6, hi: 10 }, { ex: 'prone_cobra', lo: 20, hi: 40 }] },
+  squat: { name: { en: 'Squat', ru: 'Присед' }, levels: [{ ex: 'chair_squat', lo: 10, hi: 15 }, { ex: 'squat', lo: 12, hi: 20 }, { ex: 'split_squat', lo: 8, hi: 12 }, { ex: 'bulgarian', lo: 8, hi: 12 }] },
   hinge: { name: { en: 'Glutes', ru: 'Ягодицы' }, levels: [{ ex: 'glute_bridge', lo: 12, hi: 20 }, { ex: 'sl_bridge', lo: 8, hi: 12 }, { ex: 'hip_thrust', lo: 12, hi: 20 }, { ex: 'sl_hip_thrust', lo: 8, hi: 12 }] },
-  pull: { name: { en: 'Back', ru: 'Спина' }, levels: [{ ex: 'superman', lo: 10, hi: 15 }, { ex: 'snow_angel', lo: 8, hi: 12 }, { ex: 'ytw', lo: 6, hi: 10 }, { ex: 'table_row', lo: 6, hi: 12 }] },
+  pelvis: { name: { en: 'Pelvis & hips', ru: 'Таз и бёдра' }, levels: [{ ex: 'clamshell', lo: 12, hi: 20 }, { ex: 'side_leg_raise', lo: 10, hi: 15 }, { ex: 'bridge_march', lo: 8, hi: 12 }, { ex: 'sl_rdl', lo: 8, hi: 12 }] },
+  knee: { name: { en: 'Knees', ru: 'Колени' }, levels: [{ ex: 'wall_sit', lo: 20, hi: 45 }, { ex: 'step_up', lo: 8, hi: 12 }, { ex: 'step_down', lo: 6, hi: 10 }] },
   lunge: { name: { en: 'Lunge', ru: 'Выпады' }, levels: [{ ex: 'reverse_lunge', lo: 8, hi: 12 }, { ex: 'lateral_lunge', lo: 8, hi: 12 }, { ex: 'walking_lunge', lo: 10, hi: 14 }] },
-  coreA: { name: { en: 'Core', ru: 'Пресс' }, levels: [{ ex: 'dead_bug', lo: 6, hi: 10 }, { ex: 'plank', lo: 20, hi: 45 }, { ex: 'hollow', lo: 15, hi: 30 }] },
-  coreB: { name: { en: 'Obliques', ru: 'Косые' }, levels: [{ ex: 'bird_dog', lo: 6, hi: 10 }, { ex: 'side_plank', lo: 15, hi: 35 }, { ex: 'leg_raise', lo: 8, hi: 15 }] },
+  push: { name: { en: 'Push', ru: 'Жим' }, levels: [{ ex: 'wall_pushup', lo: 10, hi: 15 }, { ex: 'incline_pushup', lo: 8, hi: 12 }, { ex: 'knee_pushup', lo: 8, hi: 12 }, { ex: 'pushup', lo: 6, hi: 12 }, { ex: 'decline_pushup', lo: 8, hi: 12 }] },
+  coreA: { name: { en: 'Core', ru: 'Пресс' }, levels: [{ ex: 'dead_bug', lo: 6, hi: 10 }, { ex: 'plank', lo: 20, hi: 45 }, { ex: 'shoulder_taps', lo: 8, hi: 14 }] },
+  coreB: { name: { en: 'Spine stability', ru: 'Стабильность позвоночника' }, levels: [{ ex: 'bird_dog', lo: 6, hi: 10 }, { ex: 'side_plank', lo: 15, hi: 35 }, { ex: 'bear_hold', lo: 20, hi: 45 }] },
+}
+/** each day = 4 supersets: two exercises alternate with a short rest, so you keep moving */
+export const DAY_BLOCKS: Record<'A' | 'B', [string, string][]> = {
+  A: [['squat', 'back'], ['hinge', 'posture'], ['knee', 'push'], ['coreA', 'coreB']],
+  B: [['lunge', 'back'], ['pelvis', 'posture'], ['knee', 'push'], ['coreB', 'coreA']],
 }
 export const DAY_FAMILIES: Record<'A' | 'B', string[]> = {
-  A: ['squat', 'push', 'hinge', 'pull', 'lunge', 'coreA'],
-  B: ['lunge', 'push', 'hinge', 'pull', 'squat', 'coreB'],
+  A: DAY_BLOCKS.A.flat(),
+  B: DAY_BLOCKS.B.flat(),
 }
 
 export const PROGRAM_WEEKS = 12
@@ -125,8 +156,12 @@ export function phase(week: number) {
 export function setsFor(week: number) {
   return week <= 8 ? 3 : 4
 }
+/** rest after the second exercise of a superset (between the pair it's ~20-30 s) */
 export function restFor(week: number) {
-  return week <= 4 ? 60 : 75
+  return week <= 4 ? 60 : 45
+}
+export function pairRestFor(week: number) {
+  return week <= 4 ? 30 : 20
 }
 
 // ---------- steps ----------
@@ -134,24 +169,30 @@ export type Step =
   | { kind: 'timed'; ex: string; sec: number; part: 'warmup' | 'finisher' | 'rest' | 'cooldown' | 'flow'; label?: string }
   | { kind: 'set'; ex: string; family: string; set: number; sets: number; lo: number; hi: number; rest: number }
 
-const WARMUP: [string, number][] = [['march', 60], ['arm_circles', 45], ['hip_circles', 45], ['cat_cow', 45], ['inchworm', 60], ['wgs', 60], ['good_morning', 45], ['jumping_jacks', 60]]
-const COOLDOWN: [string, number][] = [['childs_pose', 60], ['hamstring', 60], ['quad', 60], ['chest_stretch', 45], ['hip_flexor', 60], ['figure4', 60], ['breathing', 60]]
-const FINISHER: Record<'A' | 'B', string[]> = { A: ['jumping_jacks', 'mountain_climber', 'high_knees', 'step_burpee'], B: ['skater', 'mountain_climber', 'jumping_jacks', 'step_burpee'] }
+const WARMUP: [string, number][] = [['march', 60], ['cat_cow', 60], ['chin_tuck', 45], ['open_book', 60], ['thread_needle', 60], ['hip_circles', 45], ['glute_bridge', 45], ['bird_dog', 60], ['wgs', 60], ['jumping_jacks', 60]]
+const COOLDOWN: [string, number][] = [['childs_pose', 60], ['thoracic_ext', 75], ['chest_stretch', 60], ['hip_flexor', 60], ['hamstring', 60], ['figure4', 60], ['quad', 45], ['expansion_breath', 60]]
+const FINISHER: Record<'A' | 'B', string[]> = { A: ['jumping_jacks', 'mountain_climber', 'high_knees', 'step_burpee'], B: ['skater', 'march', 'mountain_climber', 'jumping_jacks'] }
 
 export function strengthSteps(day: 'A' | 'B', week: number, levels: Record<string, number>): Step[] {
   const steps: Step[] = WARMUP.map(([e, s]) => ({ kind: 'timed', ex: e, sec: s, part: 'warmup' }))
   const sets = setsFor(week)
   const rest = restFor(week)
-  for (const f of DAY_FAMILIES[day]) {
-    const lv = FAMILIES[f].levels[Math.min(levels[f] ?? 0, FAMILIES[f].levels.length - 1)]
-    for (let i = 1; i <= sets; i++) steps.push({ kind: 'set', ex: lv.ex, family: f, set: i, sets, lo: lv.lo, hi: lv.hi, rest })
+  const pair = pairRestFor(week)
+  for (const [f1, f2] of DAY_BLOCKS[day]) {
+    const lv = (f: string) => FAMILIES[f].levels[Math.min(levels[f] ?? 0, FAMILIES[f].levels.length - 1)]
+    const a = lv(f1)
+    const b = lv(f2)
+    for (let i = 1; i <= sets; i++) {
+      steps.push({ kind: 'set', ex: a.ex, family: f1, set: i, sets, lo: a.lo, hi: a.hi, rest: pair })
+      steps.push({ kind: 'set', ex: b.ex, family: f2, set: i, sets, lo: b.lo, hi: b.hi, rest })
+    }
   }
   // finisher: work/rest intervals, gets harder by phase
   const p = phase(week)
   const work = p === 1 ? 30 : 40
   const off = p === 1 ? 30 : 20
   const rounds = p === 1 ? 8 : p === 2 ? 10 : 12
-  const moves = FINISHER[day].map((m) => (m === 'step_burpee' && p === 3 ? 'burpee' : m))
+  const moves = FINISHER[day]
   for (let r = 0; r < rounds; r++) {
     steps.push({ kind: 'timed', ex: moves[r % moves.length], sec: work, part: 'finisher', label: `${r + 1}/${rounds}` })
     if (r < rounds - 1) steps.push({ kind: 'timed', ex: 'breathing', sec: off, part: 'rest' })
@@ -161,12 +202,12 @@ export function strengthSteps(day: 'A' | 'B', week: number, levels: Record<strin
 }
 
 const YOGA: [string, number][] = [
-  ['childs_pose', 60], ['cat_cow', 90], ['down_dog', 60], ['low_lunge', 120], ['cobra', 45], ['childs_pose', 30], ['warrior2', 120],
-  ['triangle', 90], ['tree', 90], ['chair_pose', 30], ['forward_fold', 60], ['seated_twist', 90], ['bridge_pose', 45], ['supine_twist', 90], ['savasana', 120],
+  ['childs_pose', 60], ['cat_cow', 90], ['thread_needle', 90], ['down_dog', 60], ['low_lunge', 120], ['cobra', 45], ['childs_pose', 30], ['warrior2', 120],
+  ['triangle', 90], ['tree', 90], ['chair_pose', 30], ['forward_fold', 60], ['thoracic_ext', 90], ['bridge_pose', 45], ['supine_twist', 60], ['expansion_breath', 60], ['savasana', 90],
 ]
 const STRETCH: [string, number][] = [
-  ['neck', 60], ['shoulder_cross', 90], ['triceps', 60], ['forward_fold', 60], ['quad', 90], ['hip_flexor', 120], ['pigeon', 150],
-  ['butterfly', 60], ['seated_fold', 75], ['seated_twist', 90], ['figure4', 90], ['happy_baby', 60], ['legs_wall', 120],
+  ['neck', 45], ['chin_tuck', 45], ['open_book', 90], ['chest_stretch', 60], ['shoulder_cross', 60], ['forward_fold', 60], ['quad', 90], ['hip_flexor', 120], ['pigeon', 150],
+  ['butterfly', 60], ['seated_fold', 75], ['figure4', 90], ['childs_pose', 60], ['happy_baby', 60], ['legs_wall', 120],
 ]
 
 /** guided flow scaled to the habit's current target (minutes); per-side poses are split L / R */

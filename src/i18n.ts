@@ -69,6 +69,7 @@ const en: Dict = {
   'lang.en': 'English', 'lang.fr': 'French', 'lang.de': 'German',
 
   'cal.today': 'Today',
+  'sport.spineTitle': 'Built for your spine', 'sport.spineText': 'The program is adapted for scoliosis and kyphosis: more upper-back and posture work, chest and thoracic opening, symmetric core stability, no loaded twisting or hard jumps. Move slowly and with control. Stop if you feel sharp pain, numbness or tingling. A physiotherapist can tell you if one side needs extra work — then do more on that side in side planks and single-leg moves.',
   'sport.setsPer': '{n} sets each', 'sport.phase': 'phase', 'sport.program12': '12-week program', 'sport.resume': 'Resume workout', 'sport.strength': 'Strength',
   'sport.nextOn': 'next:', 'sport.again': 'Do it again', 'sport.startProgram': 'Start the program', 'sport.morning': 'Morning', 'sport.evening': 'Evening',
   'sport.levels': 'Your levels', 'sport.levelsHint': 'tap to see', 'sport.records': 'Personal records',
@@ -77,7 +78,7 @@ const en: Dict = {
   'sess.yoga': 'Morning yoga', 'sess.stretch': 'Evening stretch', 'sess.day': 'Day', 'sess.start': 'Start', 'sess.warmup': 'Warm-up',
   'sess.strength': 'Strength', 'sess.finisher': 'Finisher', 'sess.cooldown': 'Cool-down', 'sess.rest': 'Rest', 'sess.flow': '',
   'sess.poses': 'poses', 'sess.sets': 'Sets', 'sess.reps': 'Reps', 'sess.repsShort': 'reps', 'sess.seconds': 'sec', 'sess.perSide': 'each side',
-  'sess.setOf': 'set {a} of {b}', 'sess.target': 'Target', 'sess.video': 'Technique video', 'sess.logSet': 'Set done',
+  'sess.setOf': 'set {a} of {b}', 'sess.target': 'Target', 'sess.video': 'Technique video', 'sess.hideVideo': 'Hide video', 'sess.logSet': 'Set done',
   'sess.startTimer': 'Start timer', 'sess.stopTimer': 'Stop timer', 'sess.skipRest': 'Skip', 'sess.next': 'Next', 'sess.left': 'left side', 'sess.right': 'right side',
   'sess.exitQ': 'Leave the workout?', 'sess.finishNow': 'Finish and save', 'sess.later': 'Pause — continue later', 'sess.discard': 'Discard', 'sess.continue': 'Keep going',
   'sess.doneTitle': 'Workout complete', 'sess.levelUp': 'Level up!', 'sess.newPrs': 'New records',
@@ -185,6 +186,7 @@ const ru: Dict = {
   'lang.en': 'Английский', 'lang.fr': 'Французский', 'lang.de': 'Немецкий',
 
   'cal.today': 'Сегодня',
+  'sport.spineTitle': 'Программа под твою спину', 'sport.spineText': 'Программа адаптирована под сколиоз и кифоз: больше работы на верх спины и осанку, раскрытие груди и грудного отдела, симметричная стабилизация корпуса, без скручиваний под нагрузкой и жёстких прыжков. Двигайся медленно и подконтрольно. Остановись, если появится резкая боль, онемение или покалывание. Физиотерапевт подскажет, нужна ли одной стороне дополнительная работа — тогда делай на эту сторону больше в боковой планке и упражнениях на одну ногу.',
   'sport.setsPer': 'по {n} подхода', 'sport.phase': 'фаза', 'sport.program12': 'Программа на 12 недель', 'sport.resume': 'Продолжить тренировку', 'sport.strength': 'Силовая',
   'sport.nextOn': 'след.:', 'sport.again': 'Пройти ещё раз', 'sport.startProgram': 'Начать программу', 'sport.morning': 'Утро', 'sport.evening': 'Вечер',
   'sport.levels': 'Твои уровни', 'sport.levelsHint': 'нажми, чтобы открыть', 'sport.records': 'Личные рекорды',
@@ -193,7 +195,7 @@ const ru: Dict = {
   'sess.yoga': 'Утренняя йога', 'sess.stretch': 'Вечерняя растяжка', 'sess.day': 'День', 'sess.start': 'Начать', 'sess.warmup': 'Разминка',
   'sess.strength': 'Силовая часть', 'sess.finisher': 'Финишер', 'sess.cooldown': 'Заминка', 'sess.rest': 'Отдых', 'sess.flow': '',
   'sess.poses': 'поз', 'sess.sets': 'Подходы', 'sess.reps': 'Повторения', 'sess.repsShort': 'повт.', 'sess.seconds': 'сек', 'sess.perSide': 'на сторону',
-  'sess.setOf': 'подход {a} из {b}', 'sess.target': 'Цель', 'sess.video': 'Видео техники', 'sess.logSet': 'Подход сделан',
+  'sess.setOf': 'подход {a} из {b}', 'sess.target': 'Цель', 'sess.video': 'Видео техники', 'sess.hideVideo': 'Скрыть видео', 'sess.logSet': 'Подход сделан',
   'sess.startTimer': 'Запустить таймер', 'sess.stopTimer': 'Остановить таймер', 'sess.skipRest': 'Пропустить', 'sess.next': 'Далее', 'sess.left': 'левая сторона', 'sess.right': 'правая сторона',
   'sess.exitQ': 'Выйти из тренировки?', 'sess.finishNow': 'Завершить и сохранить', 'sess.later': 'Пауза — продолжу позже', 'sess.discard': 'Отменить тренировку', 'sess.continue': 'Продолжить',
   'sess.doneTitle': 'Тренировка завершена', 'sess.levelUp': 'Новый уровень!', 'sess.newPrs': 'Новые рекорды',

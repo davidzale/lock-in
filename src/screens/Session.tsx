@@ -4,10 +4,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import type { SessionKind } from '../store'
 import { useT } from '../i18n'
-import { EX, FAMILIES, exCues, exName, flowSteps, stepsDuration, strengthSteps, videoUrl } from '../lib/program'
+import { EX, FAMILIES, exCues, exName, flowSteps, stepsDuration, strengthSteps } from '../lib/program'
 import type { Step } from '../lib/program'
 import { flowMinutes, programWeek, weekForPlan } from '../lib/sportCalc'
 import { Icon } from '../components/Icon'
+import { ExerciseVideo } from '../components/ExerciseVideo'
 
 // ---------- tiny audio + wake lock helpers ----------
 let ctx: AudioContext | null = null
@@ -256,7 +257,6 @@ export default function Session() {
           lang={lang}
           t={t}
           prev={(logs[step.ex] || [])[step.set - 2]}
-          video={videoUrl(EX[step.ex], sp.videos[step.ex])}
           onLog={(v) => {
             const arr = [...(logs[step.ex] || [])]
             arr[step.set - 1] = v
@@ -312,6 +312,7 @@ function TimedView({ step, paused, onDone, lang, t }: { step: Extract<Step, { ki
       </Ring>
       <div style={{ marginTop: 18 }}>
         {exCues(step.ex, lang).map((c, i) => <div key={i} className="t2" style={{ fontSize: 14, textAlign: 'center', padding: '3px 0' }}>{c}</div>)}
+        {step.part !== 'rest' && <div style={{ marginTop: 12 }}><ExerciseVideo exId={step.ex} /></div>}
       </div>
     </div>
   )
@@ -336,7 +337,7 @@ function RestView({ sec, paused, onDone, t, nextName }: { sec: number; paused: b
   )
 }
 
-function SetView({ step, lang, t, prev, video, onLog }: { step: Extract<Step, { kind: 'set' }>; lang: string; t: TFn; prev?: number; video: string; onLog: (v: number) => void }) {
+function SetView({ step, lang, t, prev, onLog }: { step: Extract<Step, { kind: 'set' }>; lang: string; t: TFn; prev?: number; onLog: (v: number) => void }) {
   const e = EX[step.ex]
   const isSec = e.unit === 'sec'
   const [v, setV] = useState(prev ?? (isSec ? step.lo : Math.round((step.lo + step.hi) / 2)))
@@ -358,7 +359,7 @@ function SetView({ step, lang, t, prev, video, onLog }: { step: Extract<Step, { 
 
       <div className="card" style={{ marginTop: 16 }}>
         {exCues(step.ex, lang).map((c, i) => <div key={i} className="t2" style={{ fontSize: 13.5, padding: '3px 0' }}>• {c}</div>)}
-        <a className="btn ghost sm" style={{ width: '100%', marginTop: 10, textDecoration: 'none' }} href={video} target="_blank" rel="noreferrer"><Icon n="video" size="s" />{t('sess.video')}</a>
+        <div style={{ marginTop: 10 }}><ExerciseVideo exId={step.ex} /></div>
       </div>
 
       <div className="stepper">
