@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { create } from 'zustand'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
+import { captureProviderToken } from './gcal'
 import { DATA_KEYS, pickData, useStore } from '../store'
 import type { AppData } from '../store'
 
@@ -79,6 +80,7 @@ export function useCloudSync() {
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       useSync.setState({ session, status: session ? useSync.getState().status : 'off' })
       if (event === 'SIGNED_IN') pull()
+      if (session?.provider_refresh_token) captureProviderToken(session)
     })
     // mark local changes and push them shortly after
     const unsub = useStore.subscribe((s, prev) => {

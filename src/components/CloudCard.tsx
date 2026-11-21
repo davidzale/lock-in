@@ -4,10 +4,12 @@ import { pull, syncNow, useSync } from '../lib/sync'
 import { useT } from '../i18n'
 import { Field } from './ui'
 import { Icon } from './Icon'
+import { disconnectGoogle, useGcal } from '../lib/gcal'
 
 export function CloudCard() {
   const t = useT()
   const { session, status, lastSync, error } = useSync()
+  const gConnected = useGcal((g) => g.connected)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
@@ -36,6 +38,12 @@ export function CloudCard() {
           <button className="btn ghost sm" onClick={() => syncNow().then(pull)}>{t('cloud.syncNow')}</button>
           <button className="btn ghost sm" onClick={() => supabase.auth.signOut()}>{t('cloud.signOut')}</button>
         </div>
+        {gConnected && (
+          <div className="row div" style={{ marginTop: 12, paddingTop: 12, fontSize: 13 }}>
+            <span className="gap8"><Icon n="cal" size="s" className="acc" />Google Calendar</span>
+            <button className="lbl" onClick={() => confirm(t('cal.disconnectQ')) && disconnectGoogle()}>{t('cal.disconnect')}</button>
+          </div>
+        )}
       </div>
     )
   }

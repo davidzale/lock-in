@@ -11,6 +11,8 @@ import { Header, IconBtn, Rings, Seg, Sheet, Bar, Field } from '../components/ui
 import { Icon } from '../components/Icon'
 import { GoalForm, unitLabel } from '../components/forms'
 import { useQuick } from '../components/QuickAdd'
+import { eventsOn, useGcal, useWeekEvents } from '../lib/gcal'
+import { weekStart } from '../lib/date'
 
 export default function Today() {
   const t = useT()
@@ -30,6 +32,10 @@ export default function Today() {
   const [progGoal, setProgGoal] = useState<Goal | null>(null)
 
   const blocks: Block[] = ['morning', 'day', 'evening']
+  useWeekEvents(weekStart(now))
+  const weeks = useGcal((g) => g.weeks)
+  const next = eventsOn(key, weeks).filter((e) => !e.allDay && new Date(e.end) > now)[0]
+  const hm = (d: Date) => `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
   const eyebrow = `${fmtWeekday(now, s.lang)} ${fmtDate(now, s.lang, { day: '2-digit', month: '2-digit' })} · W${isoWeek(now)}`
 
   return (
@@ -91,6 +97,19 @@ export default function Today() {
           </div>
         </div>
       </div>
+
+      {next && (
+        <button className="card list-row" onClick={() => nav('/calendar')}>
+          <div className="ibox"><Icon n={next.meet ? 'video' : 'cal'} size="s" /></div>
+          <div className="grow">
+            <div className="ellipsis" style={{ fontSize: 14, fontWeight: 600 }}>{next.title}</div>
+            <div className="mono mut" style={{ fontSize: 11, marginTop: 3 }}>
+              {hm(new Date(next.start))}–{hm(new Date(next.end))} · {new Date(next.start) <= now ? t('today.now') : t('today.inMin', { n: Math.round((new Date(next.start).getTime() - now.getTime()) / 60000) })}
+            </div>
+          </div>
+          <Icon n="chev" size="s" className="mut" />
+        </button>
+      )}
 
       {blocks.map((b) => {
         const hs = s.habits.filter((h) => h.block === b)

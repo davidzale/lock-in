@@ -68,7 +68,12 @@ const en: Dict = {
   'speech.diction': 'Diction warm-up', 'speech.diction.d': 'Tongue twisters and articulation, 5 min',
   'lang.en': 'English', 'lang.fr': 'French', 'lang.de': 'German',
 
-  'cal.today': 'Today', 'cal.connect': 'Google Calendar', 'cal.connectSoon': 'Events, calls and 15-min reminders — coming in phase 2',
+  'cal.today': 'Today',
+  'cal.new': 'New event', 'cal.connectHint': 'See your events and calls here and add new ones.', 'cal.needCloud': 'Sign in to cloud sync first (Settings).',
+  'cal.connectBtn': 'Connect', 'cal.allDay': 'All day', 'cal.empty': 'No events this day', 'cal.join': 'Join call', 'cal.openGoogle': 'Open in Google Calendar',
+  'cal.start': 'Start', 'cal.duration': 'Duration', 'cal.reminderNote': 'Google Calendar will remind you 15 minutes before.',
+  'cal.disconnect': 'Disconnect', 'cal.disconnectQ': 'Disconnect Google Calendar?', 'today.now': 'now', 'today.inMin': 'in {n} min',
+ 'cal.connect': 'Google Calendar', 'cal.connectSoon': 'Events, calls and 15-min reminders — coming in phase 2',
 
   'stats.title': 'Stats', 'stats.eyebrow': 'All spheres', 'stats.habits': 'Habits', 'stats.avg': 'Average', 'stats.goodDays': '≥80% days',
   'stats.bestStreak': 'Best streak', 'stats.net': 'Net', 'stats.workouts': 'Workouts', 'stats.minutes': 'Minutes', 'stats.strength': 'Strength',
@@ -155,7 +160,12 @@ const ru: Dict = {
   'speech.diction': 'Разминка дикции', 'speech.diction.d': 'Скороговорки и артикуляция, 5 мин',
   'lang.en': 'Английский', 'lang.fr': 'Французский', 'lang.de': 'Немецкий',
 
-  'cal.today': 'Сегодня', 'cal.connect': 'Google Календарь', 'cal.connectSoon': 'События, звонки и напоминания за 15 мин — на 2 этапе',
+  'cal.today': 'Сегодня',
+  'cal.new': 'Новое событие', 'cal.connectHint': 'События и звонки появятся здесь, можно будет добавлять новые.', 'cal.needCloud': 'Сначала войди в облако (Настройки).',
+  'cal.connectBtn': 'Подключить', 'cal.allDay': 'Весь день', 'cal.empty': 'В этот день событий нет', 'cal.join': 'Присоединиться к звонку', 'cal.openGoogle': 'Открыть в Google Календаре',
+  'cal.start': 'Начало', 'cal.duration': 'Длительность', 'cal.reminderNote': 'Google Календарь напомнит за 15 минут.',
+  'cal.disconnect': 'Отключить', 'cal.disconnectQ': 'Отключить Google Календарь?', 'today.now': 'сейчас', 'today.inMin': 'через {n} мин',
+ 'cal.connect': 'Google Календарь', 'cal.connectSoon': 'События, звонки и напоминания за 15 мин — на 2 этапе',
 
   'stats.title': 'Статистика', 'stats.eyebrow': 'Все сферы', 'stats.habits': 'Привычки', 'stats.avg': 'Среднее', 'stats.goodDays': 'Дни ≥80%',
   'stats.bestStreak': 'Лучшая серия', 'stats.net': 'Итог', 'stats.workouts': 'Тренировки', 'stats.minutes': 'Минуты', 'stats.strength': 'Силовые',
