@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useT } from '../i18n'
 import { useSync } from '../lib/sync'
-import { disablePush, enablePush, isStandalone, pushEnabled, pushSupported, refreshPushTz, testPush } from '../lib/push'
+import { disablePush, enablePush, isStandalone, pushEnabled, pushSupported, syncSubscription, testPush } from '../lib/push'
 import { Switch } from './ui'
 import { Icon } from './Icon'
 
@@ -17,7 +17,7 @@ export function PushCard() {
     if (!supported) return
     pushEnabled().then((v) => {
       setOn(v)
-      if (v && session) refreshPushTz(session.user.id)
+      if (v && session) syncSubscription(session.user.id).catch((e) => setMsg({ ok: false, text: (e as Error).message }))
     })
   }, [supported, session])
 
@@ -59,7 +59,7 @@ export function PushCard() {
           onClick={async () => {
             setMsg(null)
             try {
-              const r = await testPush()
+              const r = await testPush(session!.user.id)
               setMsg({ ok: true, text: t('push.testSent', { n: r.sent }) })
             } catch (e) {
               setMsg({ ok: false, text: (e as Error).message })

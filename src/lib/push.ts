@@ -23,11 +23,7 @@ export async function pushEnabled() {
   return !!(await currentSub()) && Notification.permission === 'granted'
 }
 
-export async function enablePush(userId: string) {
-  const perm = await Notification.requestPermission()
-  if (perm !== 'granted') throw new Error('permission')
-  const reg = await navigator.serviceWorker.ready
-  const sub = (await reg.pushManager.getSubscription()) || (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToBytes(VAPID_PUBLIC) }))
+async function saveSub(userId: string, sub: PushSubscription) {
   const j = sub.toJSON()
   const { error } = await supabase.from('push_subscriptions').upsert({
     endpoint: j.endpoint,
@@ -40,6 +36,14 @@ export async function enablePush(userId: string) {
   if (error) throw new Error(error.message)
 }
 
+export async function enablePush(userId: string) {
+  const perm = await Notification.requestPermission()
+  if (perm !== 'granted') throw new Error('permission')
+  const reg = await navigator.serviceWorker.ready
+  const sub = (await reg.pushManager.getSubscription()) || (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToBytes(VAPID_PUBLIC) }))
+  await saveSub(userId, sub)
+}
+
 export async function disablePush() {
   const sub = await currentSub()
   if (!sub) return
@@ -47,14 +51,14 @@ export async function disablePush() {
   await sub.unsubscribe()
 }
 
-/** keep the stored time zone fresh (travel) */
-export async function refreshPushTz(userId: string) {
+/** make sure this device's subscription (and current time zone) is stored on the server */
+export async function syncSubscription(userId: string) {
   const sub = await currentSub()
-  if (!sub) return
-  await supabase.from('push_subscriptions').update({ tz: Intl.DateTimeFormat().resolvedOptions().timeZone, user_id: userId }).eq('endpoint', sub.endpoint)
+  if (sub && Notification.permission === 'granted') await saveSub(userId, sub)
 }
 
-export async function testPush() {
+export async function testPush(userId: string) {
+  await syncSubscription(userId)
   const { data, error } = await supabase.functions.invoke('notify', { body: { action: 'test' } })
   if (error) throw new Error(error.message)
   if (data?.error) throw new Error(data.error)

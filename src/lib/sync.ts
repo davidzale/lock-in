@@ -31,6 +31,23 @@ const readMeta = (): Meta => {
 const writeMeta = (m: Meta) => localStorage.setItem(META, JSON.stringify({ ...readMeta(), ...m }))
 
 let applyingRemote = false
+let retries = 0
+const isNetwork = (m?: string) => !!m && /load failed|failed to fetch|network|fetch/i.test(m)
+/** transient network errors (app just resumed, offline): retry quietly with backoff */
+function fail(message: string, again: () => void) {
+  if (isNetwork(message) && retries < 4) {
+    const delay = [2000, 5000, 15000, 30000][retries++]
+    useSync.setState({ status: 'syncing' })
+    setTimeout(again, delay)
+    return
+  }
+  retries = 0
+  useSync.setState({ status: 'error', error: isNetwork(message) ? 'offline' : message })
+}
+const ok = (patch: Partial<SyncState> = {}) => {
+  retries = 0
+  useSync.setState({ status: 'synced', lastSync: new Date().toISOString(), error: undefined, ...patch })
+}
 let pushTimer: ReturnType<typeof setTimeout> | undefined
 
 async function push() {
@@ -39,9 +56,9 @@ async function push() {
   useSync.setState({ status: 'syncing' })
   const now = new Date().toISOString()
   const { error } = await supabase.from('app_state').upsert({ user_id: session.user.id, data: pickData(useStore.getState()), updated_at: now })
-  if (error) return useSync.setState({ status: 'error', error: error.message })
+  if (error) return fail(error.message, push)
   writeMeta({ remoteAt: now, localChangedAt: now })
-  useSync.setState({ status: 'synced', lastSync: now, error: undefined })
+  ok({ lastSync: now })
 }
 
 export async function pull() {
@@ -49,7 +66,7 @@ export async function pull() {
   if (!session) return
   useSync.setState({ status: 'syncing' })
   const { data, error } = await supabase.from('app_state').select('data, updated_at').eq('user_id', session.user.id).maybeSingle()
-  if (error) return useSync.setState({ status: 'error', error: error.message })
+  if (error) return fail(error.message, pull)
   const meta = readMeta()
   if (!data) return push() // first device: upload local data
   const ts = (x?: string) => (x ? Date.parse(x) : 0)
@@ -66,7 +83,7 @@ export async function pull() {
     applyingRemote = false
     writeMeta({ remoteAt, localChangedAt: remoteAt })
   }
-  useSync.setState({ status: 'synced', lastSync: new Date().toISOString(), error: undefined })
+  ok()
 }
 
 export const syncNow = () => push()
@@ -93,7 +110,10 @@ export function useCloudSync() {
     })
     const onVis = () => document.visibilityState === 'visible' && useSync.getState().session && pull()
     document.addEventListener('visibilitychange', onVis)
+    const onOnline = () => useSync.getState().session && pull()
+    window.addEventListener('online', onOnline)
     return () => {
+      window.removeEventListener('online', onOnline)
       sub.subscription.unsubscribe()
       unsub()
       document.removeEventListener('visibilitychange', onVis)
