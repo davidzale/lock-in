@@ -82,7 +82,7 @@ const en: Dict = {
   'cal.new': 'New event', 'cal.connectHint': 'See your events and calls here and add new ones.', 'cal.needCloud': 'Sign in to cloud sync first (Settings).',
   'cal.connectBtn': 'Connect', 'cal.allDay': 'All day', 'cal.empty': 'No events this day', 'cal.join': 'Join call', 'cal.openGoogle': 'Open in Google Calendar',
   'cal.start': 'Start', 'cal.duration': 'Duration', 'cal.reminderNote': 'Google Calendar will remind you 15 minutes before.',
-  'cal.disconnect': 'Disconnect', 'cal.disconnectQ': 'Disconnect Google Calendar?', 'today.now': 'now', 'today.inMin': 'in {n} min',
+  'cal.disconnect': 'Disconnect', 'cal.disconnectQ': 'Disconnect Google Calendar?', 'today.now': 'now', 'today.noMoreEvents': 'No more events today', 'today.inMin': 'in {n} min',
  'cal.connect': 'Google Calendar', 'cal.connectSoon': 'Events, calls and 15-min reminders — coming in phase 2',
 
   'stats.title': 'Stats', 'stats.eyebrow': 'All spheres', 'stats.habits': 'Habits', 'stats.avg': 'Average', 'stats.goodDays': '≥80% days',
@@ -184,7 +184,7 @@ const ru: Dict = {
   'cal.new': 'Новое событие', 'cal.connectHint': 'События и звонки появятся здесь, можно будет добавлять новые.', 'cal.needCloud': 'Сначала войди в облако (Настройки).',
   'cal.connectBtn': 'Подключить', 'cal.allDay': 'Весь день', 'cal.empty': 'В этот день событий нет', 'cal.join': 'Присоединиться к звонку', 'cal.openGoogle': 'Открыть в Google Календаре',
   'cal.start': 'Начало', 'cal.duration': 'Длительность', 'cal.reminderNote': 'Google Календарь напомнит за 15 минут.',
-  'cal.disconnect': 'Отключить', 'cal.disconnectQ': 'Отключить Google Календарь?', 'today.now': 'сейчас', 'today.inMin': 'через {n} мин',
+  'cal.disconnect': 'Отключить', 'cal.disconnectQ': 'Отключить Google Календарь?', 'today.now': 'сейчас', 'today.noMoreEvents': 'Сегодня событий больше нет', 'today.inMin': 'через {n} мин',
  'cal.connect': 'Google Календарь', 'cal.connectSoon': 'События, звонки и напоминания за 15 мин — на 2 этапе',
 
   'stats.title': 'Статистика', 'stats.eyebrow': 'Все сферы', 'stats.habits': 'Привычки', 'stats.avg': 'Среднее', 'stats.goodDays': 'Дни ≥80%',

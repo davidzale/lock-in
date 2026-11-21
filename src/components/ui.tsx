@@ -1,17 +1,8 @@
-import { useEffect } from 'react'
 import type { ReactNode } from 'react'
 import { Icon } from './Icon'
 import { clamp01 } from '../lib/format'
 
 export function Sheet({ open, onClose, title, children }: { open: boolean; onClose: () => void; title?: string; children: ReactNode }) {
-  useEffect(() => {
-    if (!open) return
-    const prev = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = prev
-    }
-  }, [open])
   if (!open) return null
   return (
     <>

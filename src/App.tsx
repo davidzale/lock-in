@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { NavLink, Route, Routes } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom'
 import { useStore } from './store'
 import { useT } from './i18n'
 import { Icon } from './components/Icon'
@@ -70,8 +70,16 @@ export default function App() {
     return () => document.removeEventListener('visibilitychange', onVis)
   }, [])
 
+  const scroller = useRef<HTMLDivElement>(null)
+  const { pathname } = useLocation()
+  // every screen opens at the top
+  useEffect(() => {
+    scroller.current?.scrollTo({ top: 0 })
+  }, [pathname])
+
   return (
     <>
+      <div className="scroller" ref={scroller}>
       <main className="app">
         <Routes>
           <Route path="/" element={<Today />} />
@@ -84,9 +92,15 @@ export default function App() {
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>
+      </div>
       <nav className="tabbar">
         {TABS.map((x) => (
-          <NavLink key={x.to} to={x.to} end={x.to === '/'}>
+          <NavLink
+            key={x.to}
+            to={x.to}
+            end={x.to === '/'}
+            onClick={() => { if (pathname === x.to) scroller.current?.scrollTo({ top: 0, behavior: 'smooth' }) }}
+          >
             <Icon n={x.icon} />
             {t(x.key)}
           </NavLink>

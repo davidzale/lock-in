@@ -34,6 +34,7 @@ export default function Today() {
   const blocks: Block[] = ['morning', 'day', 'evening']
   useWeekEvents(weekStart(now))
   const weeks = useGcal((g) => g.weeks)
+  const calConnected = useGcal((g) => !!g.connected)
   const next = eventsOn(key, weeks).filter((e) => !e.allDay && new Date(e.end) > now)[0]
   const hm = (d: Date) => `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
   const eyebrow = `${fmtWeekday(now, s.lang)} ${fmtDate(now, s.lang, { day: '2-digit', month: '2-digit' })} · W${isoWeek(now)}`
@@ -98,14 +99,20 @@ export default function Today() {
         </div>
       </div>
 
-      {next && (
-        <button className="card list-row" onClick={() => nav('/calendar')}>
-          <div className="ibox"><Icon n={next.meet ? 'video' : 'cal'} size="s" /></div>
+      {calConnected && (
+        <button className="card list-row next-slot" onClick={() => nav('/calendar')}>
+          <div className={`ibox ${next ? '' : 'g'}`}><Icon n={next?.meet ? 'video' : 'cal'} size="s" /></div>
           <div className="grow">
-            <div className="ellipsis" style={{ fontSize: 14, fontWeight: 600 }}>{next.title}</div>
-            <div className="mono mut" style={{ fontSize: 11, marginTop: 3 }}>
-              {hm(new Date(next.start))}–{hm(new Date(next.end))} · {new Date(next.start) <= now ? t('today.now') : t('today.inMin', { n: Math.round((new Date(next.start).getTime() - now.getTime()) / 60000) })}
-            </div>
+            {next ? (
+              <>
+                <div className="ellipsis" style={{ fontSize: 14, fontWeight: 600 }}>{next.title}</div>
+                <div className="mono mut" style={{ fontSize: 11, marginTop: 3 }}>
+                  {hm(new Date(next.start))}–{hm(new Date(next.end))} · {new Date(next.start) <= now ? t('today.now') : t('today.inMin', { n: Math.round((new Date(next.start).getTime() - now.getTime()) / 60000) })}
+                </div>
+              </>
+            ) : (
+              <div className="mut" style={{ fontSize: 13 }}>{t('today.noMoreEvents')}</div>
+            )}
           </div>
           <Icon n="chev" size="s" className="mut" />
         </button>
