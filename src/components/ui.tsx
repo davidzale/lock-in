@@ -1,18 +1,89 @@
-import type { ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { ReactNode, TouchEvent as RTouchEvent } from 'react'
+import { createPortal } from 'react-dom'
+import { create } from 'zustand'
 import { Icon } from './Icon'
 import { clamp01 } from '../lib/format'
 
+/** how many sheets are open — the tab bar and mic button hide while any is */
+export const useOverlay = create<{ count: number }>(() => ({ count: 0 }))
+
+const CLOSE_MS = 220
+
 export function Sheet({ open, onClose, title, children }: { open: boolean; onClose: () => void; title?: string; children: ReactNode }) {
-  if (!open) return null
-  return (
+  const [mounted, setMounted] = useState(open)
+  const [closing, setClosing] = useState(false)
+  const last = useRef({ title, children })
+  if (open) last.current = { title, children } // keep content while the close animation plays
+  const sheet = useRef<HTMLDivElement>(null)
+  const drag = useRef<{ y0: number; dy: number; active: boolean }>({ y0: 0, dy: 0, active: false })
+
+  useEffect(() => {
+    if (open) {
+      setMounted(true)
+      setClosing(false)
+      return
+    }
+    if (!mounted) return
+    setClosing(true)
+    const t = setTimeout(() => { setMounted(false); setClosing(false) }, CLOSE_MS)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
+  useEffect(() => {
+    if (!mounted) return
+    useOverlay.setState((o) => ({ count: o.count + 1 }))
+    return () => useOverlay.setState((o) => ({ count: Math.max(0, o.count - 1) }))
+  }, [mounted])
+
+  if (!mounted) return null
+
+  // swipe down to close (only when the sheet content is scrolled to the top)
+  const onTouchStart = (e: RTouchEvent) => {
+    const el = sheet.current
+    if (!el || el.scrollTop > 0) return
+    drag.current = { y0: e.touches[0].clientY, dy: 0, active: true }
+  }
+  const onTouchMove = (e: RTouchEvent) => {
+    const d = drag.current
+    if (!d.active || !sheet.current) return
+    d.dy = Math.max(0, e.touches[0].clientY - d.y0)
+    if (d.dy > 0) {
+      sheet.current.style.transition = 'none'
+      sheet.current.style.transform = `translateY(${d.dy}px)`
+    }
+  }
+  const onTouchEnd = () => {
+    const d = drag.current
+    const el = sheet.current
+    d.active = false
+    if (!el) return
+    el.style.transition = 'transform .22s cubic-bezier(.2,.8,.2,1)'
+    if (d.dy > 110) {
+      el.style.transform = 'translateY(100%)'
+      setTimeout(onClose, 160)
+    } else el.style.transform = ''
+    d.dy = 0
+  }
+
+  return createPortal(
     <>
-      <div className="backdrop" onClick={onClose} />
-      <div className="sheet" role="dialog">
+      <div className={`backdrop ${closing ? 'closing' : ''}`} onClick={onClose} />
+      <div
+        ref={sheet}
+        className={`sheet ${closing ? 'closing' : ''}`}
+        role="dialog"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         <div className="grab" />
-        {title && <h3>{title}</h3>}
-        {children}
+        {last.current.title && <h3>{last.current.title}</h3>}
+        {last.current.children}
       </div>
-    </>
+    </>,
+    document.body,
   )
 }
 

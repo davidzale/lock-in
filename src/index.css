@@ -43,9 +43,8 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { background: var(--bg); height: 100%; overflow: hidden; }
-#root { height: 100%; }
-.scroller { position: fixed; inset: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
+html, body { background: var(--bg); }
+html { overflow-x: hidden; }
 body {
   color: var(--text);
   font-family: 'LI Digits', Geist, system-ui, -apple-system, sans-serif;
@@ -80,7 +79,6 @@ input, select, textarea { font: inherit; color: inherit; }
 .h { font-size: 28px; font-weight: 600; letter-spacing: -0.03em; margin-top: 5px; }
 .h2 { font-size: 15px; font-weight: 600; }
 .iconbtn { width: 36px; height: 36px; border-radius: 12px; background: var(--card2); border: 1px solid var(--line); display: grid; place-items: center; color: var(--text2); }
-.iconbtn:active { transform: scale(0.96); }
 
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 14px 16px; margin-bottom: 10px; }
 .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px; }
@@ -116,7 +114,6 @@ input, select, textarea { font: inherit; color: inherit; }
 .btn.ghost { background: var(--card2); border: 1px solid var(--line); color: var(--text); }
 .btn.danger { background: transparent; color: var(--danger); border: 1px solid var(--line); }
 .btn.sm { height: 34px; font-size: 13px; border-radius: 10px; padding: 0 12px; }
-.btn:active { transform: scale(0.98); }
 .btn:disabled { opacity: 0.4; }
 
 .seg { display: flex; background: var(--card2); border: 1px solid var(--line); border-radius: 12px; padding: 3px; gap: 2px; }
@@ -152,9 +149,9 @@ select.input { appearance: none; -webkit-appearance: none; }
 /* sheet */
 .backdrop { position: fixed; inset: 0; background: var(--backdrop); z-index: 40; animation: fade 0.18s ease; }
 .sheet {
-  position: fixed; left: 0; right: 0; margin: 0 auto; bottom: 0; width: 100%; max-width: 480px; max-height: 88dvh; overflow-y: auto; overscroll-behavior: contain; z-index: 41;
+  position: fixed; left: 0; right: 0; margin: 0 auto; bottom: 0; width: 100%; max-width: 480px; max-height: calc(100dvh - env(safe-area-inset-top) - 24px); overflow-y: auto; overscroll-behavior: contain; z-index: 41; will-change: transform;
   background: var(--card); border: 1px solid var(--line); border-bottom: 0; border-radius: 24px 24px 0 0;
-  padding: 10px 18px calc(env(safe-area-inset-bottom) + 18px); animation: up 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  padding: 10px 18px calc(env(safe-area-inset-bottom) + 18px); animation: up 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .sheet .grab { width: 40px; height: 5px; border-radius: 5px; background: var(--line); margin: 0 auto 12px; }
 .sheet h3 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 16px; }
@@ -194,7 +191,6 @@ select.input { appearance: none; -webkit-appearance: none; }
   display: grid; place-items: center; box-shadow: 0 8px 24px rgba(255, 106, 26, 0.35);
   right: max(18px, calc(50vw - 240px + 18px)); bottom: calc(env(safe-area-inset-bottom) + 78px);
 }
-.fab:active { transform: scale(0.95); }
 .mic { position: absolute; right: 10px; top: 10px; width: 38px; height: 38px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); color: var(--text2); display: grid; place-items: center; }
 .mic.on { background: var(--acc); border-color: var(--acc); color: var(--acc-ink); animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 106, 26, 0.5); } 50% { box-shadow: 0 0 0 8px rgba(255, 106, 26, 0); } }
@@ -206,3 +202,46 @@ textarea.input { font-size: 16px; }
 .tile:active, .card.list-row:active { transform: scale(0.985); }
 .tabbar a:active { opacity: 0.6; }
 .next-slot { min-height: 66px; }
+
+/* ---------- motion ---------- */
+:root { --ease: cubic-bezier(0.16, 1, 0.3, 1); }
+.sheet.closing { animation: sheetDown 0.22s cubic-bezier(0.4, 0, 1, 1) forwards; }
+.backdrop { touch-action: none; }
+.backdrop.closing { animation: fadeOut 0.22s ease forwards; }
+@keyframes sheetDown { to { transform: translateY(100%); } }
+@keyframes fadeOut { to { opacity: 0; } }
+
+/* tab bar / mic hide while a sheet is open */
+.tabbar, .fab { transition: transform 0.28s var(--ease), opacity 0.2s; }
+.tabbar.hide { transform: translateY(110%); }
+.fab.hide { transform: scale(0.6); opacity: 0; pointer-events: none; }
+
+/* screens fade in */
+.page { animation: pageIn 0.28s var(--ease); }
+@keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* press feedback */
+.btn, .iconbtn, .chip, .seg button, .fab, .mic, .wd, .switch { transition: transform 0.14s var(--ease), background 0.18s, color 0.18s, border-color 0.18s, opacity 0.18s; }
+.btn:active, .iconbtn:active, .chip:active, .wd:active, .mic:active { transform: scale(0.95); }
+.seg button:active { transform: scale(0.97); }
+.fab:active { transform: scale(0.92); }
+.task:active .cb { transform: scale(0.88); }
+.cb { transition: background 0.18s, border-color 0.18s, transform 0.14s var(--ease); }
+.cb.on svg { animation: tick 0.32s var(--ease); }
+@keyframes tick { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.task .tname { transition: color 0.2s; }
+
+/* tab icons */
+.tabbar a .ic { transition: transform 0.25s var(--ease), color 0.2s; }
+.tabbar a.active .ic { transform: translateY(-1px) scale(1.08); }
+
+/* progress bars and segments animate */
+.bar i { transition: width 0.5s var(--ease); }
+.segs i { transition: background 0.3s; }
+
+/* banners and sheet content */
+.banner { animation: pageIn 0.3s var(--ease); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

@@ -6,7 +6,7 @@ import { useGcal, loadWeek } from '../lib/gcal'
 import { weekStart } from '../lib/date'
 import { apply, ask, describe } from '../lib/assistant'
 import type { Action } from '../lib/assistant'
-import { Sheet } from './ui'
+import { Sheet, useOverlay } from './ui'
 import { Icon } from './Icon'
 
 type Rec = {
@@ -23,6 +23,7 @@ export function Assistant() {
   const session = useSync((s) => s.session)
   const calendar = useGcal((g) => !!g.connected)
   const [open, setOpen] = useState(false)
+  const overlay = useOverlay((o) => o.count > 0)
   const [text, setText] = useState('')
   const [listening, setListening] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -89,7 +90,7 @@ export function Assistant() {
 
   return (
     <>
-      <button className="fab" aria-label={t('ai.title')} onClick={() => setOpen(true)}>
+      <button className={`fab ${overlay ? 'hide' : ''}`} aria-label={t('ai.title')} onClick={() => setOpen(true)}>
         <Icon n="mic" />
       </button>
       <Sheet open={open} onClose={close} title={t('ai.title')}>

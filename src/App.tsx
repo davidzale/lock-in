@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { NavLink, Route, Routes, useLocation } from 'react-router-dom'
 import { useStore } from './store'
 import { useT } from './i18n'
 import { Icon } from './components/Icon'
 import { QuickAdd } from './components/QuickAdd'
 import { Assistant } from './components/Assistant'
+import { useOverlay } from './components/ui'
 import { useCloudSync } from './lib/sync'
 import Today from './screens/Today'
 import Calendar from './screens/Calendar'
@@ -70,17 +71,17 @@ export default function App() {
     return () => document.removeEventListener('visibilitychange', onVis)
   }, [])
 
-  const scroller = useRef<HTMLDivElement>(null)
   const { pathname } = useLocation()
+  const overlay = useOverlay((o) => o.count > 0)
   // every screen opens at the top
   useEffect(() => {
-    scroller.current?.scrollTo({ top: 0 })
+    window.scrollTo({ top: 0 })
   }, [pathname])
 
   return (
     <>
-      <div className="scroller" ref={scroller}>
       <main className="app">
+        <div className="page" key={pathname}>
         <Routes>
           <Route path="/" element={<Today />} />
           <Route path="/calendar" element={<Calendar />} />
@@ -91,15 +92,15 @@ export default function App() {
           <Route path="/summary/:month" element={<Summary />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
+        </div>
       </main>
-      </div>
-      <nav className="tabbar">
+      <nav className={`tabbar ${overlay ? 'hide' : ''}`}>
         {TABS.map((x) => (
           <NavLink
             key={x.to}
             to={x.to}
             end={x.to === '/'}
-            onClick={() => { if (pathname === x.to) scroller.current?.scrollTo({ top: 0, behavior: 'smooth' }) }}
+            onClick={() => { if (pathname === x.to) window.scrollTo({ top: 0, behavior: 'smooth' }) }}
           >
             <Icon n={x.icon} />
             {t(x.key)}
