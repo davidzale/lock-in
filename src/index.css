@@ -54,7 +54,7 @@ body {
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 input, select, textarea { font: inherit; color: inherit; }
 
-.app { max-width: 480px; margin: 0 auto; min-height: 100dvh; padding: calc(env(safe-area-inset-top) + 18px) 18px calc(env(safe-area-inset-bottom) + 100px); }
+.app { max-width: 480px; margin: 0 auto; min-height: 100dvh; padding: calc(env(safe-area-inset-top) + 18px) 18px calc(env(safe-area-inset-bottom) + 150px); }
 
 .mono { font-family: 'Geist Mono', ui-monospace, monospace; }
 .num { font-family: Inter, Geist, system-ui, sans-serif; font-weight: 500; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'cv11' 1; }
@@ -183,3 +183,15 @@ select.input { appearance: none; -webkit-appearance: none; }
 .card.list-row { padding: 12px 16px; border: 1px solid var(--line); }
 .heat-cal { gap: 5px; }
 .heat-cal span { border-radius: 6px; }
+
+/* assistant */
+.fab {
+  position: fixed; z-index: 21; width: 54px; height: 54px; border-radius: 18px; background: var(--acc); color: var(--acc-ink);
+  display: grid; place-items: center; box-shadow: 0 8px 24px rgba(255, 106, 26, 0.35);
+  right: max(18px, calc(50vw - 240px + 18px)); bottom: calc(env(safe-area-inset-bottom) + 78px);
+}
+.fab:active { transform: scale(0.95); }
+.mic { position: absolute; right: 10px; top: 10px; width: 38px; height: 38px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); color: var(--text2); display: grid; place-items: center; }
+.mic.on { background: var(--acc); border-color: var(--acc); color: var(--acc-ink); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 106, 26, 0.5); } 50% { box-shadow: 0 0 0 8px rgba(255, 106, 26, 0); } }
+textarea.input { font-size: 16px; }

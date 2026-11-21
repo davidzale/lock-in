@@ -4,6 +4,7 @@ import { useStore } from './store'
 import { useT } from './i18n'
 import { Icon } from './components/Icon'
 import { QuickAdd } from './components/QuickAdd'
+import { Assistant } from './components/Assistant'
 import { useCloudSync } from './lib/sync'
 import Today from './screens/Today'
 import Calendar from './screens/Calendar'
@@ -92,6 +93,7 @@ export default function App() {
         ))}
       </nav>
       <QuickAdd />
+      <Assistant />
     </>
   )
 }

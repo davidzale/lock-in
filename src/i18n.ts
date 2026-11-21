@@ -69,6 +69,10 @@ const en: Dict = {
   'lang.en': 'English', 'lang.fr': 'French', 'lang.de': 'German',
 
   'cal.today': 'Today',
+  'ai.needCloud': 'Sign in to Cloud sync in Settings to use the assistant.', 'ai.title': 'Assistant', 'ai.placeholder': 'e.g. “spent 25 lari on groceries, did yoga and meditation, slept 7 hours”',
+  'ai.hintMic': 'Tap the mic and speak, or type. I’ll show what I understood before saving.', 'ai.hintKeyboard': 'Type, or use the mic on the iPhone keyboard to dictate.',
+  'ai.send': 'Send', 'ai.thinking': 'Thinking…', 'ai.apply': 'Apply ({n})', 'ai.again': 'Redo', 'ai.done': 'Done', 'ai.micError': 'Microphone unavailable — use the mic on the keyboard.',
+
   'push.needCloud': 'Sign in to Cloud sync above first.', 'push.title': 'Notifications', 'push.hint': 'Habit reminders at the time you set, events 15 min before, monthly summary on the 1st.',
   'push.onHint': 'On: habit reminders (time is set per habit), events 15 min before, monthly summary on the 1st.',
   'push.installFirst': 'Open LOCK IN from the Home Screen icon to enable notifications.', 'push.unsupported': 'This device doesn’t support web notifications.',
@@ -167,6 +171,10 @@ const ru: Dict = {
   'lang.en': 'Английский', 'lang.fr': 'Французский', 'lang.de': 'Немецкий',
 
   'cal.today': 'Сегодня',
+  'ai.needCloud': 'Чтобы пользоваться помощником, войди в облако в Настройках.', 'ai.title': 'Помощник', 'ai.placeholder': 'Например: «потратил 25 лари на продукты, сделал йогу и медитацию, спал 7 часов»',
+  'ai.hintMic': 'Нажми на микрофон и говори, или напиши. Перед сохранением я покажу, что понял.', 'ai.hintKeyboard': 'Напиши или продиктуй через микрофон на клавиатуре iPhone.',
+  'ai.send': 'Отправить', 'ai.thinking': 'Думаю…', 'ai.apply': 'Применить ({n})', 'ai.again': 'Заново', 'ai.done': 'Готово', 'ai.micError': 'Микрофон недоступен — продиктуй через микрофон на клавиатуре.',
+
   'push.needCloud': 'Сначала войди в облако — карточка выше.', 'push.title': 'Уведомления', 'push.hint': 'Напоминания о привычках в твоё время, о событиях за 15 минут и итоги месяца 1-го числа.',
   'push.onHint': 'Включено: привычки (время задаётся у каждой), события за 15 минут, итоги месяца 1-го числа.',
   'push.installFirst': 'Открой LOCK IN с иконки на экране «Домой», чтобы включить уведомления.', 'push.unsupported': 'Это устройство не поддерживает веб-уведомления.',
