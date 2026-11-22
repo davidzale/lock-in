@@ -8,6 +8,7 @@ import type { GEvent } from '../lib/gcal'
 import { useSync } from '../lib/sync'
 import { Field, Header, IconBtn, Sheet, Switch } from '../components/ui'
 import { Icon } from '../components/Icon'
+import { askConfirm } from '../components/Confirm'
 
 const START = 6, END = 24, ROW = 48
 
@@ -176,7 +177,7 @@ export default function Calendar() {
             <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 8, marginBottom: 8 }}>
               {!open.allDay && <button className="btn ghost" onClick={() => { const e = open; setOpen(null); setTimeout(() => setEditing(e), 250) }}><Icon n="edit" size="s" />{t('common.edit')}</button>}
               <button className="btn danger" disabled={delBusy} style={open.allDay ? { gridColumn: '1 / -1' } : undefined} onClick={async () => {
-                if (!confirm(t('cal.deleteQ'))) return
+                if (!(await askConfirm(t('cal.deleteQ')))) return
                 setDelBusy(true)
                 try { await deleteEvent(open); setOpen(null) } catch (e) { alert((e as Error).message) }
                 setDelBusy(false)

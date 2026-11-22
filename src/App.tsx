@@ -6,6 +6,7 @@ import { Icon } from './components/Icon'
 import { QuickAdd } from './components/QuickAdd'
 import { Assistant } from './components/Assistant'
 import { useOverlay } from './components/ui'
+import { ConfirmHost } from './components/Confirm'
 import { useCloudSync } from './lib/sync'
 import Today from './screens/Today'
 import Calendar from './screens/Calendar'
@@ -80,17 +81,6 @@ export default function App() {
     window.scrollTo({ top: 0 })
   }, [pathname])
 
-  // while a sheet is open, freeze the page behind it (iOS ignores overflow:hidden on body)
-  useEffect(() => {
-    if (!overlay) return
-    const y = window.scrollY
-    const b = document.body.style
-    Object.assign(b, { position: 'fixed', top: `-${y}px`, left: '0', right: '0', width: '100%' })
-    return () => {
-      Object.assign(b, { position: '', top: '', left: '', right: '', width: '' })
-      window.scrollTo(0, y)
-    }
-  }, [overlay])
 
   return (
     <>
@@ -124,6 +114,7 @@ export default function App() {
       </nav>
       <QuickAdd />
       {!inSession && <Assistant />}
+      <ConfirmHost />
     </>
   )
 }

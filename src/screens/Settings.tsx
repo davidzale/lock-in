@@ -9,6 +9,7 @@ import { Icon } from '../components/Icon'
 import { GoalForm, HabitForm, unitLabel } from '../components/forms'
 import { CloudCard } from '../components/CloudCard'
 import { PushCard } from '../components/PushCard'
+import { askConfirm } from '../components/Confirm'
 
 export default function Settings() {
   const t = useT()
@@ -32,7 +33,7 @@ export default function Settings() {
     try {
       const j = JSON.parse(await f.text())
       if (j?.app !== 'lockin' || !j.data) throw new Error('bad')
-      if (confirm(t('settings.importConfirm'))) s.importData(j.data)
+      if (await askConfirm(t('settings.importConfirm'), { ok: t('settings.import'), danger: false })) s.importData(j.data)
     } catch {
       alert(t('settings.importError'))
     }
@@ -126,7 +127,7 @@ export default function Settings() {
         <input ref={fileRef} type="file" accept="application/json" hidden onChange={(e) => e.target.files?.[0] && importData(e.target.files[0])} />
       </div>
 
-      <div className="mono mut" style={{ textAlign: 'center', fontSize: 10, padding: '8px 0 20px' }}>LOCK IN · v0.6.4 · {t('settings.phase')}</div>
+      <div className="mono mut" style={{ textAlign: 'center', fontSize: 10, padding: '8px 0 20px' }}>LOCK IN · v0.6.5 · {t('settings.phase')}</div>
 
       <Sheet open={!!habit} onClose={() => setHabit(null)} title={habit === 'new' ? t('habit.new') : t('habit.edit')}>
         {habit && <HabitForm habit={habit === 'new' ? undefined : habit} onDone={() => setHabit(null)} />}

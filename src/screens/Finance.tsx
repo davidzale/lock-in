@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { EXPENSE_CATS, useStore } from '../store'
+import { CURRENCIES, EXPENSE_CATS, useStore } from '../store'
 import type { Currency, FinGoal, FinGoalType, Recurring, Tx } from '../store'
 import { useT } from '../i18n'
 import { dayKey, fmtDate, inRange, monthKey, parseDay, uid } from '../lib/date'
@@ -10,6 +10,7 @@ import { Bar, Field, IconBtn, Seg, Segs, Sheet } from '../components/ui'
 import { Icon } from '../components/Icon'
 import { TxForm } from '../components/QuickAdd'
 import { CategoryRing } from '../components/Donut'
+import { askConfirm } from '../components/Confirm'
 
 const num = (s: string) => Number(s.replace(',', '.').replace(/\s/g, ''))
 const CAT_ICON: Record<string, string> = { food: 'flame', housing: 'lock', transport: 'compass', entertainment: 'spark', health: 'activity', sport: 'dumbbell', subscriptions: 'repeat', shopping: 'wallet', travel: 'globe', other: 'target', fixed: 'up', variable: 'up' }
@@ -367,7 +368,7 @@ function FinGoalForm({ goal, onDone }: { goal?: FinGoal; onDone: () => void }) {
         upsertFinGoal({ id: goal?.id || uid(), saved: goal?.saved || 0, type, title: title.trim(), target: num(target) || 0, deadline: deadline || undefined, seed: goal?.seed && goal.title === title.trim() ? goal.seed : undefined })
         onDone()
       }}>{t('common.save')}</button>
-      {goal && <button className="btn danger" style={{ width: '100%', marginTop: 8 }} onClick={() => { if (confirm(t('common.confirmDelete'))) { removeFinGoal(goal.id); onDone() } }}>{t('common.delete')}</button>}
+      {goal && <button className="btn danger" style={{ width: '100%', marginTop: 8 }} onClick={async () => { if (await askConfirm(t('common.confirmDelete'))) { removeFinGoal(goal.id); onDone() } }}>{t('common.delete')}</button>}
     </>
   )
 }
@@ -397,7 +398,7 @@ function ContribForm({ goal, onDone, onEdit }: { goal: FinGoal; onDone: () => vo
 
 function RecurringForm({ rec, mk, onDone }: { rec?: Recurring; mk: string; onDone: () => void }) {
   const t = useT()
-  const { currencies, upsertRecurring, removeRecurring } = useStore()
+  const { upsertRecurring, removeRecurring } = useStore()
   const [title, setTitle] = useState(rec?.title || '')
   const [amount, setAmount] = useState(rec ? String(recurringAmount(rec, mk)) : '')
   const [cur, setCur] = useState<Currency>(rec?.currency || 'USD')
@@ -412,7 +413,7 @@ function RecurringForm({ rec, mk, onDone }: { rec?: Recurring; mk: string; onDon
       </div>
       {rec && <div className="mut" style={{ fontSize: 12, marginTop: -6, marginBottom: 12 }}>{t('fin.amountFrom')}</div>}
       <div className="chips" style={{ marginBottom: 14 }}>
-        {currencies.map((c) => <button key={c} className={`chip ${c === cur ? 'on' : ''}`} onClick={() => setCur(c)}>{c}</button>)}
+        {CURRENCIES.map((c) => <button key={c} className={`chip ${c === cur ? 'on' : ''}`} onClick={() => setCur(c)}>{c}</button>)}
       </div>
       <Field label={t('fin.category')}>
         <div className="chips">{EXPENSE_CATS.map((c) => <button key={c} className={`chip ${c === cat ? 'on' : ''}`} onClick={() => setCat(c)}>{t(`cat.${c}`)}</button>)}</div>
@@ -425,7 +426,7 @@ function RecurringForm({ rec, mk, onDone }: { rec?: Recurring; mk: string; onDon
         upsertRecurring({ ...base, title: title.trim(), currency: cur, category: cat, day: Math.min(31, Math.max(1, num(day) || 1)) })
         onDone()
       }}>{t('common.save')}</button>
-      {rec && <button className="btn danger" style={{ width: '100%', marginTop: 8 }} onClick={() => { if (confirm(t('common.confirmDelete'))) { removeRecurring(rec.id); onDone() } }}>{t('common.delete')}</button>}
+      {rec && <button className="btn danger" style={{ width: '100%', marginTop: 8 }} onClick={async () => { if (await askConfirm(t('common.confirmDelete'))) { removeRecurring(rec.id); onDone() } }}>{t('common.delete')}</button>}
     </>
   )
 }

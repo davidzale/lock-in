@@ -5,6 +5,7 @@ import { useT } from '../i18n'
 import { Field } from './ui'
 import { Icon } from './Icon'
 import { disconnectGoogle, useGcal } from '../lib/gcal'
+import { askConfirm } from './Confirm'
 
 export function CloudCard() {
   const t = useT()
@@ -41,7 +42,7 @@ export function CloudCard() {
         {gConnected && (
           <div className="row div" style={{ marginTop: 12, paddingTop: 12, fontSize: 13 }}>
             <span className="gap8"><Icon n="cal" size="s" className="acc" />Google Calendar</span>
-            <button className="lbl" onClick={() => confirm(t('cal.disconnectQ')) && disconnectGoogle()}>{t('cal.disconnect')}</button>
+            <button className="lbl" onClick={async () => (await askConfirm(t('cal.disconnectQ'), { ok: t('cal.disconnect'), danger: true })) && disconnectGoogle()}>{t('cal.disconnect')}</button>
           </div>
         )}
       </div>

@@ -5,6 +5,7 @@ import type { Period } from '../lib/date'
 import { dayKey, uid } from '../lib/date'
 import { useT } from '../i18n'
 import { Field, Seg, Switch } from './ui'
+import { askConfirm } from './Confirm'
 
 const num = (s: string) => Number(s.replace(',', '.').replace(/\s/g, ''))
 
@@ -89,7 +90,7 @@ export function HabitForm({ habit, onDone }: { habit?: Habit; onDone: () => void
       <div className="mut" style={{ fontSize: 12, marginTop: -8, marginBottom: 14 }}>{t('habit.reminderHint')}</div>
       <button className="btn primary" style={{ width: '100%' }} disabled={!name.trim()} onClick={save}>{t('common.save')}</button>
       {habit && (
-        <button className="btn danger" style={{ width: '100%', marginTop: 8 }} onClick={() => { if (confirm(t('common.confirmDelete'))) { removeHabit(habit.id); onDone() } }}>
+        <button className="btn danger" style={{ width: '100%', marginTop: 8 }} onClick={async () => { if (await askConfirm(t('common.confirmDelete'))) { removeHabit(habit.id); onDone() } }}>
           {t('common.delete')}
         </button>
       )}
@@ -124,7 +125,7 @@ export function GoalForm({ goal, onDone, defaultPeriod }: { goal?: Goal; onDone:
         {t('common.save')}
       </button>
       {goal && (
-        <button className="btn danger" style={{ width: '100%', marginTop: 8 }} onClick={() => { if (confirm(t('common.confirmDelete'))) { removeGoal(goal.id); onDone() } }}>
+        <button className="btn danger" style={{ width: '100%', marginTop: 8 }} onClick={async () => { if (await askConfirm(t('common.confirmDelete'))) { removeGoal(goal.id); onDone() } }}>
           {t('common.delete')}
         </button>
       )}

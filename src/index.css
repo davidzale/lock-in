@@ -304,3 +304,15 @@ html.fit-screen .app { min-height: calc(100vh + 2px); padding-bottom: 0; }
 .cal-screen { display: flex; flex-direction: column; height: calc(100dvh - env(safe-area-inset-top) - 18px - 66px - max(4px, env(safe-area-inset-bottom) - 16px)); overflow: hidden; }
 .cal-screen .cal-grid { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-bottom: 0; }
 .cal-screen .cal-scroll { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+
+/* in-app confirm */
+.confirm { position: fixed; z-index: 61; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(320px, calc(100vw - 48px));
+  background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 20px 18px 16px; animation: pop 0.22s var(--ease); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+@keyframes pop { from { opacity: 0; transform: translate(-50%, -46%) scale(0.96); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+.ibox.warn { background: rgba(255, 77, 77, 0.12); color: var(--danger); }
+.btn.danger-fill { background: var(--danger); color: #fff; }
+/* sheets: block scrolling the page behind without freezing it */
+.sheet { overscroll-behavior: contain; touch-action: pan-y; }
+/* tighter page bottom; pages stay 2px scrollable so iOS keeps the tab bar at the edge */
+.app { min-height: calc(100vh + 2px) !important; padding-bottom: calc(max(4px, env(safe-area-inset-bottom) - 16px) + 88px) !important; }
+html.fit-screen .app { padding-bottom: 0 !important; }

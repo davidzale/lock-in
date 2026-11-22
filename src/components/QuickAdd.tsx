@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { create } from 'zustand'
 import { useNavigate } from 'react-router-dom'
-import { EXPENSE_CATS, useStore } from '../store'
+import { CURRENCIES, EXPENSE_CATS, useStore } from '../store'
 import type { Currency, Tx, TxType, WorkoutType } from '../store'
 import { useT } from '../i18n'
 import { dayKey } from '../lib/date'
 import { sym } from '../lib/format'
 import { Field, Sheet } from './ui'
 import { Icon } from './Icon'
+import { askConfirm } from './Confirm'
 
 export type QuickKind = 'menu' | 'expense' | 'income' | 'workout' | 'metrics'
 export const useQuick = create<{ kind: QuickKind | null; open: (k: QuickKind) => void; close: () => void }>((set) => ({
@@ -20,7 +21,7 @@ const num = (s: string) => Number(s.replace(',', '.').replace(/\s/g, ''))
 
 export function TxForm({ type, onDone, tx, defaultDate }: { type: TxType; onDone: () => void; tx?: Tx; defaultDate?: string }) {
   const t = useT()
-  const { currencies, defaultCurrency, addTx, updateTx, removeTx } = useStore()
+  const { defaultCurrency, addTx, updateTx, removeTx } = useStore()
   const [amount, setAmount] = useState(tx ? String(tx.amount) : '')
   const [cur, setCur] = useState<Currency>(tx?.currency || (type === 'income' ? 'USD' : defaultCurrency))
   const [cat, setCat] = useState<string>(tx?.category || (type === 'income' ? 'fixed' : 'food'))
@@ -37,7 +38,7 @@ export function TxForm({ type, onDone, tx, defaultDate }: { type: TxType; onDone
         </div>
       </Field>
       <div className="chips" style={{ marginBottom: 14 }}>
-        {currencies.map((c) => (
+        {CURRENCIES.map((c) => (
           <button key={c} className={`chip ${c === cur ? 'on' : ''}`} onClick={() => setCur(c)}>{c}</button>
         ))}
       </div>
@@ -70,7 +71,7 @@ export function TxForm({ type, onDone, tx, defaultDate }: { type: TxType; onDone
         {t('common.save')}
       </button>
       {tx && (
-        <button className="btn danger" style={{ width: '100%', marginTop: 8 }} onClick={() => { if (confirm(t('common.confirmDelete'))) { removeTx(tx.id); onDone() } }}>
+        <button className="btn danger" style={{ width: '100%', marginTop: 8 }} onClick={async () => { if (await askConfirm(t('common.confirmDelete'))) { removeTx(tx.id); onDone() } }}>
           {t('common.delete')}
         </button>
       )}
