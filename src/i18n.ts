@@ -95,6 +95,7 @@ const en: Dict = {
 
   'cal.guests': 'Guests (email, optional)', 'cal.badEmail': 'Check this email: {e}', 'cal.addMeet': 'Add Google Meet link', 'cal.inviteNote': 'Guests get an email invitation from Google Calendar. You’ll be reminded 15 minutes before.',
   'cal.noScope': 'Google didn’t give access to the calendar. Tap Connect and tick the calendar checkbox on Google’s screen.', 'cal.notConnected': 'Google Calendar isn’t connected — tap Connect on the Calendar tab.',
+  'cal.edit': 'Edit event', 'cal.deleteQ': 'Delete this event? Guests will be notified.',
   'cal.new': 'New event', 'cal.connectHint': 'See your events and calls here and add new ones.', 'cal.needCloud': 'Sign in to cloud sync first (Settings).',
   'cal.connectBtn': 'Connect', 'cal.allDay': 'All day', 'cal.empty': 'No events this day', 'cal.join': 'Join call', 'cal.openGoogle': 'Open in Google Calendar',
   'cal.start': 'Start', 'cal.duration': 'Duration', 'cal.reminderNote': 'Google Calendar will remind you 15 minutes before.',
@@ -213,6 +214,7 @@ const ru: Dict = {
 
   'cal.guests': 'Гости (email, необязательно)', 'cal.badEmail': 'Проверь email: {e}', 'cal.addMeet': 'Добавить ссылку Google Meet', 'cal.inviteNote': 'Гостям придёт приглашение на почту от Google Календаря. Тебе — напоминание за 15 минут.',
   'cal.noScope': 'Google не дал доступ к календарю. Нажми «Подключить» и на экране Google поставь галочку у календаря.', 'cal.notConnected': 'Google Календарь не подключён — нажми «Подключить» на вкладке «Календарь».',
+  'cal.edit': 'Изменить событие', 'cal.deleteQ': 'Удалить событие? Гости получат уведомление.',
   'cal.new': 'Новое событие', 'cal.connectHint': 'События и звонки появятся здесь, можно будет добавлять новые.', 'cal.needCloud': 'Сначала войди в облако (Настройки).',
   'cal.connectBtn': 'Подключить', 'cal.allDay': 'Весь день', 'cal.empty': 'В этот день событий нет', 'cal.join': 'Присоединиться к звонку', 'cal.openGoogle': 'Открыть в Google Календаре',
   'cal.start': 'Начало', 'cal.duration': 'Длительность', 'cal.reminderNote': 'Google Календарь напомнит за 15 минут.',

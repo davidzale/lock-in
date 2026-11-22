@@ -106,6 +106,28 @@ Deno.serve(async (req) => {
       return json({ connected: true, events })
     }
 
+    if (action === 'update' || action === 'delete') {
+      const full = String(body.id || '')
+      const cut = full.lastIndexOf(':')
+      const cal = cut > 0 ? full.slice(0, cut) : 'primary'
+      const evId = cut > 0 ? full.slice(cut + 1) : full
+      const path = `/calendars/${encodeURIComponent(cal)}/events/${encodeURIComponent(evId)}?sendUpdates=all`
+      if (action === 'delete') {
+        const r = await g(path, { method: 'DELETE' })
+        if (!r.ok && r.status !== 410) return json({ error: (await r.json().catch(() => ({}))).error?.message || 'delete failed' }, 400)
+        return json({ connected: true, ok: true })
+      }
+      const tz = body.timeZone || 'UTC'
+      const patch: Record<string, unknown> = {}
+      if (body.title) patch.summary = body.title
+      if (body.start) patch.start = { dateTime: body.start, timeZone: tz }
+      if (body.end) patch.end = { dateTime: body.end, timeZone: tz }
+      const r = await g(path, { method: 'PATCH', body: JSON.stringify(patch) })
+      const j = await r.json()
+      if (!r.ok) return json({ error: j.error?.message || 'update failed' }, 400)
+      return json({ connected: true, ok: true })
+    }
+
     if (action === 'create') {
       const tz = body.timeZone || 'UTC'
       const guests = ((body.guests || []) as string[]).filter((x) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x)).slice(0, 50)

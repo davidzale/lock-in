@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { useT } from '../i18n'
 import { addDays, dayKey, fmtDate, fmtWeekday, parseDay, weekStart } from '../lib/date'
-import { connectGoogle, createEvent, eventsOn, loadWeek, useGcal, useWeekEvents } from '../lib/gcal'
+import { connectGoogle, createEvent, deleteEvent, eventsOn, loadWeek, updateEvent, useGcal, useWeekEvents } from '../lib/gcal'
 import type { GEvent } from '../lib/gcal'
 import { useSync } from '../lib/sync'
 import { Field, Header, IconBtn, Sheet, Switch } from '../components/ui'
@@ -23,6 +23,8 @@ export default function Calendar() {
   const [sel, setSel] = useState(dayKey(now))
   const [offset, setOffset] = useState(0)
   const [adding, setAdding] = useState(false)
+  const [editing, setEditing] = useState<GEvent | null>(null)
+  const [delBusy, setDelBusy] = useState(false)
   const [open, setOpen] = useState<GEvent | null>(null)
   const ws = addDays(weekStart(now), offset * 7)
   const days = Array.from({ length: 7 }, (_, i) => addDays(ws, i))
@@ -136,6 +138,9 @@ export default function Calendar() {
       <Sheet open={adding} onClose={() => setAdding(false)} title={t('cal.new')}>
         {adding && <NewEvent day={sel} onDone={() => { setAdding(false); loadWeek(ws, true) }} />}
       </Sheet>
+      <Sheet open={!!editing} onClose={() => setEditing(null)} title={t('cal.edit')}>
+        {editing && <NewEvent day={sel} event={editing} onDone={() => { setEditing(null); loadWeek(ws, true) }} />}
+      </Sheet>
       <Sheet open={!!open} onClose={() => setOpen(null)} title={open?.title}>
         {open && (
           <>
@@ -144,6 +149,15 @@ export default function Calendar() {
             </div>
             {open.location && <div className="t2" style={{ fontSize: 13, marginBottom: 12 }}>{open.location}</div>}
             {open.meet && <a className="btn primary" style={{ width: '100%', textDecoration: 'none', marginBottom: 8 }} href={open.meet} target="_blank" rel="noreferrer"><Icon n="video" size="s" />{t('cal.join')}</a>}
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 8, marginBottom: 8 }}>
+              {!open.allDay && <button className="btn ghost" onClick={() => { const e = open; setOpen(null); setTimeout(() => setEditing(e), 250) }}><Icon n="edit" size="s" />{t('common.edit')}</button>}
+              <button className="btn danger" disabled={delBusy} style={open.allDay ? { gridColumn: '1 / -1' } : undefined} onClick={async () => {
+                if (!confirm(t('cal.deleteQ'))) return
+                setDelBusy(true)
+                try { await deleteEvent(open); setOpen(null) } catch (e) { alert((e as Error).message) }
+                setDelBusy(false)
+              }}><Icon n="trash" size="s" />{delBusy ? '…' : t('common.delete')}</button>
+            </div>
             {open.link && <a className="btn ghost" style={{ width: '100%', textDecoration: 'none' }} href={open.link} target="_blank" rel="noreferrer">{t('cal.openGoogle')}</a>}
           </>
         )}
@@ -182,14 +196,15 @@ function layout(evs: GEvent[], day: string) {
   return items.map((it) => ({ ...it, top: Math.max(0, it.top) }))
 }
 
-function NewEvent({ day, onDone }: { day: string; onDone: () => void }) {
+function NewEvent({ day, onDone, event }: { day: string; onDone: () => void; event?: GEvent }) {
   const t = useT()
   const nextHour = new Date()
   nextHour.setHours(nextHour.getHours() + 1, 0, 0, 0)
-  const [title, setTitle] = useState('')
-  const [date, setDate] = useState(day)
-  const [start, setStart] = useState(hm(nextHour))
-  const [dur, setDur] = useState(30)
+  const evStart = event ? new Date(event.start) : null
+  const [title, setTitle] = useState(event?.title || '')
+  const [date, setDate] = useState(evStart ? dayKey(evStart) : day)
+  const [start, setStart] = useState(evStart ? hm(evStart) : hm(nextHour))
+  const [dur, setDur] = useState(event ? Math.max(5, Math.round((new Date(event.end).getTime() - new Date(event.start).getTime()) / 60000)) : 30)
   const [guests, setGuests] = useState('')
   const [meet, setMeet] = useState(true)
   const [busy, setBusy] = useState(false)
@@ -202,7 +217,8 @@ function NewEvent({ day, onDone }: { day: string; onDone: () => void }) {
     s.setHours(h, m, 0, 0)
     setBusy(true)
     try {
-      await createEvent({ title: title.trim(), start: s, end: new Date(s.getTime() + dur * 60000), guests: emails, meet })
+      if (event) await updateEvent(event, { title: title.trim(), start: s, end: new Date(s.getTime() + dur * 60000) })
+      else await createEvent({ title: title.trim(), start: s, end: new Date(s.getTime() + dur * 60000), guests: emails, meet })
       onDone()
     } catch (e) {
       const m = (e as Error).message
@@ -219,20 +235,24 @@ function NewEvent({ day, onDone }: { day: string; onDone: () => void }) {
       </div>
       <Field label={t('cal.duration')}>
         <div className="chips">
-          {[15, 30, 45, 60, 90, 120].map((m) => (
-            <button key={m} className={`chip ${m === dur ? 'on' : ''}`} onClick={() => setDur(m)}>{m < 60 ? `${m}′` : `${m / 60}${t('unit.h')}`}</button>
+          {[...new Set([15, 30, 45, 60, 90, 120, dur])].sort((a, b) => a - b).map((m) => (
+            <button key={m} className={`chip ${m === dur ? 'on' : ''}`} onClick={() => setDur(m)}>{m < 60 || m % 60 ? `${m}′` : `${m / 60}${t('unit.h')}`}</button>
           ))}
         </div>
       </Field>
-      <Field label={t('cal.guests')}>
-        <input className="input" type="email" inputMode="email" autoCapitalize="off" autoCorrect="off" placeholder="name@gmail.com, …" value={guests} onChange={(e) => setGuests(e.target.value)} />
-      </Field>
-      {badEmail && <div className="danger" style={{ fontSize: 12, marginTop: -8, marginBottom: 10 }}>{t('cal.badEmail', { e: badEmail })}</div>}
-      <div className="row" style={{ marginBottom: 14 }}>
-        <span className="gap8"><Icon n="video" size="s" className="mut" />{t('cal.addMeet')}</span>
-        <Switch on={meet} onChange={setMeet} />
-      </div>
-      <div className="mut" style={{ fontSize: 12, marginTop: -6, marginBottom: 12 }}>{emails.length ? t('cal.inviteNote') : t('cal.reminderNote')}</div>
+      {!event && (
+        <>
+          <Field label={t('cal.guests')}>
+            <input className="input" type="email" inputMode="email" autoCapitalize="off" autoCorrect="off" placeholder="name@gmail.com, …" value={guests} onChange={(e) => setGuests(e.target.value)} />
+          </Field>
+          {badEmail && <div className="danger" style={{ fontSize: 12, marginTop: -8, marginBottom: 10 }}>{t('cal.badEmail', { e: badEmail })}</div>}
+          <div className="row" style={{ marginBottom: 14 }}>
+            <span className="gap8"><Icon n="video" size="s" className="mut" />{t('cal.addMeet')}</span>
+            <Switch on={meet} onChange={setMeet} />
+          </div>
+          <div className="mut" style={{ fontSize: 12, marginTop: -6, marginBottom: 12 }}>{emails.length ? t('cal.inviteNote') : t('cal.reminderNote')}</div>
+        </>
+      )}
       {err && <div className="danger" style={{ fontSize: 12, marginBottom: 10 }}>{err}</div>}
       <button className="btn primary" style={{ width: '100%' }} disabled={!title.trim() || busy || !!badEmail} onClick={save}>{busy ? '…' : t('common.save')}</button>
     </>

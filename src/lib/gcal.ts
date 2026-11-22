@@ -150,3 +150,28 @@ export function useWeekEvents(monday: Date) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, key])
 }
+
+function replaceEvent(id: string, next: GEvent | null) {
+  useGcal.setState((st) => ({
+    weeks: Object.fromEntries(Object.entries(st.weeks).map(([k, list]) => [k, next ? list.map((e) => (e.id === id ? next : e)) : list.filter((e) => e.id !== id)])),
+  }))
+}
+
+export async function updateEvent(ev: GEvent, p: { title: string; start: Date; end: Date }) {
+  const r = await call<{ ok?: boolean; error?: string; connected?: boolean }>('update', {
+    id: ev.id, title: p.title, start: p.start.toISOString(), end: p.end.toISOString(), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  })
+  if (r.connected === false) throw new Error(r.error === 'no_scope' ? 'no_scope' : 'not_connected')
+  if (r.error) throw new Error(r.error)
+  // moved to another week? drop it here and let that week reload
+  replaceEvent(ev.id, null)
+  const key = dayKey(weekStartOf(p.start))
+  useGcal.setState((st) => ({ weeks: { ...st.weeks, [key]: [...(st.weeks[key] || []), { ...ev, title: p.title, start: p.start.toISOString(), end: p.end.toISOString() }] } }))
+}
+
+export async function deleteEvent(ev: GEvent) {
+  const r = await call<{ ok?: boolean; error?: string; connected?: boolean }>('delete', { id: ev.id })
+  if (r.connected === false) throw new Error(r.error === 'no_scope' ? 'no_scope' : 'not_connected')
+  if (r.error) throw new Error(r.error)
+  replaceEvent(ev.id, null)
+}
