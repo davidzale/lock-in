@@ -35,7 +35,7 @@ const en: Dict = {
   'quick.title': 'Quick add', 'quick.expense': 'Expense', 'quick.income': 'Income', 'quick.workout': 'Workout',
   'quick.metrics': 'Sleep & steps', 'quick.growth': 'Something new',
 
-  'common.cancel': 'Cancel', 'fin.editTx': 'Edit transaction', 'fin.monthGoal': 'Month goal', 'fin.yearGoal': 'Year goal',
+  'common.cancel': 'Cancel', 'fin.spending': 'Spending', 'fin.editTx': 'Edit transaction', 'fin.monthGoal': 'Month goal', 'fin.yearGoal': 'Year goal',
   'fin.monthGoalHint': 'Applies to this month and carries over to the next months until you change it.', 'fin.yearGoalHint': 'Income target for this calendar year.',
   'fin.budgetsHint2': 'Spending limits for this month, in USD. They carry over to the next months until you change them.',
   'fin.payQ': 'Confirm payment', 'fin.payHint': 'This records the expense in this month. You can edit or delete it later in Transactions.', 'fin.confirmPay': 'Yes, paid',
@@ -161,7 +161,7 @@ const ru: Dict = {
   'quick.title': 'Быстро добавить', 'quick.expense': 'Расход', 'quick.income': 'Доход', 'quick.workout': 'Тренировка',
   'quick.metrics': 'Сон и шаги', 'quick.growth': 'Что-то новое',
 
-  'common.cancel': 'Отмена', 'fin.editTx': 'Изменить операцию', 'fin.monthGoal': 'Цель на месяц', 'fin.yearGoal': 'Цель на год',
+  'common.cancel': 'Отмена', 'fin.spending': 'Траты', 'fin.editTx': 'Изменить операцию', 'fin.monthGoal': 'Цель на месяц', 'fin.yearGoal': 'Цель на год',
   'fin.monthGoalHint': 'Действует с этого месяца и переносится на следующие, пока не изменишь.', 'fin.yearGoalHint': 'Цель по доходу на этот календарный год.',
   'fin.budgetsHint2': 'Лимиты трат на этот месяц, в USD. Переносятся на следующие месяцы, пока не изменишь.',
   'fin.payQ': 'Подтверди оплату', 'fin.payHint': 'Расход запишется в этот месяц. Потом его можно изменить или удалить в «Операциях».', 'fin.confirmPay': 'Да, оплачено',

@@ -9,8 +9,8 @@ import { money } from '../lib/format'
 import { Bar, Field, IconBtn, Seg, Segs, Sheet } from '../components/ui'
 import { Icon } from '../components/Icon'
 import { TxForm } from '../components/QuickAdd'
+import { CategoryRing } from '../components/Donut'
 
-const CAT_COLORS = ['var(--acc)', 'var(--data2)', '#8a8a93', 'var(--data3)']
 const num = (s: string) => Number(s.replace(',', '.').replace(/\s/g, ''))
 const CAT_ICON: Record<string, string> = { food: 'flame', housing: 'lock', transport: 'compass', entertainment: 'spark', health: 'activity', sport: 'dumbbell', subscriptions: 'repeat', shopping: 'wallet', travel: 'globe', other: 'target', fixed: 'up', variable: 'up' }
 const cap = (x: string) => x.replace(/^./, (c) => c.toUpperCase())
@@ -53,7 +53,7 @@ export default function Finance() {
         <div className="h">{t('tab.finance')}</div>
         <div className="gap8">
           <IconBtn n="up" label={t('quick.income')} onClick={() => setSheet({ k: 'tx', type: 'income' })} />
-          <IconBtn n="plus" label={t('quick.expense')} onClick={() => setSheet({ k: 'tx', type: 'expense' })} />
+          <IconBtn n="down" label={t('quick.expense')} onClick={() => setSheet({ k: 'tx', type: 'expense' })} />
         </div>
       </div>
       <div style={{ marginBottom: 10 }}>
@@ -107,10 +107,6 @@ function MonthView({ y, m, mk, setSheet }: { y: number; m: number; mk: string; s
   const target = monthTarget(s, mk)
   const budgets = budgetsFor(s, mk)
   const budgetCats = Object.keys(budgets).filter((c) => budgets[c] > 0)
-  const cats = Object.entries(tot.byCat).sort((a, b) => b[1] - a[1])
-  const top = cats.slice(0, 3)
-  const rest = cats.slice(3).reduce((a, [, v]) => a + v, 0)
-  const parts = [...top, ...(rest > 0 ? [['other+', rest] as [string, number]] : [])]
   const txs = s.txs.filter((x) => inRange(x.date, range)).sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
   const days = [...new Set(txs.map((x) => x.date))]
   const recs = s.recurring.filter((r) => recurringActive(r, mk)).sort((a, b) => a.day - b.day)
@@ -126,17 +122,9 @@ function MonthView({ y, m, mk, setSheet }: { y: number; m: number; mk: string; s
           <div><div className="lbl">{t('fin.variable')}</div><div className="num ellipsis">{money(tot.variable, 'USD', { compact: true })}</div></div>
           <div><div className="lbl">{t('fin.expense')}</div><div className="num ellipsis">{money(tot.expense, 'USD', { compact: true })}</div></div>
         </div>
-        {tot.expense > 0 && (
-          <>
-            <div className="bar" style={{ marginTop: 14 }}>
-              {parts.map(([c, v], i) => <i key={c} style={{ width: `${(v / tot.expense) * 100}%`, background: CAT_COLORS[i], borderRadius: 0 }} />)}
-            </div>
-            <div className="mono mut" style={{ display: 'flex', gap: 10, fontSize: 10, marginTop: 8, flexWrap: 'wrap', textTransform: 'uppercase' }}>
-              {parts.map(([c, v], i) => <span key={c}><span style={{ color: CAT_COLORS[i] }}>●</span> {c === 'other+' ? t('fin.rest') : t(`cat.${c}`)} {money(v, 'USD', { compact: true })}</span>)}
-            </div>
-          </>
-        )}
       </div>
+
+      <CategoryRing range={range} />
 
       <button className="card list-row" style={{ display: 'block' }} onClick={() => setSheet({ k: 'target', scope: 'month' })}>
         <div className="row" style={{ marginBottom: 8 }}>
@@ -251,6 +239,8 @@ function YearView({ y, setSheet, openMonth }: { y: number; setSheet: SetSheet; o
         <Segs v={year.income / target} />
         {left > 0 && monthsLeft > 0 && <div className="mono mut" style={{ fontSize: 11, marginTop: 8, textAlign: 'left' }}>{t('fin.needPerMonth', { v: money(need, 'USD', { compact: true }) })}</div>}
       </button>
+
+      <CategoryRing range={[new Date(y, 0, 1), new Date(y + 1, 0, 1)]} />
 
       <div className="card">
         <div className="card-head">

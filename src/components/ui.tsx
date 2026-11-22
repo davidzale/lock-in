@@ -87,11 +87,11 @@ export function Sheet({ open, onClose, title, children }: { open: boolean; onClo
   )
 }
 
-export function Header({ eyebrow, title, actions }: { eyebrow: string; title: string; actions?: ReactNode }) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Header({ title, actions }: { eyebrow?: string; title: string; actions?: ReactNode }) {
   return (
     <div className="head">
       <div style={{ minWidth: 0 }}>
-        <div className="lbl">{eyebrow}</div>
         <div className="h">{title}</div>
       </div>
       {actions && <div className="gap8">{actions}</div>}

@@ -14,3 +14,15 @@ export function money(v: number, c: Currency = 'USD', opts: { sign?: boolean; co
 
 export const pct = (v: number) => `${Math.round(v * 100)}%`
 export const clamp01 = (v: number) => Math.max(0, Math.min(1, v))
+
+/** 434 → { d: 0, h: 7, m: 14 } */
+export function splitMinutes(total: number) {
+  const t = Math.max(0, Math.round(total))
+  return { d: Math.floor(t / 1440), h: Math.floor((t % 1440) / 60), m: t % 60 }
+}
+export function inDuration(total: number, lang: string) {
+  const { d, h, m } = splitMinutes(total)
+  const u = lang === 'ru' ? { d: 'д', h: 'ч', m: 'мин', in: 'через' } : { d: 'd', h: 'h', m: 'min', in: 'in' }
+  const parts = d ? [`${d} ${u.d}`, h ? `${h} ${u.h}` : ''] : h ? [`${h} ${u.h}`, m ? `${m} ${u.m}` : ''] : [`${m} ${u.m}`]
+  return `${u.in} ${parts.filter(Boolean).join(' ')}`
+}

@@ -1,10 +1,12 @@
+import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSync } from '../lib/sync'
 import { useStore } from '../store'
 import type { Block } from '../store'
 import { useT } from '../i18n'
 import { dayKey, fmtDate, fmtWeekday, isoWeek, monthKey, periodRange, weekKey } from '../lib/date'
 import { dayPct, growthScore, streak, totals } from '../lib/calc'
-import { clamp01, money, pct } from '../lib/format'
+import { clamp01, inDuration, money, pct } from '../lib/format'
 import { Header, IconBtn, Rings } from '../components/ui'
 import { Icon } from '../components/Icon'
 import { unitLabel } from '../components/forms'
@@ -30,6 +32,15 @@ export default function Today() {
   useWeekEvents(weekStart(now))
   const weeks = useGcal((g) => g.weeks)
   const calConnected = useGcal((g) => !!g.connected)
+  const signedIn = useSync((x) => !!x.session)
+  const lastTap = useRef<{ id: string; at: number }>({ id: '', at: 0 })
+  const tap = (id: string) => {
+    const n = Date.now()
+    if (lastTap.current.id === id && n - lastTap.current.at < 400) return // ignore accidental double taps
+    lastTap.current = { id, at: n }
+    s.toggleHabit(key, id)
+    navigator.vibrate?.(8)
+  }
   const next = eventsOn(key, weeks).filter((e) => !e.allDay && new Date(e.end) > now)[0]
   const hm = (d: Date) => `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
   const eyebrow = `${fmtWeekday(now, s.lang)} ${fmtDate(now, s.lang, { day: '2-digit', month: '2-digit' })} · W${isoWeek(now)}`
@@ -41,7 +52,7 @@ export default function Today() {
         title={t('today.title')}
         actions={
           <>
-            <IconBtn n="chart" label={t('stats.title')} onClick={() => nav('/stats')} />
+            <IconBtn n="logo" label={t('stats.title')} onClick={() => nav('/stats')} />
             <IconBtn n="settings" label={t('settings.title')} onClick={() => nav('/settings')} />
             <IconBtn n="plus" label={t('quick.title')} onClick={() => openQuick('menu')} />
           </>
@@ -94,7 +105,7 @@ export default function Today() {
         </div>
       </div>
 
-      {calConnected && (
+      {(calConnected || signedIn) && (
         <button className="card list-row next-slot" onClick={() => nav('/calendar')}>
           <div className={`ibox ${next ? '' : 'g'}`}><Icon n={next?.meet ? 'video' : 'cal'} size="s" /></div>
           <div className="grow">
@@ -102,11 +113,11 @@ export default function Today() {
               <>
                 <div className="ellipsis" style={{ fontSize: 14, fontWeight: 600 }}>{next.title}</div>
                 <div className="mono mut" style={{ fontSize: 11, marginTop: 3 }}>
-                  {hm(new Date(next.start))}–{hm(new Date(next.end))} · {new Date(next.start) <= now ? t('today.now') : t('today.inMin', { n: Math.round((new Date(next.start).getTime() - now.getTime()) / 60000) })}
+                  {hm(new Date(next.start))}–{hm(new Date(next.end))} · {new Date(next.start) <= now ? t('today.now') : inDuration((new Date(next.start).getTime() - now.getTime()) / 60000, s.lang)}
                 </div>
               </>
             ) : (
-              <div className="mut" style={{ fontSize: 13 }}>{t('today.noMoreEvents')}</div>
+              <div className="mut" style={{ fontSize: 13 }}>{calConnected ? t('today.noMoreEvents') : t('cal.connect')}</div>
             )}
           </div>
           <Icon n="chev" size="s" className="mut" />
@@ -127,7 +138,7 @@ export default function Today() {
               {hs.map((h) => {
                 const on = done.includes(h.id)
                 return (
-                  <button key={h.id} className={`task ${on ? 'done' : ''}`} onClick={() => { s.toggleHabit(key, h.id); navigator.vibrate?.(8) }}>
+                  <button key={h.id} className={`task ${on ? 'done' : ''}`} onClick={() => tap(h.id)}>
                     <span className={`cb ${on ? 'on' : ''}`}>{on && <Icon n="check" size="xs" className="" />}</span>
                     <span className="tname grow">{h.name}</span>
                     {h.target != null && <span className={`tag ${h.prog ? 'acc' : ''}`}>{h.target} {unitLabel(t, h.unit)}</span>}

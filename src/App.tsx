@@ -18,7 +18,7 @@ import Settings from './screens/Settings'
 import Session from './screens/Session'
 
 const TABS = [
-  { to: '/', icon: 'today', key: 'tab.today' },
+  { to: '/', icon: 'trophy', key: 'tab.today' },
   { to: '/calendar', icon: 'cal', key: 'tab.calendar' },
   { to: '/finance', icon: 'wallet', key: 'tab.finance' },
   { to: '/sport', icon: 'activity', key: 'tab.sport' },

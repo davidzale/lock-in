@@ -4,7 +4,7 @@ import type { GrowthWeek } from '../store'
 import { useT } from '../i18n'
 import { addDays, isoWeek, weekKey, weekStart } from '../lib/date'
 import { growthScore } from '../lib/calc'
-import { Field, Header, Heat, IconBtn, Sheet, Switch } from '../components/ui'
+import { Field, Header, Heat, Sheet, Switch } from '../components/ui'
 import { Icon } from '../components/Icon'
 import { IDEAS } from '../lib/ideas'
 import { GoalsCard } from '../components/GoalsCard'
@@ -49,7 +49,7 @@ export default function Growth() {
 
   return (
     <>
-      <Header eyebrow={`${t('common.week')} ${isoWeek(now)} · ${sc.done}/4`} title={t('tab.growth')} actions={<IconBtn n="shuffle" label={t('growth.idea')} onClick={() => setIdeaSeed((x) => x + 1)} />} />
+      <Header eyebrow={`${t('common.week')} ${isoWeek(now)} · ${sc.done}/4`} title={t('tab.growth')} />
 
       <div className="g2">
         {tiles.map((x) => {

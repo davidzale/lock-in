@@ -285,3 +285,8 @@ input[type='date'].input::-webkit-calendar-picker-indicator, input[type='time'].
 .video-wrap { margin-top: 10px; animation: rise 0.3s var(--ease); }
 .video-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: #000; border: 1px solid var(--line); }
 .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* bigger, steadier tap targets for daily tasks */
+.task { min-height: 50px; padding: 12px 6px; margin: 0 -6px; width: calc(100% + 12px); }
+.task .cb { width: 24px; height: 24px; border-radius: 8px; }
+.task .tname { font-size: 15px; }

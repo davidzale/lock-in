@@ -19,7 +19,7 @@ export default function Summary() {
     <>
       <Header
         eyebrow={t('summary.title')}
-        title={fmtDate(d, lang, { month: 'long', year: 'numeric' }).replace(/^./, (c) => c.toUpperCase())}
+        title={fmtDate(d, lang, { month: 'long', year: 'numeric' }).replace(/^./, (c) => c.toUpperCase()).replace(/ г\.$/, '')}
         actions={<IconBtn n="back" label="back" onClick={() => nav('/stats')} />}
       />
       <div className="row" style={{ marginBottom: 12 }}>

@@ -27,6 +27,19 @@ export default function Calendar() {
   const [delBusy, setDelBusy] = useState(false)
   const [open, setOpen] = useState<GEvent | null>(null)
   const ws = addDays(weekStart(now), offset * 7)
+  const swipeX = useRef(0)
+  const shiftWeek = (d: number) => {
+    setOffset((o) => o + d)
+    setSel(dayKey(addDays(parseDay(sel), d * 7)))
+  }
+  const jumpMonth = (d: number) => {
+    const mid = addDays(ws, 3)
+    const target = new Date(mid.getFullYear(), mid.getMonth() + d, 1)
+    const isThis = target.getFullYear() === now.getFullYear() && target.getMonth() === now.getMonth()
+    const day = isThis ? now : target
+    setOffset(Math.round((weekStart(day).getTime() - weekStart(now).getTime()) / (7 * 86400000)))
+    setSel(dayKey(day))
+  }
   const days = Array.from({ length: 7 }, (_, i) => addDays(ws, i))
   useWeekEvents(ws)
   const scroller = useRef<HTMLDivElement>(null)
@@ -61,12 +74,18 @@ export default function Calendar() {
         ) : undefined}
       />
 
-      <div className="row" style={{ marginBottom: 8 }}>
-        <button className="iconbtn" onClick={() => setOffset((o) => o - 1)} aria-label="prev"><Icon n="back" size="s" /></button>
-        <button className="lbl" onClick={() => { setOffset(0); setSel(dayKey(now)) }}>{loading ? '…' : t('cal.today')}</button>
-        <button className="iconbtn" onClick={() => setOffset((o) => o + 1)} aria-label="next"><Icon n="chev" size="s" /></button>
+      <div className="row" style={{ marginBottom: 10 }}>
+        <button className="iconbtn" onClick={() => jumpMonth(-1)} aria-label="prev month"><Icon n="back" size="s" /></button>
+        <button className="h2" onClick={() => { setOffset(0); setSel(dayKey(now)) }}>
+          {fmtDate(addDays(ws, 3), lang, { month: 'long', year: 'numeric' }).replace(/^./, (c) => c.toUpperCase()).replace(/ г\.$/, '')}
+          {(offset !== 0 || loading) && <span className="lbl acc" style={{ marginLeft: 8 }}>{loading ? '…' : t('cal.today')}</span>}
+        </button>
+        <button className="iconbtn" onClick={() => jumpMonth(1)} aria-label="next month"><Icon n="chev" size="s" /></button>
       </div>
-      <div className="week">
+      <div className="week" onTouchStart={(e) => (swipeX.current = e.touches[0].clientX)} onTouchEnd={(e) => {
+        const dx = e.changedTouches[0].clientX - swipeX.current
+        if (Math.abs(dx) > 50) shiftWeek(dx < 0 ? 1 : -1)
+      }}>
         {days.map((d) => (
           <button key={dayKey(d)} className={`wd ${dayKey(d) === sel ? 'on' : ''}`} onClick={() => setSel(dayKey(d))}>
             {fmtWeekday(d, lang).slice(0, 2)}
