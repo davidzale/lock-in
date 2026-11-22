@@ -58,48 +58,98 @@ const HABIT_ALIASES: Record<string, string[]> = {
   night: ['умыл', 'умыв', 'wash'],
 }
 
-const W = '[a-zа-яё]*' // word tail (JS \\w is ASCII-only)
-const STRIP = new RegExp(
-  [
-    '(\\d+(?:[.,]\\d+)?)\\s*(тыс' + W + '|к|k)?(?=\\s|$)',
-    'лари', 'лар', 'lari', 'laris', 'gel', '₾', 'доллар' + W, 'dollar' + W, 'бакс' + W, 'buck' + W, 'usd', '\\$', 'рубл' + W, 'ruble' + W, 'rouble' + W, '₽', 'rub',
-    'потратил' + W, 'заплатил' + W, 'купил' + W, 'заработал' + W, 'получил' + W, 'вчера', 'позавчера', 'сегодня',
-    'spent', 'paid', 'bought', 'earned', 'got', 'yesterday', 'today',
-  ].map((x) => `(?:^|\\s)${x}(?=\\s|$)`).join('|'),
-  'gi',
-)
-const LEAD = /^(?:на|за|в|во|for|on)\s+/i
+/** filler words dropped from the note */
+const STOP = new Set(('я мы ты мой моя моё мое мои моем моём моей мою свой своя своё свое свои своей своем своём своего своих сегодня вчера позавчера также тоже ещё еще и а но на за в во с со по у от для до это так просто вот ну уже около примерно ' +
+  'i me my mine we our on for the a an at from also today yesterday and to of in with by just about then plus').split(' '))
+const VERB = /^(потратил|заплатил|купил|заработал|получил|отдал|перевели|сделал|выполнил|spent|spend|paid|pay|bought|buy|earned|earn|got|received|made|did|done)[а-яёa-z]*$/i
+const CURW = /^(лари|лар|lari|laris|gel|₾|доллар[а-яё]*|dollars?|бакс[а-яё]*|bucks?|usd|\$|рубл[а-яё]*|rubles?|roubles?|₽|rub|тыс[а-яё]*|к|k)$/i
 
-function noteOf(t: string) {
-  let n = (' ' + t + ' ').replace(STRIP, ' ').replace(STRIP, ' ').replace(/\s+/g, ' ').trim()
-  n = n.replace(LEAD, '').trim()
+function noteOf(t: string, salary: boolean) {
+  if (salary) return undefined // the category already says «Зарплата»
+  const words = t
+    .replace(/[^\p{L}\p{N}$₾₽\s-]/gu, ' ')
+    .split(/\s+/)
+    .filter((w) => w && !/^\d/.test(w) && !CURW.test(w) && !VERB.test(w) && !STOP.has(w.toLowerCase()))
+    .slice(0, 4)
+  const n = words.join(' ')
   return n ? n[0].toUpperCase() + n.slice(1, 40) : undefined
+}
+
+const NUM = /(\d+(?:[.,]\d+)?)\s*(тыс[а-яё]*|к|k)?(?![\d:])/gi
+const CUR_AFTER = /^\s*(лари|лар|lari|laris|gel|₾|доллар[а-яё]*|dollars?|бакс[а-яё]*|bucks?|usd|\$|рубл[а-яё]*|rubles?|roubles?|₽|rub)(?=[\s,.;!?]|$)/i
+const SPLIT = /(?:^|[\s,.;!?])(также|тоже|ещё|еще|потом|плюс|и|а|потратил[а-яё]*|заплатил[а-яё]*|купил[а-яё]*|заработал[а-яё]*|получил[а-яё]*|also|and|then|plus|spent|paid|bought|earned|got)(?=\s|$)/gi
+const EXPENSE = /потратил|заплатил|купил|расход|отдал|spent|paid|bought|cost/i
+
+/** cut a run-on dictated sentence into one piece per amount (dictation has no commas) */
+function moneySegments(text: string) {
+  const t = text.replace(/\$\s*(\d)/g, '$1 $ ')
+  const nums = [...t.matchAll(NUM)].filter((m) => !/^\d{1,2}[:.]\d{2}$/.test(m[0].trim()))
+  if (!nums.length) return []
+  const ends = nums.map((m) => {
+    const e = m.index! + m[0].length
+    const c = t.slice(e).match(CUR_AFTER)
+    return e + (c ? c[0].length : 0)
+  })
+  const bounds = [0]
+  for (let i = 1; i < nums.length; i++) {
+    const region = t.slice(ends[i - 1], nums[i].index!)
+    let cut = -1
+    // 1) punctuation wins: «на продукты, такси 12»
+    const punct = Math.max(region.lastIndexOf(','), region.lastIndexOf(';'), region.lastIndexOf('.'))
+    if (punct >= 0) cut = punct + 1
+    // 2) a joining word: «… и 50 лари», «… потратил 1000»
+    if (cut < 0) for (const m of region.matchAll(SPLIT)) cut = m.index! + (m[0].length - m[1].length)
+    // 3) «на/за/for X» right after the amount belongs to it: «25 лари на продукты такси 12»
+    if (cut < 0) {
+      const pm = region.match(/^\s*(?:на|за|в|во|for|on|at)\s+\S+/i)
+      cut = pm ? pm[0].length : 0
+    }
+    bounds.push(ends[i - 1] + cut)
+  }
+  return nums.map((_, i) => {
+    let seg = t.slice(bounds[i], i + 1 < nums.length ? bounds[i + 1] : t.length)
+    // drop a trailing habit phrase: «… фриланс и сделал йогу»
+    const d = seg.slice(ends[i] - bounds[i]).search(/(?:^|\s)(?:и\s+|and\s+)?(?:сделал|выполнил|отметь|did|done|finished)/i)
+    if (d >= 0) seg = seg.slice(0, ends[i] - bounds[i] + d)
+    return seg.trim()
+  })
 }
 
 /** returns actions in the same shape the AI assistant produces, or [] if nothing was understood */
 export function parseLocal(text: string, s: ParseCtx): Action[] {
   const out: Action[] = []
-  const parts = text.split(/(?<!\d)[.,](?!\d)|[;!?\n]+|\s+(?:и|а ещё|а также|плюс|and|also)\s+/i).map((x) => x.trim()).filter(Boolean)
   const now = s.now ?? new Date()
-  let lastDate = dayKey(now)
-  for (const p of parts) {
-    const date = /вчера|позавчера|yesterday/i.test(p) ? dateOf(p, now) : lastDate
-    lastDate = date
-    const amount = amountOf(p)
-    if (amount) {
-      const income = INCOME.test(p)
-      const cur = currencyOf(p) || (income ? 'USD' : (s.defaultCurrency as 'USD' | 'GEL' | 'RUB'))
-      const category = income ? (/зарплат|оклад|salary/i.test(p) ? 'fixed' : 'variable') : (CAT.find(([, re]) => re.test(p))?.[0] ?? 'other')
-      out.push({ tool: 'add_transaction', input: { type: income ? 'income' : 'expense', amount, currency: cur, category, note: noteOf(p) ?? null, date } })
-      continue
-    }
-    // habits: «сделал йогу», or just the habit name after a 'done' word earlier in the phrase
-    if (DONE.test(p) || DONE.test(text)) {
+  let date = dayKey(now)
+  let lastType: 'income' | 'expense' = 'expense'
+
+  // money: one record per amount
+  for (const seg of moneySegments(text)) {
+    if (/вчера|позавчера|yesterday/i.test(seg)) date = dateOf(seg, now)
+    const amount = amountOf(seg)
+    if (!amount) continue
+    const type: 'income' | 'expense' = INCOME.test(seg) ? 'income' : EXPENSE.test(seg) ? 'expense' : lastType
+    lastType = type
+    const salary = type === 'income' && /зарплат|оклад|salary|paycheck/i.test(seg)
+    const cur = currencyOf(seg) || (type === 'income' ? 'USD' : (s.defaultCurrency as 'USD' | 'GEL' | 'RUB'))
+    const category = type === 'income' ? (salary ? 'fixed' : 'variable') : (CAT.find(([, re]) => re.test(seg))?.[0] ?? 'other')
+    out.push({ tool: 'add_transaction', input: { type, amount, currency: cur, category, note: noteOf(seg, salary) ?? null, date } })
+  }
+
+  // habits: only in the parts without amounts («сделал йогу и медитацию»)
+  if (DONE.test(text)) {
+    const parts = text.split(/(?<!\d)[.,](?!\d)|[;!?\n]+|\s+(?:и|а|а ещё|а также|плюс|and|also)\s+/i).map((x) => x.trim()).filter((x) => x && !/\d/.test(x))
+    const seen = new Set<string>()
+    for (const p of parts) {
       const low = p.toLowerCase()
+      const d = /вчера|позавчера|yesterday/i.test(p) ? dateOf(p, now) : dayKey(now)
       for (const h of s.habits) {
+        if (seen.has(h.id)) continue
         const stem = h.name.toLowerCase().slice(0, Math.min(6, Math.max(3, h.name.length - 1)))
         const aliases = (h.seed && HABIT_ALIASES[h.seed]) || []
-        if (low.includes(stem) || aliases.some((a) => low.includes(a))) out.push({ tool: 'set_habit_done', input: { habit_id: h.id, date, done: true } })
+        if (low.includes(stem) || aliases.some((a) => low.includes(a))) {
+          seen.add(h.id)
+          out.push({ tool: 'set_habit_done', input: { habit_id: h.id, date: d, done: true } })
+        }
       }
     }
   }
