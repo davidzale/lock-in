@@ -79,8 +79,8 @@ export default function Calendar() {
           <div className="ibox"><Icon n="cal" size="s" /></div>
           <div className="grow">
             <div style={{ fontWeight: 600 }}>{t('cal.connect')}</div>
-            <div className="mut" style={{ fontSize: 12, marginTop: 2 }}>{session ? t('cal.connectHint') : t('cal.needCloud')}</div>
-            {error && <div className="danger" style={{ fontSize: 12, marginTop: 4 }}>{error}</div>}
+            <div className="mut" style={{ fontSize: 12, marginTop: 2 }}>{!session ? t('cal.needCloud') : error === 'no_scope' ? t('cal.noScope') : t('cal.connectHint')}</div>
+            {error && error !== 'no_scope' && <div className="danger" style={{ fontSize: 12, marginTop: 4 }}>{error}</div>}
           </div>
           {session
             ? <button className="btn primary sm" onClick={connectGoogle}>{t('cal.connectBtn')}</button>
@@ -205,7 +205,8 @@ function NewEvent({ day, onDone }: { day: string; onDone: () => void }) {
       await createEvent({ title: title.trim(), start: s, end: new Date(s.getTime() + dur * 60000), guests: emails, meet })
       onDone()
     } catch (e) {
-      setErr((e as Error).message)
+      const m = (e as Error).message
+      setErr(m === 'no_scope' ? t('cal.noScope') : m === 'not_connected' ? t('cal.notConnected') : m)
     }
     setBusy(false)
   }

@@ -96,7 +96,7 @@ export async function loadWeek(monday: Date, force = false) {
 }
 
 export async function createEvent(p: { title: string; start: Date; end: Date; description?: string; guests?: string[]; meet?: boolean }) {
-  const r = await call<{ id?: string; error?: string }>('create', {
+  const r = await call<{ id?: string; error?: string; connected?: boolean }>('create', {
     title: p.title,
     description: p.description,
     guests: p.guests || [],
@@ -105,7 +105,22 @@ export async function createEvent(p: { title: string; start: Date; end: Date; de
     end: p.end.toISOString(),
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   })
+  if (r.connected === false) {
+    useGcal.setState({ connected: false, error: r.error })
+    throw new Error(r.error === 'no_scope' ? 'no_scope' : 'not_connected')
+  }
   if (r.error) throw new Error(r.error)
+  if (!r.id) throw new Error('Google did not create the event')
+  // show it right away, before the next refresh
+  const ev: GEvent = { id: `primary:${r.id}`, title: p.title, start: p.start.toISOString(), end: p.end.toISOString(), allDay: false }
+  const key = dayKey(weekStartOf(p.start))
+  useGcal.setState((st) => ({ weeks: { ...st.weeks, [key]: [...(st.weeks[key] || []), ev] } }))
+}
+
+function weekStartOf(d: Date) {
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+  x.setDate(x.getDate() - ((x.getDay() + 6) % 7))
+  return x
 }
 
 /** events overlapping a given day */

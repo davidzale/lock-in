@@ -68,6 +68,12 @@ Deno.serve(async (req) => {
     const g = (path: string, init: RequestInit = {}) =>
       fetch(CAL + path, { ...init, headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', ...(init.headers || {}) } })
 
+    // the user may have unticked the calendar checkbox on Google's consent screen
+    const info = await fetch(`https://oauth2.googleapis.com/tokeninfo?access_token=${token}`).then((r) => r.json()).catch(() => ({}))
+    if (info.scope && !String(info.scope).includes('calendar')) {
+      return json({ connected: false, error: 'no_scope' })
+    }
+
     if (action === 'status') return json({ connected: true })
 
     if (action === 'list') {
