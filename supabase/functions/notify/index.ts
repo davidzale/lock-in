@@ -90,6 +90,7 @@ async function forUser(userId: string, subs: Sub[]) {
     const g = (p: string) => fetch('https://www.googleapis.com/calendar/v3' + p, { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json())
     const cl = await g('/users/me/calendarList?minAccessRole=reader')
     const cals = ((cl.items || []) as { id: string; selected?: boolean; primary?: boolean }[]).filter((c) => c.selected || c.primary)
+    if (!cals.some((c) => c.primary)) cals.unshift({ id: 'primary', primary: true })
     const qs = new URLSearchParams({ timeMin: new Date(now.getTime() + 10 * 60000).toISOString(), timeMax: new Date(now.getTime() + 16 * 60000).toISOString(), singleEvents: 'true', orderBy: 'startTime' })
     for (const c of cals) {
       const r = await g(`/calendars/${encodeURIComponent(c.id)}/events?${qs}`)

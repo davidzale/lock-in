@@ -80,6 +80,8 @@ Deno.serve(async (req) => {
       const cl = await g('/users/me/calendarList?minAccessRole=reader').then((r) => r.json())
       const cals: { id: string; backgroundColor?: string; selected?: boolean; primary?: boolean; summary?: string }[] =
         (cl.items || []).filter((c: { selected?: boolean; primary?: boolean }) => c.selected || c.primary)
+      // calendar.events scope can't list calendars — always read the primary calendar directly
+      if (!cals.some((c) => c.primary)) cals.unshift({ id: 'primary', primary: true })
       const qs = new URLSearchParams({ timeMin: body.timeMin, timeMax: body.timeMax, singleEvents: 'true', orderBy: 'startTime', maxResults: '250' })
       const lists = await Promise.all(
         cals.map(async (c) => {
