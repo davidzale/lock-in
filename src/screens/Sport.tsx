@@ -10,6 +10,7 @@ import { Field, Header, IconBtn, Segs, Sheet } from '../components/ui'
 import { Icon } from '../components/Icon'
 import { MetricsForm, WorkoutForm } from '../components/QuickAdd'
 import { ExerciseVideo } from '../components/ExerciseVideo'
+import { BodyProgress } from '../components/BodyProgress'
 
 export default function Sport() {
   const t = useT()
@@ -178,11 +179,7 @@ export default function Sport() {
           <div className="num" style={{ fontSize: 18, marginTop: 3 }}>{daily.steps != null ? daily.steps.toLocaleString('en-US').replace(/,/g, ' ') : '—'}</div>
         </button>
       </div>
-      <button className="card list-row" onClick={() => setSheet('weight')}>
-        <div className="ibox g"><Icon n="scale" size="s" /></div>
-        <div className="grow"><div style={{ fontWeight: 500 }}>{t('sport.weight')}</div><div className="mut" style={{ fontSize: 12 }}>{t('sport.weightHint')}</div></div>
-        <span className="num">{s.weights[mk] != null ? `${s.weights[mk]} ${t('unit.kg')}` : '—'}</span>
-      </button>
+      <BodyProgress />
 
       {/* history */}
       {sp.sessions.length > 0 && (

@@ -7,7 +7,8 @@ import { money } from './format'
 import { createEvent } from './gcal'
 import { uid } from './date'
 
-export interface Action { tool: string; input: Record<string, unknown> }
+import type { Action } from './localParse'
+export type { Action }
 export interface AskResult { reply: string; actions: Action[] }
 
 /** compact snapshot of the user's data the model needs to resolve a command */

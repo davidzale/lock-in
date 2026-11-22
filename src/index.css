@@ -316,3 +316,11 @@ html.fit-screen .app { min-height: calc(100vh + 2px); padding-bottom: 0; }
 /* tighter page bottom; pages stay 2px scrollable so iOS keeps the tab bar at the edge */
 .app { min-height: calc(100vh + 2px) !important; padding-bottom: calc(max(4px, env(safe-area-inset-bottom) - 16px) + 88px) !important; }
 html.fit-screen .app { padding-bottom: 0 !important; }
+
+.toast { position: fixed; z-index: 70; left: 12px; right: 12px; max-width: 456px; margin: 0 auto; top: calc(env(safe-area-inset-top) + 10px);
+  display: flex; gap: 10px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 10px 12px;
+  font-size: 13px; box-shadow: 0 12px 40px rgba(0,0,0,.45); animation: rise 0.3s var(--ease); }
+
+.photo-slot { position: relative; aspect-ratio: 3 / 4; border-radius: 14px; border: 1px dashed var(--data3); background: var(--card2); display: grid; place-items: center; overflow: hidden; }
+.photo-slot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.photo-slot .lbl { position: absolute; left: 6px; bottom: 6px; background: rgba(0,0,0,.55); color: #fff; padding: 2px 6px; border-radius: 6px; }

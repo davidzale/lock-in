@@ -114,6 +114,8 @@ interface Data {
   growthTargets: { speech: number; lang: Record<string, number> }
   daily: Record<string, DailyMetrics>
   weights: Record<string, number>
+  /** monthly body measurements in cm, keyed YYYY-MM */
+  measures: Record<string, Partial<Record<'waist' | 'chest' | 'hips' | 'arm' | 'thigh', number>>>
   progNotes: ProgNote[]
   sport: SportData
 }
@@ -218,6 +220,7 @@ function initial(): Data {
     growthTargets: { speech: 3, lang: { en: 150, fr: 60, de: 60 } },
     daily: {},
     weights: {},
+    measures: {},
     progNotes: [],
     sport: { levels: {}, hits: {}, prs: {}, videos: {}, sessions: [], active: null },
   }

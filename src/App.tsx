@@ -7,6 +7,9 @@ import { QuickAdd } from './components/QuickAdd'
 import { Assistant } from './components/Assistant'
 import { useOverlay } from './components/ui'
 import { ConfirmHost } from './components/Confirm'
+import { ToastHost } from './components/Toast'
+import { applyInbox } from './lib/quick'
+import { useSync } from './lib/sync'
 import { useCloudSync } from './lib/sync'
 import Today from './screens/Today'
 import Calendar from './screens/Calendar'
@@ -76,6 +79,15 @@ export default function App() {
   const { pathname } = useLocation()
   const overlay = useOverlay((o) => o.count > 0)
   const inSession = pathname.startsWith('/session')
+  const signedIn = useSync((x) => !!x.session)
+  // pick up anything said to Siri while the app was closed
+  useEffect(() => {
+    if (!signedIn) return
+    const run = () => document.visibilityState === 'visible' && applyInbox()
+    const id = setTimeout(run, 1500) // after the first cloud pull
+    document.addEventListener('visibilitychange', run)
+    return () => { clearTimeout(id); document.removeEventListener('visibilitychange', run) }
+  }, [signedIn])
   // every screen opens at the top (before paint, so nothing jumps)
   useLayoutEffect(() => {
     window.scrollTo({ top: 0 })
@@ -115,6 +127,7 @@ export default function App() {
       <QuickAdd />
       {!inSession && <Assistant />}
       <ConfirmHost />
+      <ToastHost />
     </>
   )
 }
