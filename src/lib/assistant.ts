@@ -158,8 +158,15 @@ export async function apply(a: Action) {
         ...(i.reminder === 'off' ? { reminder: undefined } : isTime(i.reminder) ? { reminder: str(i.reminder) } : {}),
       })
     }
-    case 'add_goal':
-      return s.upsertGoal({ id: uid(), period: i.period as Period, kind: i.kind as GoalKind, title: str(i.title), target: num(i.target) })
+    case 'add_goal': {
+      if (i.kind !== 'custom' && (i.period === 'month' || i.period === 'year')) {
+        const fp = s.finPlan
+        const now = new Date()
+        if (i.period === 'month') return s.set('finPlan', { ...fp, monthOverrides: { ...fp.monthOverrides, [dayKey(now).slice(0, 7)]: num(i.target) } })
+        return s.set('finPlan', { ...fp, yearOverrides: { ...fp.yearOverrides, [String(now.getFullYear())]: num(i.target) } })
+      }
+      return s.upsertGoal({ id: uid(), period: i.period as Period, kind: 'custom' as GoalKind, title: str(i.title), target: num(i.target) })
+    }
     case 'set_goal_progress': {
       const g = s.goals.find((x) => x.id === i.goal_id)
       if (g) s.setGoalProgress(g.id, periodKey(g.period), num(i.value))

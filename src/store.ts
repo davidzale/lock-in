@@ -49,8 +49,16 @@ export interface Tx {
   date: string
 }
 export type FinGoalType = 'savings' | 'purchase' | 'debt'
-export interface FinGoal { id: string; type: FinGoalType; title: string; target: number; saved: number; seed?: string }
-export interface Recurring { id: string; title: string; amount: number; currency: Currency; category: string; day: number; paid: string[] }
+export interface FinGoal { id: string; type: FinGoalType; title: string; target: number; saved: number; seed?: string; /** YYYY-MM */ deadline?: string }
+export interface Recurring {
+  id: string; title: string; amount: number; currency: Currency; category: string; day: number; paid: string[]
+  /** first month it applies (YYYY-MM) */
+  start?: string
+  /** amount changes: from that month on */
+  amounts?: { from: string; amount: number }[]
+}
+/** money targets: defaults + per-month / per-year overrides (an override carries forward) */
+export interface FinPlan { incomeMonth: number; incomeYear: number; monthOverrides: Record<string, number>; yearOverrides: Record<string, number> }
 export type WorkoutType = 'strength' | 'yoga' | 'stretch' | 'walk' | 'other'
 export interface Workout { id: string; date: string; type: WorkoutType; minutes: number; note?: string }
 export interface GrowthWeek {
@@ -96,6 +104,9 @@ interface Data {
   goals: Goal[]
   txs: Tx[]
   budgets: Record<string, number>
+  /** monthly limits by month (YYYY-MM); a month uses the latest entry at or before it */
+  budgetsHist: Record<string, Record<string, number>>
+  finPlan: FinPlan
   finGoals: FinGoal[]
   recurring: Recurring[]
   workouts: Workout[]
@@ -118,6 +129,7 @@ interface Actions {
   setGoalProgress: (id: string, pk: string, v: number) => void
   addTx: (t: Omit<Tx, 'id' | 'usd'>) => void
   removeTx: (id: string) => void
+  updateTx: (id: string, t: Omit<Tx, 'id' | 'usd'>) => void
   upsertFinGoal: (g: FinGoal) => void
   removeFinGoal: (id: string) => void
   upsertRecurring: (r: Recurring) => void
@@ -175,12 +187,7 @@ function seedHabits(lang: Lang): Habit[] {
   ]
 }
 function seedGoals(lang: Lang): Goal[] {
-  return [
-    { id: uid(), period: 'week', title: seedName('earn', lang), seed: 'earn', kind: 'income', target: 1000 },
-    { id: uid(), period: 'month', title: seedName('earn', lang), seed: 'earn', kind: 'income', target: 5000 },
-    { id: uid(), period: 'year', title: seedName('earn', lang), seed: 'earn', kind: 'income', target: 100000 },
-    { id: uid(), period: 'year', title: seedName('save', lang), seed: 'save', kind: 'savings', target: 50000 },
-  ]
+  return [{ id: uid(), period: 'year', title: lang === 'ru' ? 'Прочитать книг' : 'Read books', kind: 'custom', target: 12 }]
 }
 
 const detectLang = (): Lang => (typeof navigator !== 'undefined' && navigator.language?.startsWith('ru') ? 'ru' : 'en')
@@ -199,6 +206,8 @@ function initial(): Data {
     goals: seedGoals(lang),
     txs: [],
     budgets: {},
+    budgetsHist: {},
+    finPlan: { incomeMonth: 5000, incomeYear: 100000, monthOverrides: {}, yearOverrides: {} },
     finGoals: [
       { id: uid(), type: 'savings', title: seedName('piggy', lang), seed: 'piggy', target: 50000, saved: 0 },
       { id: uid(), type: 'debt', title: seedName('debts', lang), seed: 'debts', target: 0, saved: 0 },
@@ -215,6 +224,21 @@ function initial(): Data {
 }
 
 export type AppData = Data
+
+/** upgrade older data: money goals move to finPlan; only custom goals stay in `goals` */
+export function normalize(d: Partial<Data>): Partial<Data> {
+  const out = { ...d }
+  if (out.goals) {
+    if (!out.finPlan) {
+      const m = out.goals.find((g) => g.kind === 'income' && g.period === 'month')
+      const y = out.goals.find((g) => g.kind === 'income' && g.period === 'year')
+      out.finPlan = { incomeMonth: m?.target ?? 5000, incomeYear: y?.target ?? 100000, monthOverrides: {}, yearOverrides: {} }
+    }
+    out.goals = out.goals.filter((g) => g.kind === 'custom')
+  }
+  if (out.budgets && !out.budgetsHist) out.budgetsHist = {}
+  return out
+}
 /** keys of persisted user data (everything except actions) */
 export const DATA_KEYS = Object.keys(initial()) as (keyof Data)[]
 export const pickData = (s: Data): Data => Object.fromEntries(DATA_KEYS.map((k) => [k, s[k]])) as unknown as Data
@@ -254,6 +278,7 @@ export const useStore = create<State>()(
         set((s) => ({ goals: s.goals.map((g) => (g.id === id ? { ...g, progress: { ...g.progress, [pk]: Math.max(0, v) } } : g)) })),
       addTx: (t) => set((s) => ({ txs: [{ ...t, id: uid(), usd: toUSD(t.amount, t.currency, s.rates) }, ...s.txs] })),
       removeTx: (id) => set((s) => ({ txs: s.txs.filter((x) => x.id !== id) })),
+      updateTx: (id, t) => set((s) => ({ txs: s.txs.map((x) => (x.id === id ? { ...t, id, usd: toUSD(t.amount, t.currency, s.rates) } : x)) })),
       upsertFinGoal: (g) => set((s) => ({ finGoals: s.finGoals.some((x) => x.id === g.id) ? s.finGoals.map((x) => (x.id === g.id ? g : x)) : [...s.finGoals, g] })),
       removeFinGoal: (id) => set((s) => ({ finGoals: s.finGoals.filter((x) => x.id !== id) })),
       upsertRecurring: (r) => set((s) => ({ recurring: s.recurring.some((x) => x.id === r.id) ? s.recurring.map((x) => (x.id === r.id ? r : x)) : [...s.recurring, r] })),
@@ -261,7 +286,11 @@ export const useStore = create<State>()(
       payRecurring: (id, month) => {
         const r = get().recurring.find((x) => x.id === id)
         if (!r || r.paid.includes(month)) return
-        get().addTx({ type: 'expense', amount: r.amount, currency: r.currency, category: r.category, note: r.title, date: dayKey() })
+        const [y, m] = month.split('-').map(Number)
+        const last = new Date(y, m, 0).getDate()
+        const date = month === dayKey().slice(0, 7) ? dayKey() : `${month}-${String(Math.min(r.day, last)).padStart(2, '0')}`
+        const amt = (r.amounts || []).filter((x) => x.from <= month).sort((a, b) => (a.from < b.from ? -1 : 1)).pop()?.amount ?? r.amount
+        get().addTx({ type: 'expense', amount: amt, currency: r.currency, category: r.category, note: r.title, date })
         set((s) => ({ recurring: s.recurring.map((x) => (x.id === id ? { ...x, paid: [...x.paid, month] } : x)) }))
       },
       addWorkout: (w) => set((s) => ({ workouts: [{ ...w, id: uid() }, ...s.workouts] })),
@@ -288,7 +317,7 @@ export const useStore = create<State>()(
         })
         if (notes.length) set({ habits, progNotes: [...notes, ...s.progNotes] })
       },
-      importData: (d) => set(d as Partial<State>),
+      importData: (d) => set(normalize(d as Partial<Data>) as Partial<State>),
       sportPatch: (p) => set((s) => ({ sport: { ...s.sport, ...p } })),
       finishSession: (kind, minutes, logs, week) => {
         const s = get()
@@ -324,7 +353,7 @@ export const useStore = create<State>()(
         return levelUps
       },
     }),
-    { name: 'lockin-v1', version: 1 },
+    { name: 'lockin-v1', version: 2, migrate: (p) => normalize(p as Partial<Data>) as State },
   ),
 )
 

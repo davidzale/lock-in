@@ -110,21 +110,6 @@ export default function Settings() {
         ))}
       </div>
 
-      <div className="card">
-        <div className="card-head">
-          <span className="h2">{t('today.goals')}</span>
-          <button className="lbl acc" onClick={() => setGoal('new')}>+ {t('common.add')}</button>
-        </div>
-        {s.goals.map((g) => (
-          <button key={g.id} className="list-row" onClick={() => setGoal(g)}>
-            <span className="tag">{t(`period.${g.period}`)}</span>
-            <span className="grow">{g.title}</span>
-            <span className="num mut" style={{ fontSize: 12 }}>{g.kind === 'custom' ? g.target : money(g.target, 'USD', { compact: true })}</span>
-            <Icon n="chev" size="s" className="mut" />
-          </button>
-        ))}
-      </div>
-
       <button className="card list-row" style={{ border: '1px solid var(--line)' }} onClick={() => setTargets(true)}>
         <div className="ibox"><Icon n="compass" size="s" /></div>
         <span className="grow" style={{ fontWeight: 500 }}>{t('settings.growthTargets')}</span>
@@ -141,7 +126,7 @@ export default function Settings() {
         <input ref={fileRef} type="file" accept="application/json" hidden onChange={(e) => e.target.files?.[0] && importData(e.target.files[0])} />
       </div>
 
-      <div className="mono mut" style={{ textAlign: 'center', fontSize: 10, padding: '8px 0 20px' }}>LOCK IN · v0.5.3 · {t('settings.phase')}</div>
+      <div className="mono mut" style={{ textAlign: 'center', fontSize: 10, padding: '8px 0 20px' }}>LOCK IN · v0.6 · {t('settings.phase')}</div>
 
       <Sheet open={!!habit} onClose={() => setHabit(null)} title={habit === 'new' ? t('habit.new') : t('habit.edit')}>
         {habit && <HabitForm habit={habit === 'new' ? undefined : habit} onDone={() => setHabit(null)} />}

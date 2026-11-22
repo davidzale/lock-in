@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { create } from 'zustand'
 import { useNavigate } from 'react-router-dom'
 import { EXPENSE_CATS, useStore } from '../store'
-import type { Currency, TxType, WorkoutType } from '../store'
+import type { Currency, Tx, TxType, WorkoutType } from '../store'
 import { useT } from '../i18n'
 import { dayKey } from '../lib/date'
 import { sym } from '../lib/format'
@@ -18,21 +18,21 @@ export const useQuick = create<{ kind: QuickKind | null; open: (k: QuickKind) =>
 
 const num = (s: string) => Number(s.replace(',', '.').replace(/\s/g, ''))
 
-export function TxForm({ type, onDone }: { type: TxType; onDone: () => void }) {
+export function TxForm({ type, onDone, tx, defaultDate }: { type: TxType; onDone: () => void; tx?: Tx; defaultDate?: string }) {
   const t = useT()
-  const { currencies, defaultCurrency, addTx } = useStore()
-  const [amount, setAmount] = useState('')
-  const [cur, setCur] = useState<Currency>(type === 'income' ? 'USD' : defaultCurrency)
-  const [cat, setCat] = useState<string>(type === 'income' ? 'fixed' : 'food')
-  const [date, setDate] = useState(dayKey())
-  const [note, setNote] = useState('')
+  const { currencies, defaultCurrency, addTx, updateTx, removeTx } = useStore()
+  const [amount, setAmount] = useState(tx ? String(tx.amount) : '')
+  const [cur, setCur] = useState<Currency>(tx?.currency || (type === 'income' ? 'USD' : defaultCurrency))
+  const [cat, setCat] = useState<string>(tx?.category || (type === 'income' ? 'fixed' : 'food'))
+  const [date, setDate] = useState(tx?.date || defaultDate || dayKey())
+  const [note, setNote] = useState(tx?.note || '')
   const v = num(amount)
   const ok = v > 0
   return (
     <>
       <Field label={t('fin.amount')}>
         <div style={{ position: 'relative' }}>
-          <input className="input big" inputMode="decimal" autoFocus placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)} />
+          <input className="input big" inputMode="decimal" autoFocus={!tx} placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)} />
           <span className="num mut" style={{ position: 'absolute', right: 16, top: 16, fontSize: 22 }}>{sym(cur)}</span>
         </div>
       </Field>
@@ -61,12 +61,19 @@ export function TxForm({ type, onDone }: { type: TxType; onDone: () => void }) {
         style={{ width: '100%' }}
         disabled={!ok}
         onClick={() => {
-          addTx({ type, amount: v, currency: cur, category: cat, note: note.trim() || undefined, date })
+          const t = { type, amount: v, currency: cur, category: cat, note: note.trim() || undefined, date }
+          if (tx) updateTx(tx.id, t)
+          else addTx(t)
           onDone()
         }}
       >
         {t('common.save')}
       </button>
+      {tx && (
+        <button className="btn danger" style={{ width: '100%', marginTop: 8 }} onClick={() => { if (confirm(t('common.confirmDelete'))) { removeTx(tx.id); onDone() } }}>
+          {t('common.delete')}
+        </button>
+      )}
     </>
   )
 }

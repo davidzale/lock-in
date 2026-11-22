@@ -7,6 +7,7 @@ import { growthScore } from '../lib/calc'
 import { Field, Header, Heat, IconBtn, Sheet, Switch } from '../components/ui'
 import { Icon } from '../components/Icon'
 import { IDEAS } from '../lib/ideas'
+import { GoalsCard } from '../components/GoalsCard'
 
 type K = 'place' | 'skill' | 'speech' | 'lang'
 
@@ -84,6 +85,8 @@ export default function Growth() {
           <button className="btn ghost sm" style={{ flex: 1 }} onClick={() => setIdeaSeed((x) => x + 1)}><Icon n="shuffle" size="s" />{t('growth.another')}</button>
         </div>
       </div>
+
+      <GoalsCard />
 
       <Sheet open={!!open} onClose={() => setOpen(null)} title={open ? tiles.find((x) => x.k === open)?.title : ''}>
         {(open === 'place' || open === 'skill') && <TitleDone wk={wk} k={open} onDone={() => setOpen(null)} />}

@@ -97,11 +97,11 @@ export function HabitForm({ habit, onDone }: { habit?: Habit; onDone: () => void
   )
 }
 
-export function GoalForm({ goal, onDone }: { goal?: Goal; onDone: () => void }) {
+export function GoalForm({ goal, onDone, defaultPeriod }: { goal?: Goal; onDone: () => void; defaultPeriod?: Period }) {
   const t = useT()
   const { upsertGoal, removeGoal } = useStore()
-  const [period, setPeriod] = useState<Period>(goal?.period || 'week')
-  const [kind, setKind] = useState<GoalKind>(goal?.kind || 'custom')
+  const [period, setPeriod] = useState<Period>(goal?.period || defaultPeriod || 'month')
+  const kind: GoalKind = 'custom'
   const [title, setTitle] = useState(goal?.title || '')
   const [target, setTarget] = useState(String(goal?.target ?? ''))
   return (
@@ -109,18 +109,10 @@ export function GoalForm({ goal, onDone }: { goal?: Goal; onDone: () => void }) 
       <Field label={t('goal.period')}>
         <Seg value={period} onChange={setPeriod} options={(['week', 'month', 'year'] as Period[]).map((p) => ({ v: p, label: t(`period.${p}`) }))} />
       </Field>
-      <Field label={t('goal.kind')}>
-        <div className="chips">
-          {(['income', 'savings', 'custom'] as GoalKind[]).map((k) => (
-            <button key={k} className={`chip ${k === kind ? 'on' : ''}`} onClick={() => setKind(k)}>{t(`goalKind.${k}`)}</button>
-          ))}
-        </div>
-      </Field>
-      <div className="mut" style={{ fontSize: 12, marginTop: -6, marginBottom: 14 }}>{t(`goalKind.${kind}.hint`)}</div>
       <Field label={t('goal.title')}>
-        <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t('goal.titlePh')} />
       </Field>
-      <Field label={kind === 'custom' ? t('goal.target') : t('goal.targetUsd')}>
+      <Field label={t('goal.target')}>
         <input className="input" inputMode="decimal" value={target} onChange={(e) => setTarget(e.target.value)} />
       </Field>
       <button
