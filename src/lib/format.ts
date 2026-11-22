@@ -26,3 +26,13 @@ export function inDuration(total: number, lang: string) {
   const parts = d ? [`${d} ${u.d}`, h ? `${h} ${u.h}` : ''] : h ? [`${h} ${u.h}`, m ? `${m} ${u.m}` : ''] : [`${m} ${u.m}`]
   return `${u.in} ${parts.filter(Boolean).join(' ')}`
 }
+
+/** one recognisable pastel colour per category (dark & light friendly) */
+export const CAT_COLOR: Record<string, string> = {
+  food: '#ff8fab', housing: '#7cc4ff', transport: '#ffd166', entertainment: '#c3a6ff', health: '#6ee7b7',
+  sport: '#ffa36c', subscriptions: '#8ea7ff', shopping: '#f7b2e6', travel: '#5fd3e0', other: '#a1a1a8',
+  fixed: '#6ee7b7', variable: '#7cc4ff', 'other+': '#6e6e75',
+}
+export const catColor = (k: string) => CAT_COLOR[k] || '#a1a1a8'
+/** css class for a signed amount */
+export const signCls = (v: number) => (v > 0 ? 'pos' : v < 0 ? 'neg' : '')

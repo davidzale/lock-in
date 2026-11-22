@@ -5,7 +5,7 @@ import { useT } from '../i18n'
 import { dayKey, fmtDate, inRange, monthKey, parseDay, uid } from '../lib/date'
 import { balance, totals } from '../lib/calc'
 import { budgetsFor, monthTarget, recurringActive, recurringAmount, yearTarget } from '../lib/finance'
-import { money } from '../lib/format'
+import { money, signCls } from '../lib/format'
 import { Bar, Field, IconBtn, Seg, Segs, Sheet } from '../components/ui'
 import { Icon } from '../components/Icon'
 import { TxForm } from '../components/QuickAdd'
@@ -116,7 +116,7 @@ function MonthView({ y, m, mk, setSheet }: { y: number; m: number; mk: string; s
     <>
       <div className="card">
         <div className="lbl">{t('fin.monthLeft')}</div>
-        <div className="num" style={{ fontSize: 32, margin: '6px 0 12px' }}>{money(tot.net, 'USD', { sign: true })}</div>
+        <div className={`num ${signCls(tot.net)}`} style={{ fontSize: 32, margin: '6px 0 12px' }}>{money(tot.net, 'USD', { sign: true })}</div>
         <div className="stats">
           <div><div className="lbl">{t('fin.fixed')}</div><div className="num ellipsis">{money(tot.fixed, 'USD', { compact: true })}</div></div>
           <div><div className="lbl">{t('fin.variable')}</div><div className="num ellipsis">{money(tot.variable, 'USD', { compact: true })}</div></div>
@@ -188,7 +188,7 @@ function MonthView({ y, m, mk, setSheet }: { y: number; m: number; mk: string; s
                   <div className="ellipsis">{x.note || t(`cat.${x.category}`)}</div>
                   <div className="mono mut" style={{ fontSize: 11, textTransform: 'uppercase' }}>{t(`cat.${x.category}`)}{x.currency !== 'USD' && ` · ${money(x.amount, x.currency)}`}</div>
                 </div>
-                <span className={`num ${x.type === 'income' ? 'acc' : ''}`}>{x.type === 'income' ? '+' : '−'}{money(x.usd).replace('−', '')}</span>
+                <span className={`num ${x.type === 'income' ? 'pos' : ''}`}>{x.type === 'income' ? '+' : '−'}{money(x.usd).replace('−', '')}</span>
               </button>
             ))}
           </div>
@@ -219,7 +219,7 @@ function YearView({ y, setSheet, openMonth }: { y: number; setSheet: SetSheet; o
     <>
       <div className="card">
         <div className="lbl">{t('fin.yearSaved')}</div>
-        <div className="num" style={{ fontSize: 32, margin: '6px 0 12px' }}>{money(year.net, 'USD', { sign: true })}</div>
+        <div className={`num ${signCls(year.net)}`} style={{ fontSize: 32, margin: '6px 0 12px' }}>{money(year.net, 'USD', { sign: true })}</div>
         <div className="stats">
           <div><div className="lbl">{t('fin.earned')}</div><div className="num ellipsis">{money(year.income, 'USD', { compact: true })}</div></div>
           <div><div className="lbl">{t('fin.spent')}</div><div className="num ellipsis">{money(year.expense, 'USD', { compact: true })}</div></div>
@@ -289,9 +289,9 @@ function YearView({ y, setSheet, openMonth }: { y: number; setSheet: SetSheet; o
           {months.filter((x) => x.income || x.expense).map((x) => (
             <button key={x.m} className="list-row" onClick={() => openMonth(x.m)} style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto auto auto', gap: 10 }}>
               <span style={{ textAlign: 'left' }}>{cap(fmtDate(new Date(y, x.m, 1), lang, { month: 'long' }))}</span>
-              <span className="num acc" style={{ fontSize: 12 }}>+{money(x.income, 'USD', { compact: true })}</span>
+              <span className="num pos" style={{ fontSize: 12 }}>+{money(x.income, 'USD', { compact: true })}</span>
               <span className="num mut" style={{ fontSize: 12 }}>−{money(x.expense, 'USD', { compact: true }).replace('−', '')}</span>
-              <span className="num" style={{ fontSize: 12, minWidth: 56, textAlign: 'right' }}>{money(x.net, 'USD', { sign: true, compact: true })}</span>
+              <span className={`num ${signCls(x.net)}`} style={{ fontSize: 12, minWidth: 56, textAlign: 'right' }}>{money(x.net, 'USD', { sign: true, compact: true })}</span>
             </button>
           ))}
           {!months.some((x) => x.income || x.expense) && <div className="empty">{t('fin.noTx')}</div>}

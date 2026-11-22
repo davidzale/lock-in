@@ -96,7 +96,7 @@ export default function Today() {
           </div>
           <div>
             <div className="lbl">{t('today.monthNet')}</div>
-            <div className="num ellipsis">{money(month.net, 'USD', { sign: true, compact: true })}</div>
+            <div className={`num ellipsis ${month.net > 0 ? 'pos' : month.net < 0 ? 'neg' : ''}`}>{money(month.net, 'USD', { sign: true, compact: true })}</div>
           </div>
           <div>
             <div className="lbl">{t('today.day')}</div>

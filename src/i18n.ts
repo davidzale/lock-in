@@ -91,7 +91,7 @@ const en: Dict = {
   'sess.doneTitle': 'Workout complete', 'sess.levelUp': 'Level up!', 'sess.newPrs': 'New records',
 
   'ai.needCloud': 'Sign in to Cloud sync in Settings to use the assistant.', 'ai.title': 'Assistant', 'ai.placeholder': 'e.g. “spent 25 lari on groceries, did yoga and meditation, slept 7 hours”',
-  'ai.hintMic': 'Tap the mic and speak, or type. I’ll show what I understood before saving.', 'ai.hintKeyboard': 'Type, or use the mic on the iPhone keyboard to dictate.',
+  'ai.hintMic': 'Tap the mic and speak, or type. I’ll show what I understood before saving.', 'ai.hintKeyboard': 'Tap the mic on the iPhone keyboard and say e.g. “coffee 12 lari, taxi 8 lari”.',
   'ai.send': 'Send', 'ai.thinking': 'Thinking…', 'ai.apply': 'Apply ({n})', 'ai.again': 'Redo', 'ai.done': 'Done', 'ai.micError': 'Microphone unavailable — use the mic on the keyboard.',
 
   'push.needCloud': 'Sign in to Cloud sync above first.', 'push.title': 'Notifications', 'push.hint': 'Habit reminders at the time you set, events 15 min before, monthly summary on the 1st.',
@@ -217,7 +217,7 @@ const ru: Dict = {
   'sess.doneTitle': 'Тренировка завершена', 'sess.levelUp': 'Новый уровень!', 'sess.newPrs': 'Новые рекорды',
 
   'ai.needCloud': 'Чтобы пользоваться помощником, войди в облако в Настройках.', 'ai.title': 'Помощник', 'ai.placeholder': 'Например: «потратил 25 лари на продукты, сделал йогу и медитацию, спал 7 часов»',
-  'ai.hintMic': 'Нажми на микрофон и говори, или напиши. Перед сохранением я покажу, что понял.', 'ai.hintKeyboard': 'Напиши или продиктуй через микрофон на клавиатуре iPhone.',
+  'ai.hintMic': 'Нажми на микрофон и говори, или напиши. Перед сохранением я покажу, что понял.', 'ai.hintKeyboard': 'Нажми микрофон на клавиатуре iPhone и скажи, например: «кофе 12 лари, такси 8 лари».',
   'ai.send': 'Отправить', 'ai.thinking': 'Думаю…', 'ai.apply': 'Применить ({n})', 'ai.again': 'Заново', 'ai.done': 'Готово', 'ai.micError': 'Микрофон недоступен — продиктуй через микрофон на клавиатуре.',
 
   'push.needCloud': 'Сначала войди в облако — карточка выше.', 'push.title': 'Уведомления', 'push.hint': 'Напоминания о привычках в твоё время, о событиях за 15 минут и итоги месяца 1-го числа.',

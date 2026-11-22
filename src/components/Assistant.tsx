@@ -5,6 +5,7 @@ import { useSync } from '../lib/sync'
 import { useGcal, loadWeek } from '../lib/gcal'
 import { weekStart } from '../lib/date'
 import { apply, ask, describe } from '../lib/assistant'
+import { parseLocal } from '../lib/localParse'
 import type { Action } from '../lib/assistant'
 import { Sheet, useOverlay } from './ui'
 import { Icon } from './Icon'
@@ -63,13 +64,25 @@ export function Assistant() {
     rec.current?.stop()
     if (!text.trim()) return
     setBusy(true); setErr(''); setReply(''); setActions([]); setDone(false)
+    const s = useStore.getState()
+    const label = (list: Action[]) => list.map((a) => ({ a, label: describe(a, t, s) || '', on: true })).filter((x) => x.label)
+    // 1) free on-device parsing for money and habits
+    const local = label(parseLocal(text.trim(), s))
+    if (local.length) {
+      setReply(t('ai.understood'))
+      setActions(local)
+      setBusy(false)
+      return
+    }
+    // 2) anything else goes to Claude (needs cloud sign-in + API key)
+    if (!session) { setErr(t('ai.localHint')); setBusy(false); return }
     try {
       const r = await ask(text.trim(), calendar)
-      const s = useStore.getState()
       setReply(r.reply)
-      setActions(r.actions.map((a) => ({ a, label: describe(a, t, s) || '', on: true })).filter((x) => x.label))
+      setActions(label(r.actions))
     } catch (e) {
-      setErr((e as Error).message)
+      const m = (e as Error).message
+      setErr(/ANTHROPIC_API_KEY|api key/i.test(m) ? t('ai.localHint') : m)
     }
     setBusy(false)
   }
@@ -94,9 +107,8 @@ export function Assistant() {
         <Icon n="mic" />
       </button>
       <Sheet open={open} onClose={close} title={t('ai.title')}>
-        {!session ? (
-          <div className="mut" style={{ fontSize: 13, paddingBottom: 8 }}>{t('ai.needCloud')}</div>
-        ) : (
+        {(
+
           <>
             <div style={{ position: 'relative' }}>
               <textarea

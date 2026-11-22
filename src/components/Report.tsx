@@ -65,7 +65,7 @@ export function Report({ range, prev }: { range: [Date, Date]; prev?: [Date, Dat
         <Trio
           a={[t('fin.income'), money(fin.income, 'USD', { compact: true }), pv && delta(fin.income - pv.fin.income)]}
           b={[t('fin.expense'), money(fin.expense, 'USD', { compact: true }), pv && delta(fin.expense - pv.fin.expense, false, true)]}
-          c={[t('stats.net'), money(fin.net, 'USD', { compact: true, sign: true })]}
+          c={[t('stats.net'), money(fin.net, 'USD', { compact: true, sign: true }), fin.net ? <span className={fin.net > 0 ? 'pos' : 'neg'} style={{ fontSize: 10, marginLeft: 4 }}>●</span> : null]}
         />
         {cats.length > 0 && (
           <div style={{ marginTop: 12 }}>

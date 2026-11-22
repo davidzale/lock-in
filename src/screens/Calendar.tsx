@@ -28,6 +28,10 @@ export default function Calendar() {
   const [open, setOpen] = useState<GEvent | null>(null)
   const ws = addDays(weekStart(now), offset * 7)
   const swipeX = useRef(0)
+  useEffect(() => {
+    document.documentElement.classList.add('no-page-scroll')
+    return () => document.documentElement.classList.remove('no-page-scroll')
+  }, [])
   const shiftWeek = (d: number) => {
     setOffset((o) => o + d)
     setSel(dayKey(addDays(parseDay(sel), d * 7)))
@@ -62,7 +66,7 @@ export default function Calendar() {
   const placed = layout(timed, sel)
 
   return (
-    <>
+    <div className="cal-screen">
       <Header
         eyebrow={fmtDate(ws, lang, { month: 'long', year: 'numeric' })}
         title={t('tab.calendar')}
@@ -121,8 +125,8 @@ export default function Calendar() {
         </div>
       )}
 
-      <div className="card" style={{ padding: '12px 14px' }}>
-        <div ref={scroller} style={{ maxHeight: '56dvh', overflowY: 'auto' }}>
+      <div className="card cal-grid" style={{ padding: '12px 14px' }}>
+        <div ref={scroller} className="cal-scroll">
           <div className="timeline" style={{ height: (END - START) * ROW + 10 }}>
             {Array.from({ length: END - START }, (_, i) => (
               <div key={i}>
@@ -181,7 +185,7 @@ export default function Calendar() {
           </>
         )}
       </Sheet>
-    </>
+    </div>
   )
 }
 

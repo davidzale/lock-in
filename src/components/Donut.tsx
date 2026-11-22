@@ -3,10 +3,9 @@ import { useStore } from '../store'
 import type { Tx } from '../store'
 import { useT } from '../i18n'
 import { inRange } from '../lib/date'
-import { money } from '../lib/format'
+import { catColor, money } from '../lib/format'
 import { Seg } from './ui'
 
-const PALETTE = ['#ff6a1a', '#ff9b52', '#ffc48c', 'var(--data2)', '#a1a1a8', '#6e6e75', '#45454b']
 
 /** spending / income ring by category (tap a slice or a row to focus it) */
 export function CategoryRing({ range }: { range: [Date, Date] }) {
@@ -51,7 +50,7 @@ export function CategoryRing({ range }: { range: [Date, Date] }) {
                 <circle
                   key={k}
                   cx="60" cy="60" r={R}
-                  stroke={PALETTE[i % PALETTE.length]}
+                  stroke={catColor(k)}
                   strokeDasharray={`${shown ? dash : 0} ${C}`}
                   strokeDashoffset={off}
                   style={{ transition: `stroke-dasharray .8s cubic-bezier(.16,1,.3,1) ${i * 60}ms, opacity .2s`, opacity: dim ? 0.25 : 1, cursor: 'pointer' }}
@@ -70,9 +69,9 @@ export function CategoryRing({ range }: { range: [Date, Date] }) {
         </div>
       </div>
       {items.length === 0 && <div className="empty">{t('fin.noTx')}</div>}
-      {items.map(([k, v], i) => (
+      {items.map(([k, v]) => (
         <button key={k} className="list-row" style={{ opacity: sel && sel !== k ? 0.45 : 1 }} onClick={() => setSel(sel === k ? null : k)}>
-          <span style={{ width: 10, height: 10, borderRadius: 3, background: PALETTE[i % PALETTE.length], flexShrink: 0 }} />
+          <span style={{ width: 10, height: 10, borderRadius: 3, background: catColor(k), flexShrink: 0 }} />
           <span className="grow" style={{ textAlign: 'left' }}>{name(k)}</span>
           <span className="num mut" style={{ fontSize: 12 }}>{Math.round((v / total) * 100)}%</span>
           <span className="num" style={{ minWidth: 70, textAlign: 'right' }}>{money(v)}</span>
