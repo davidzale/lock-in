@@ -40,14 +40,14 @@ export function Assistant() {
 
   useEffect(() => () => rec.current?.stop(), [])
 
-  const listen = () => {
+  const listen = (fresh = false) => {
     if (!SR) return
-    if (listening) { rec.current?.stop(); return }
+    if (listening && !fresh) { rec.current?.stop(); return }
     const r = new SR()
     r.lang = lang === 'ru' ? 'ru-RU' : 'en-US'
     r.interimResults = true
-    r.continuous = false
-    base.current = text ? text.trim() + ' ' : ''
+    r.continuous = true
+    base.current = !fresh && text ? text.trim() + ' ' : ''
     r.onresult = (e) => {
       let s = ''
       for (let i = 0; i < e.results.length; i++) s += e.results[i][0].transcript
@@ -103,7 +103,7 @@ export function Assistant() {
 
   return (
     <>
-      <button className={`fab ${overlay ? 'hide' : ''}`} aria-label={t('ai.title')} onClick={() => setOpen(true)}>
+      <button className={`fab ${overlay ? 'hide' : ''}`} aria-label={t('ai.title')} onClick={() => { reset(); setOpen(true); if (SR) listen(true) }}>
         <Icon n="mic" />
       </button>
       <Sheet open={open} onClose={close} title={t('ai.title')}>
@@ -121,7 +121,7 @@ export function Assistant() {
               />
               {SR && (
                 <button
-                  onClick={listen}
+                  onClick={() => listen()}
                   aria-label="mic"
                   className={listening ? 'mic on' : 'mic'}
                 >

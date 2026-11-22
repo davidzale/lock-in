@@ -28,9 +28,10 @@ export default function Calendar() {
   const [open, setOpen] = useState<GEvent | null>(null)
   const ws = addDays(weekStart(now), offset * 7)
   const swipeX = useRef(0)
+  // size the page to the screen (no html/body lock — that lifts the tab bar on iOS)
   useEffect(() => {
-    document.documentElement.classList.add('no-page-scroll')
-    return () => document.documentElement.classList.remove('no-page-scroll')
+    document.documentElement.classList.add('fit-screen')
+    return () => document.documentElement.classList.remove('fit-screen')
   }, [])
   const shiftWeek = (d: number) => {
     setOffset((o) => o + d)
