@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LOCK IN — экраны</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&family=Inter:wght@500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{background:#050506;color:#f4f4f5;font-family:Geist,sans-serif;padding:24px 14px 60px}
+h1{font-size:22px;margin-bottom:18px}h2{font-size:17px;margin:28px 0 12px;color:#ff6a1a}
+.row2{display:flex;gap:18px;flex-wrap:wrap}.cap{font:500 11px 'Geist Mono';color:#8a8a93;text-align:center;margin-top:8px;text-transform:uppercase;letter-spacing:.06em}
+.ph{width:250px;height:520px;border-radius:38px;padding:7px;background:#1a1a1d;box-shadow:0 0 0 1px #2a2a2e}
+.sc{height:100%;border-radius:32px;background:#000;overflow:hidden;position:relative;padding:34px 14px 70px;font-size:12px}
+.tb{position:absolute;left:0;right:0;bottom:0;height:56px;border-top:1px solid #161618;display:flex;justify-content:space-around;align-items:center;background:#000}
+.tb i{width:16px;height:16px;border-radius:5px;background:#2a2a2e;display:block}.tb i.on{background:#ff6a1a}
+.l{font:500 8px 'Geist Mono';letter-spacing:.08em;text-transform:uppercase;color:#6e6e75}.h{font-size:20px;font-weight:600;letter-spacing:-.03em;margin:2px 0 10px}
+.c{background:#0e0e10;border:1px solid #1e1e21;border-radius:14px;padding:10px;margin-bottom:7px}.n{font-family:Inter;font-weight:600;font-variant-numeric:tabular-nums}
+.r{display:flex;justify-content:space-between;align-items:center;gap:6px}.m{color:#6e6e75}.a{color:#ff6a1a}
+.cb{width:15px;height:15px;border-radius:5px;border:1.5px solid #4a4a50;flex-shrink:0}.cb.on{background:#ff6a1a;border-color:#ff6a1a}
+.t{display:flex;gap:8px;align-items:center;padding:6px 0;border-top:1px solid #161618}.t:first-child{border:0}.t.d span{color:#555;text-decoration:line-through}
+.bar{height:4px;border-radius:4px;background:#1c1c1f;overflow:hidden}.bar i{display:block;height:100%;background:#ff6a1a}
+.chip{display:inline-block;padding:5px 8px;border-radius:8px;background:#151517;border:1px solid #232326;margin:0 3px 4px 0;font-size:10px}
+.chip.on{border-color:#ff6a1a;color:#ff6a1a;background:rgba(255,106,26,.1)}
+.fab{position:absolute;right:12px;bottom:66px;width:40px;height:40px;border-radius:13px;background:#ff6a1a;color:#000;display:grid;place-items:center;font-size:20px;font-weight:600}
+.seg{display:flex;background:#151517;border-radius:9px;padding:2px;margin-bottom:8px}.seg b{flex:1;text-align:center;padding:4px;border-radius:7px;font-weight:500;color:#888;font-size:10px}.seg b.on{background:#232326;color:#fff}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:7px}.heat{display:grid;grid-template-columns:repeat(15,1fr);gap:2px}.heat i{aspect-ratio:1;border-radius:2px;background:#1c1c1f}
+</style></head><body>
+<h1>Варианты экранов</h1>
+
+<h2>1 · Сегодня</h2>
+<div class="row2">
+<div><div class="ph"><div class="sc">
+ <div class="r"><div><div class="l">сб 22.11</div><div class="h">Сегодня</div></div><div class="n a" style="font-size:22px">7/10</div></div>
+ <div class="bar" style="margin-bottom:10px"><i style="width:70%"></i></div>
+ <div class="l" style="margin:6px 0">Сейчас · утро</div>
+ <div class="c"><div class="t"><span class="cb on"></span><span style="color:#555;text-decoration:line-through">Проснуться</span></div><div class="t"><span class="cb on"></span><span style="color:#555;text-decoration:line-through">Вода 500 мл</span></div><div class="t"><span class="cb"></span><span>Йога</span><span class="m" style="margin-left:auto">20 мин ▶</span></div><div class="t"><span class="cb"></span><span>Медитация</span><span class="m" style="margin-left:auto">10 мин</span></div></div>
+ <div class="c r"><span>☀ День</span><span class="m">0/2 ›</span></div><div class="c r"><span>☾ Вечер</span><span class="m">0/2 ›</span></div>
+ <div class="c r"><span>📞 Созвон 14:00</span><span class="a">через 40м</span></div>
+ <div class="fab">+</div><div class="tb"><i class="on"></i><i></i><i></i><i></i><i></i></div></div></div><div class="cap">A · фокус на текущем блоке</div></div>
+
+<div><div class="ph"><div class="sc">
+ <div class="l">сб 22.11 · серия 12д</div><div class="h">Сегодня</div>
+ <div class="g2"><div class="c" style="margin:0"><div class="l">привычки</div><div class="n" style="font-size:18px">7/10</div></div><div class="c" style="margin:0"><div class="l">месяц</div><div class="n" style="font-size:18px">+$1.2k</div></div></div>
+ <div class="l" style="margin:6px 0">Отметь одним касанием</div>
+ <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+  <div class="c" style="margin:0;text-align:center;border-color:#ff6a1a"><div class="a" style="font-size:16px">✓</div><div style="font-size:10px">Подъём</div></div>
+  <div class="c" style="margin:0;text-align:center;border-color:#ff6a1a"><div class="a" style="font-size:16px">✓</div><div style="font-size:10px">Вода</div></div>
+  <div class="c" style="margin:0;text-align:center"><div style="font-size:16px">🧘</div><div style="font-size:10px">Йога 20</div></div>
+  <div class="c" style="margin:0;text-align:center"><div style="font-size:16px">◎</div><div style="font-size:10px">Медит. 10</div></div>
+  <div class="c" style="margin:0;text-align:center"><div style="font-size:16px">💼</div><div style="font-size:10px">Работа</div></div>
+  <div class="c" style="margin:0;text-align:center"><div style="font-size:16px">🚶</div><div style="font-size:10px">Прогулка</div></div></div>
+ <div class="c r" style="margin-top:7px"><span>Цель недели $1000</span><span class="n">62%</span></div>
+ <div class="fab">+</div><div class="tb"><i class="on"></i><i></i><i></i><i></i><i></i></div></div></div><div class="cap">B · сетка плиток</div></div>
+</div>
+
+<h2>2 · Календарь</h2>
+<div class="row2">
+<div><div class="ph"><div class="sc">
+ <div class="h">Календарь</div>
+ <div class="l" style="margin:4px 0">Сегодня · сб 22</div>
+ <div class="c"><div class="r"><span class="n m">14:00</span><span style="flex:1;margin-left:8px">Созвон с командой</span><span class="a">Meet</span></div></div>
+ <div class="c"><div class="r"><span class="n m">16:30</span><span style="flex:1;margin-left:8px">Бухгалтер</span></div></div>
+ <div class="l" style="margin:8px 0 4px">Завтра · вс 23</div>
+ <div class="c"><div class="r"><span class="n m">11:00</span><span style="flex:1;margin-left:8px">Йога-студия</span></div></div>
+ <div class="l" style="margin:8px 0 4px">Пн 24</div>
+ <div class="c"><div class="r"><span class="n m">10:00</span><span style="flex:1;margin-left:8px">Стендап</span></div></div>
+ <div class="fab">+</div><div class="tb"><i></i><i class="on"></i><i></i><i></i><i></i></div></div></div><div class="cap">A · список по дням</div></div>
+<div><div><div class="ph"><div class="sc">
+ <div class="h">Ноябрь</div>
+ <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;margin-bottom:8px" class="n">
+ <span class="m">П</span><span class="m">В</span><span class="m">С</span><span class="m">Ч</span><span class="m">П</span><span class="m">С</span><span class="m">В</span>
+ <span>17</span><span>18<br><b class="a">·</b></span><span>19</span><span>20<br><b class="a">·</b></span><span>21</span><span style="background:#ff6a1a;color:#000;border-radius:7px">22</span><span>23</span>
+ <span>24<br><b class="a">·</b></span><span>25</span><span>26</span><span>27<br><b class="a">·</b></span><span>28</span><span>29</span><span>30</span></div>
+ <div class="c"><div class="l">14:00 – 14:45</div><div style="font-weight:600">Созвон с командой</div><div class="a" style="margin-top:4px">▶ Подключиться</div></div>
+ <div class="c"><div class="l">16:30</div><div style="font-weight:600">Бухгалтер</div></div>
+ <div class="fab">+</div><div class="tb"><i></i><i class="on"></i><i></i><i></i><i></i></div></div></div><div class="cap">B · мини-месяц + день</div></div></div>
+</div>
+
+<h2>3 · Финансы</h2>
+<div class="row2">
+<div><div class="ph"><div class="sc">
+ <div class="l">ноябрь</div><div class="n" style="font-size:28px;margin:2px 0">+$1 183</div><div class="m" style="margin-bottom:8px">↑ 1 200 · ↓ 17</div>
+ <div class="l" style="margin-bottom:5px">Быстрый расход, ₾</div>
+ <div><span class="chip on">🍔 Еда</span><span class="chip">🚕 Такси</span><span class="chip">☕ Кофе</span><span class="chip">🛒 Магазин</span><span class="chip">＋</span></div>
+ <div class="c" style="margin-top:6px"><div class="n" style="font-size:22px;text-align:center">25 ₾</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:6px" class="n m"><span style="text-align:center">1</span><span style="text-align:center">2</span><span style="text-align:center">3</span></div></div>
+ <div class="l" style="margin:6px 0">Сегодня</div><div class="c r"><span>Кофейня</span><span class="n">−45 ₾</span></div>
+ <div class="tb"><i></i><i></i><i class="on"></i><i></i><i></i></div></div></div><div class="cap">A · расход за 2 касания</div></div>
+<div><div class="ph"><div class="sc">
+ <div class="h">Финансы</div>
+ <div class="c"><div class="r"><span class="l">осталось на месяц</span><span class="n a">$820</span></div><div class="bar" style="margin-top:6px"><i style="width:58%"></i></div></div>
+ <div class="g2">
+  <div class="c" style="margin:0"><div>🍔 Еда</div><div class="n">$140 <span class="m">/ 300</span></div><div class="bar"><i style="width:47%"></i></div></div>
+  <div class="c" style="margin:0"><div>🏠 Жильё</div><div class="n">$600 <span class="m">/ 600</span></div><div class="bar"><i style="width:100%"></i></div></div>
+  <div class="c" style="margin:0"><div>🚕 Транспорт</div><div class="n">$40 <span class="m">/ 100</span></div><div class="bar"><i style="width:40%"></i></div></div>
+  <div class="c" style="margin:0"><div>🎉 Развл.</div><div class="n">$25 <span class="m">/ 150</span></div><div class="bar"><i style="width:17%"></i></div></div></div>
+ <div class="c r"><span>🎯 Копилка</span><span class="n">$3.2k / 50k</span></div>
+ <div class="fab">+</div><div class="tb"><i></i><i></i><i class="on"></i><i></i><i></i></div></div></div><div class="cap">B · бюджеты-плитки</div></div>
+</div>
+
+<h2>4 · Рост</h2>
+<div class="row2">
+<div><div class="ph"><div class="sc">
+ <div class="l">неделя 47</div><div class="h">Рост · 2/4</div>
+ <div class="c"><div class="r"><span>📍 Новое место</span><span class="m">сб</span></div><div class="bar" style="margin-top:6px"><i style="width:0"></i></div></div>
+ <div class="c"><div class="r"><span>✦ Навык: бариста</span><span class="a">✓</span></div><div class="bar" style="margin-top:6px"><i style="width:100%"></i></div></div>
+ <div class="c"><div class="r"><span>🎙 Речь</span><span class="n">2/3</span></div><div class="bar" style="margin-top:6px"><i style="width:66%"></i></div></div>
+ <div class="c"><div class="r"><span>🌍 EN · FR · DE</span><span class="n">180/270′</span></div><div class="bar" style="margin-top:6px"><i style="width:66%"></i></div><div style="margin-top:6px"><span class="chip">EN +15</span><span class="chip">FR +15</span><span class="chip">DE +15</span></div></div>
+ <div class="tb"><i></i><i></i><i></i><i></i><i class="on"></i></div></div></div><div class="cap">A · полосы + быстрые +15</div></div>
+<div><div class="ph"><div class="sc">
+ <div class="h">Рост</div>
+ <div class="c" style="text-align:center;padding:16px"><div class="l">идея недели</div><div style="font-size:14px;font-weight:600;margin:6px 0">Мастер-класс по керамике</div><span class="chip on">Взять</span><span class="chip">Другая</span></div>
+ <div class="l" style="margin:6px 0">Чек-лист недели</div>
+ <div class="c"><div class="t"><span class="cb"></span><span>Новое место</span></div><div class="t d"><span class="cb on"></span><span>Навык недели</span></div><div class="t"><span class="cb on"></span><span>Монолог на камеру</span></div><div class="t"><span class="cb"></span><span>Пересказ подкаста</span></div><div class="t"><span class="cb"></span><span>Английский 150′</span></div></div>
+ <div class="tb"><i></i><i></i><i></i><i></i><i class="on"></i></div></div></div><div class="cap">B · идея + чек-лист</div></div>
+</div>
+
+<h2>5 · Статистика</h2>
+<div class="row2">
+<div><div class="ph"><div class="sc">
+ <div class="h">Статистика</div><div class="seg"><b class="on">Неделя</b><b>Месяц</b><b>Год</b></div>
+ <div class="g2">
+  <div class="c" style="margin:0"><div class="l">привычки</div><div class="n" style="font-size:18px">78%</div><div class="a" style="font-size:9px">▲ 6%</div></div>
+  <div class="c" style="margin:0"><div class="l">финансы</div><div class="n" style="font-size:18px">+$1.2k</div><div class="a" style="font-size:9px">▲ $300</div></div>
+  <div class="c" style="margin:0"><div class="l">спорт</div><div class="n" style="font-size:18px">5 трен.</div><div class="m" style="font-size:9px">= 0</div></div>
+  <div class="c" style="margin:0"><div class="l">рост</div><div class="n" style="font-size:18px">3/4</div><div class="a" style="font-size:9px">▲ 1</div></div></div>
+ <div class="c"><div class="l" style="margin-bottom:6px">сон · шаги</div><div class="r n"><span>7.2 ч</span><span>8 400</span></div></div>
+ <div class="tb"><i class="on"></i><i></i><i></i><i></i><i></i></div></div></div><div class="cap">A · 4 плитки сфер</div></div>
+<div><div class="ph"><div class="sc">
+ <div class="h">Год 2026</div>
+ <div class="c"><div class="l" style="margin-bottom:6px">дни ≥80%</div><div class="heat" id="h"></div></div>
+ <div class="c r"><span>Лучшая серия</span><span class="n a">21 д</span></div>
+ <div class="c r"><span>Заработано</span><span class="n">$48k / 100k</span></div>
+ <div class="c r"><span>Тренировок</span><span class="n">96</span></div>
+ <div class="c r"><span>Новых мест</span><span class="n">23</span></div>
+ <div class="tb"><i class="on"></i><i></i><i></i><i></i><i></i></div></div></div><div class="cap">B · год одним экраном</div></div>
+</div>
+<script>let s=3,h=document.getElementById('h');for(let i=0;i<105;i++){s=(s*9301+49297)%233280;const r=s/233280,e=document.createElement('i');e.style.background=r<.3?'#1c1c1f':r<.6?'#5a2a10':'#ff6a1a';h.appendChild(e)}</script>
+</body></html>
