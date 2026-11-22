@@ -4,7 +4,7 @@
 //   «сделал йогу и медитацию»
 // Dependency-free: the Siri edge function bundles a copy of this file (scripts/sync-parser.mjs).
 export interface Action { tool: string; input: Record<string, unknown> }
-export interface ParseCtx { defaultCurrency: string; habits: { id: string; name: string }[]; /** when the command was spoken (default: now) */ now?: Date }
+export interface ParseCtx { defaultCurrency: string; habits: { id: string; name: string; seed?: string }[]; /** when the command was spoken (default: now) */ now?: Date }
 const pad = (n: number) => String(n).padStart(2, '0')
 const dayKey = (d: Date = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 const addDays = (d: Date, n: number) => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x }
@@ -24,9 +24,9 @@ const CAT: [string, RegExp][] = [
 ]
 
 function currencyOf(t: string): 'USD' | 'GEL' | 'RUB' | null {
-  if (/лари|лар\b|gel|₾/i.test(t)) return 'GEL'
+  if (/лари|лар\b|lari|gel|₾/i.test(t)) return 'GEL'
   if (/доллар|бакс|usd|\$|dollar|buck/i.test(t)) return 'USD'
-  if (/рубл|₽|rub/i.test(t)) return 'RUB'
+  if (/рубл|₽|rub|ruble|rouble/i.test(t)) return 'RUB'
   return null
 }
 
@@ -44,13 +44,27 @@ function dateOf(t: string, now: Date): string {
   return dayKey(now)
 }
 
+/** words that mean a seeded habit, in RU and EN (so “did yoga” finds «Йога») */
+const HABIT_ALIASES: Record<string, string[]> = {
+  wake: ['просну', 'подъём', 'подъем', 'woke', 'wake'],
+  face: ['лицо', 'лица', 'face', 'skincare', 'skin care'],
+  teeth: ['зубы', 'teeth', 'brush'],
+  water: ['вод', 'water'],
+  yoga: ['йог', 'yoga'],
+  meditation: ['медит', 'meditat'],
+  work: ['работ', 'work'],
+  walk: ['прогул', 'гулял', 'walk'],
+  stretch: ['растяж', 'stretch'],
+  night: ['умыл', 'умыв', 'wash'],
+}
+
 const W = '[a-zа-яё]*' // word tail (JS \\w is ASCII-only)
 const STRIP = new RegExp(
   [
     '(\\d+(?:[.,]\\d+)?)\\s*(тыс' + W + '|к|k)?(?=\\s|$)',
-    'лари', 'лар', 'gel', '₾', 'доллар' + W, 'бакс' + W, 'usd', '\\$', 'рубл' + W, '₽', 'rub',
+    'лари', 'лар', 'lari', 'laris', 'gel', '₾', 'доллар' + W, 'dollar' + W, 'бакс' + W, 'buck' + W, 'usd', '\\$', 'рубл' + W, 'ruble' + W, 'rouble' + W, '₽', 'rub',
     'потратил' + W, 'заплатил' + W, 'купил' + W, 'заработал' + W, 'получил' + W, 'вчера', 'позавчера', 'сегодня',
-    'spent', 'paid', 'bought', 'earned',
+    'spent', 'paid', 'bought', 'earned', 'got', 'yesterday', 'today',
   ].map((x) => `(?:^|\\s)${x}(?=\\s|$)`).join('|'),
   'gi',
 )
@@ -84,7 +98,8 @@ export function parseLocal(text: string, s: ParseCtx): Action[] {
       const low = p.toLowerCase()
       for (const h of s.habits) {
         const stem = h.name.toLowerCase().slice(0, Math.min(6, Math.max(3, h.name.length - 1)))
-        if (low.includes(stem)) out.push({ tool: 'set_habit_done', input: { habit_id: h.id, date, done: true } })
+        const aliases = (h.seed && HABIT_ALIASES[h.seed]) || []
+        if (low.includes(stem) || aliases.some((a) => low.includes(a))) out.push({ tool: 'set_habit_done', input: { habit_id: h.id, date, done: true } })
       }
     }
   }
@@ -92,15 +107,16 @@ export function parseLocal(text: string, s: ParseCtx): Action[] {
 }
 
 const CAT_RU: Record<string, string> = { food: 'Еда', housing: 'Жильё', transport: 'Транспорт', entertainment: 'Развлечения', health: 'Здоровье', sport: 'Спорт', subscriptions: 'Подписки', shopping: 'Покупки', travel: 'Путешествия', other: 'Прочее', fixed: 'Зарплата', variable: 'Доход' }
+const CAT_EN: Record<string, string> = { food: 'Food', housing: 'Housing', transport: 'Transport', entertainment: 'Fun', health: 'Health', sport: 'Sport', subscriptions: 'Subscriptions', shopping: 'Shopping', travel: 'Travel', other: 'Other', fixed: 'Salary', variable: 'Income' }
 const SYM: Record<string, string> = { USD: '$', GEL: '₾', RUB: '₽' }
 /** short human summary, e.g. "−12 ₾ · Еда · Кофе; ✓ Йога" (used for Siri's spoken reply) */
-export function summarize(actions: Action[], habits: { id: string; name: string }[]) {
+export function summarize(actions: Action[], habits: { id: string; name: string }[], en = false) {
   return actions
     .map((a) => {
       const i = a.input
       if (a.tool === 'add_transaction') {
         const amt = `${i.type === 'income' ? '+' : '−'}${i.amount} ${SYM[String(i.currency)] || i.currency}`
-        return [amt, CAT_RU[String(i.category)] || i.category, i.note].filter(Boolean).join(' · ')
+        return [amt, (en ? CAT_EN : CAT_RU)[String(i.category)] || i.category, i.note].filter(Boolean).join(' · ')
       }
       if (a.tool === 'set_habit_done') return `✓ ${habits.find((h) => h.id === i.habit_id)?.name || ''}`
       return ''

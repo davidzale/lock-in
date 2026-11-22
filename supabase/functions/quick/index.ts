@@ -28,14 +28,15 @@ Deno.serve(async (req) => {
     if (!text) return reply('Не расслышал — повтори, пожалуйста', 400)
 
     const { data: st } = await admin.from('app_state').select('data').eq('user_id', tk.user_id).maybeSingle()
-    const d = (st?.data || {}) as { defaultCurrency?: string; habits?: { id: string; name: string }[] }
-    const habits = (d.habits || []).map((h) => ({ id: h.id, name: h.name }))
+    const d = (st?.data || {}) as { defaultCurrency?: string; habits?: { id: string; name: string; seed?: string }[] }
+    const habits = (d.habits || []).map((h) => ({ id: h.id, name: h.name, seed: h.seed }))
     const actions = parseLocal(text, { defaultCurrency: d.defaultCurrency || 'GEL', habits })
-    if (!actions.length) return reply('Не понял. Скажи, например: «кофе 12 лари» или «сделал йогу»', 422)
+    if (!actions.length) return reply(/[а-яё]/i.test(text) ? 'Не понял. Скажи, например: «кофе 12 лари» или «сделал йогу»' : 'Didn’t get that. Try “coffee 12 lari” or “did yoga”.', 422)
 
     const { error } = await admin.from('quick_inbox').insert({ user_id: tk.user_id, text })
     if (error) return reply('Не получилось сохранить: ' + error.message, 500)
-    return reply('Записал: ' + summarize(actions, habits))
+    const ru = /[а-яё]/i.test(text)
+    return reply((ru ? 'Записал: ' : 'Saved: ') + summarize(actions, habits, !ru))
   } catch (e) {
     return reply('Ошибка: ' + String(e), 500)
   }

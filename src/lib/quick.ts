@@ -36,7 +36,7 @@ export async function applyInbox() {
     const { data, error } = await supabase.from('quick_inbox').select('id, text, created_at').is('applied_at', null).order('created_at')
     if (error || !data?.length) return
     const s = useStore.getState()
-    const habits = s.habits.map((h) => ({ id: h.id, name: h.name }))
+    const habits = s.habits.map((h) => ({ id: h.id, name: h.name, seed: h.seed }))
     const done: string[] = []
     for (const row of data) {
       const actions = parseLocal(row.text, { defaultCurrency: s.defaultCurrency, habits, now: new Date(row.created_at) })
