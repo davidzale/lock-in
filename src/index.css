@@ -299,7 +299,8 @@ input[type='date'].input::-webkit-calendar-picker-indicator, input[type='time'].
 .neg { color: var(--neg) !important; }
 
 /* calendar: the page stays put, only the hour grid scrolls */
-html.fit-screen .app { min-height: 0; padding-bottom: 0; }
+/* iOS standalone shrinks the viewport (and lifts fixed bars) when a page can't scroll — keep it 2px taller than the screen */
+html.fit-screen .app { min-height: calc(100vh + 2px); padding-bottom: 0; }
 .cal-screen { display: flex; flex-direction: column; height: calc(100dvh - env(safe-area-inset-top) - 18px - 66px - max(4px, env(safe-area-inset-bottom) - 16px)); overflow: hidden; }
 .cal-screen .cal-grid { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-bottom: 0; }
 .cal-screen .cal-scroll { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
