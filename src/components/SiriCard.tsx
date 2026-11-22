@@ -35,10 +35,9 @@ export function SiriCard() {
             }}>{t('siri.create')}</button>
           ) : (
             <>
-              <div className="lbl" style={{ marginBottom: 6 }}>{t('siri.yourKey')}</div>
-              <button className="input mono" style={{ height: 'auto', padding: '10px 12px', fontSize: 12, wordBreak: 'break-all', textAlign: 'left' }} onClick={() => copy(token)}>{token}</button>
-              <div className="lbl" style={{ margin: '12px 0 6px' }}>URL</div>
-              <button className="input mono" style={{ height: 'auto', padding: '10px 12px', fontSize: 11, wordBreak: 'break-all', textAlign: 'left' }} onClick={() => copy(QUICK_URL)}>{QUICK_URL}</button>
+              <div className="lbl" style={{ marginBottom: 6 }}>{t('siri.urlWithKey')}</div>
+              <button className="input mono" style={{ height: 'auto', padding: '10px 12px', fontSize: 11, wordBreak: 'break-all', textAlign: 'left' }} onClick={() => copy(`${QUICK_URL}?token=${token}`)}>{`${QUICK_URL}?token=${token}`}</button>
+              <button className="btn primary sm" style={{ width: '100%', marginTop: 8 }} onClick={() => copy(`${QUICK_URL}?token=${token}`)}><Icon n="check" size="s" />{t('siri.copyUrl')}</button>
               <div className="lbl" style={{ margin: '14px 0 6px' }}>{t('siri.steps')}</div>
               <ol className="t2" style={{ fontSize: 13, lineHeight: 1.55, paddingLeft: 18 }}>
                 <li>{t('siri.s1')}</li>
